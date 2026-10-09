@@ -1,7 +1,7 @@
 // Pieces Files and Data Sources share: a file's status, its name cut to fit, the "…" menu every row carries (the same
 // menu right-click opens), the Import files button and the drop zone. Status is quiet when all is well: only Reading,
 // Done with gaps and Failed carry colour (owner, 09.10.2026).
-import { Alert, Button, Classes, ContextMenu, EditableText, Intent, Menu, MenuDivider, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
+import { Alert, Button, Classes, ContextMenu, InputGroup, Intent, Menu, MenuDivider, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
 import { Document as DocumentIcon, Import, More, SmallTick, Th, Time, Trash, WarningSign } from '@blueprintjs/icons';
 import { useRef, useState, type DragEvent, type ReactElement, type ReactNode } from 'react';
 import { deleteDocument, EngineError, useDataClient } from '../data/index.ts';
@@ -102,22 +102,35 @@ export function FitName({ name, children }: { name: string; children?: ReactNode
 
 export const EMPTY_NAME = "A name can't be empty.";
 
-/** A name being changed where it stands: Enter or a click away keeps it, Escape puts it back. `allowEmpty` for a field
- * that may be cleared, like a register. */
+/** A name being changed where it stands, in Blueprint's own input so it reads on any row, the selected one too: Enter
+ * or a click away keeps it, Escape puts it back. `allowEmpty` for a field that may be cleared, like a register. */
 export function RenameField({ value, onRename, onDone, allowEmpty = false, placeholder }: { value: string; onRename: (next: string) => void; onDone: () => void; allowEmpty?: boolean; placeholder?: string }) {
+  const [text, setText] = useState(value);
+  const finished = useRef(false);
+  const finish = (keep: boolean) => {
+    if (finished.current) return;
+    finished.current = true;
+    onDone();
+    const next = text.trim();
+    if (!keep || next === value) return;
+    if (!next && !allowEmpty) toast(EMPTY_NAME);
+    else onRename(next);
+  };
   const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
   return (
-    <span className="files-rename" onClick={stop} onDoubleClick={stop} onKeyDown={stop}>
-      <EditableText
-        isEditing
-        defaultValue={value}
+    <span className="files-rename" onClick={stop} onDoubleClick={stop}>
+      <InputGroup
+        value={text}
         placeholder={placeholder}
-        selectAllOnFocus
-        onCancel={onDone}
-        onConfirm={(next) => {
-          onDone();
-          if (!next.trim() && !allowEmpty) toast(EMPTY_NAME);
-          else if (next.trim() !== value) onRename(next.trim());
+        aria-label="New name"
+        autoFocus
+        onFocus={(e) => e.currentTarget.select()}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={() => finish(true)}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+          if (e.key === 'Enter') finish(true);
+          if (e.key === 'Escape') finish(false);
         }}
       />
     </span>

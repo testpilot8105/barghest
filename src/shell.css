@@ -999,6 +999,12 @@ h4 {
   border-right: 1px solid var(--bh-chrome-line);
 }
 
+/* The list (and the open file) fills everything beside the tree: no gutter, no frame (owner, 10.10.2026). */
+.files .intake-card.view-panel {
+  margin: 0;
+  border: 0;
+}
+
 .files__side-head {
   display: flex;
   align-items: center;
@@ -1043,8 +1049,9 @@ h4 {
   font-variant-numeric: tabular-nums;
 }
 
-/* A name being renamed takes the room the name had. */
+/* A name being renamed takes the whole room the name had, in the tree as in the list. */
 .files-rename {
+  display: block;
   flex: 1 1 auto;
   min-width: 0;
 }

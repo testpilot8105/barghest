@@ -273,7 +273,8 @@ function FilesTree({ investigation, top, folders, here, counts, total, actions, 
           hasCaret: childNodes.length > 0,
           isExpanded,
           childNodes,
-          isSelected: f.id === here,
+          // The highlight steps aside while the name is a field, so the field reads like any other input.
+          isSelected: f.id === here && !actions.isRenaming(f, 'tree'),
           secondaryLabel: end(counts.get(f.id) ?? 0, actions.menu(f, top, 'tree'), f.name),
         };
       });
@@ -289,7 +290,7 @@ function FilesTree({ investigation, top, folders, here, counts, total, actions, 
       hasCaret: childNodes.length > 0,
       isExpanded: current && (expanded[`i:${inv.id}`] ?? true),
       childNodes,
-      isSelected: current && here === '',
+      isSelected: current && here === '' && !invActions.isRenaming(inv),
       secondaryLabel: end(current ? total : inv.documents, invActions.menu(inv), inv.name),
     };
   });
