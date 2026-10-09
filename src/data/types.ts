@@ -294,6 +294,23 @@ export interface DocumentView {
   inference: InferenceRow[];
 }
 
+/** What `POST delete-document` answers: what went with the file, and what the re-run of resolution wrote. */
+export interface DeleteResult {
+  documentId: string;
+  removed: {
+    passages: number;
+    records: number;
+    mentions: number;
+    relationships: number;
+    resolutions: number;
+    embeddings: number;
+    storedFile: boolean;
+  };
+  /** Relationships also cited by another file, which only lost this file's passage ids. */
+  trimmedRelationships: number;
+  resolved: { written: number; repointedRelationships: number } | null;
+}
+
 /** One kind of thing the model can be asked to list, and the ontology type it lands as. */
 export interface InvestigationBlock {
   id: string;

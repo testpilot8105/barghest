@@ -22,6 +22,7 @@ import { timeline, whatConnects } from './queries/graph.mjs';
 import { documentView } from './queries/document.mjs';
 import { ask, embedAll, searchPassages } from './ask/index.mjs';
 import { createInvestigation, ensureDemoInvestigations, listInvestigations } from './investigations.mjs';
+import { deleteDocument } from './documents.mjs';
 import { ownership } from '../ontology/ownership.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -137,6 +138,13 @@ const routes = {
     const documentId = url.searchParams.get('documentId');
     if (!documentId) throw bad('documentId is required');
     return documentView({ data: engine.data, meta, store, documentId, extracting: jobs.has(documentId) });
+  },
+  // Delete a file and everything the model pulled from it; refused while the model is reading it.
+  'POST /barghest/delete-document': async (url) => {
+    const documentId = url.searchParams.get('documentId');
+    if (!documentId) throw bad('documentId is required');
+    if (jobs.has(documentId)) throw Object.assign(new Error('the model is still reading this file; wait for it to finish'), { status: 409 });
+    return deleteDocument({ engine, meta, store, documentId, filesDir: FILES, root });
   },
   // Investigations: store records, outside the ontology (engine-api.md 2.6).
   'GET /barghest/investigations': () => listInvestigations(store, engine.data),

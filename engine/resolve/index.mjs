@@ -38,6 +38,27 @@ class UnionFind {
 const isMention = (o) => !!(o.passageId || o.recordId);
 const isCanonical = (o) => !o.canonicalId && !isMention(o);
 
+/** The deterministic id of the Resolution for one pair, so a re-run overwrites rather than duplicates. */
+export function resolutionIdFor(type, a, b) {
+  const [x, y] = [String(a), String(b)].sort();
+  return `RS-${createHash('sha1').update(`${type}|${x}|${y}`).digest('hex').slice(0, 8)}`;
+}
+
+/**
+ * A decider that answers from the Resolutions the model already wrote and never calls the model: for a re-run after
+ * a deletion, every earlier decision whose two sides survive is kept, and new unsure pairs go to review.
+ */
+export function rememberedDecisions(data) {
+  const decide = async (pairs) =>
+    pairs.map((p) => {
+      const prior = data.getObject('Resolution', resolutionIdFor(p.type, p.a.__primaryKey, p.b.__primaryKey));
+      if (!prior || prior.decidedBy !== 'local-model') return null;
+      return { same: prior.decision === 'same', confidence: prior.confidence ?? p.score, reason: prior.reason ?? 'kept from an earlier decision' };
+    });
+  decide.remembered = true;
+  return decide;
+}
+
 function pickTitle(rule, members) {
   // The most complete, best-looking spelling: most full words, then mixed case over SHOUTING, then "First Last"
   // over "LAST, FIRST", then the one seen most often.
@@ -174,7 +195,7 @@ export async function resolveScenario({ engine, meta, store, scenario, decide = 
     // Resolution rows, one per decided pair, deterministic ids so a re-run overwrites rather than duplicates.
     for (const r of resolutions) {
       const [x, y] = [String(r.pair.a.__primaryKey), String(r.pair.b.__primaryKey)].sort();
-      const resolutionId = `RS-${createHash('sha1').update(`${type}|${x}|${y}`).digest('hex').slice(0, 8)}`;
+      const resolutionId = resolutionIdFor(type, x, y);
       toPut.push(
         toServerObject(meta, 'Resolution', {
           resolutionId,
@@ -222,7 +243,7 @@ export async function resolveScenario({ engine, meta, store, scenario, decide = 
   if (toPut.length) engine.put(toPut.map((o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined))));
   store.audit({
     action: 'resolve',
-    actor: decide ? 'engine+local-model' : 'engine',
+    actor: decide && !decide.remembered ? 'engine+local-model' : 'engine',
     outcome: 'applied',
     params: { scenario, types: Object.keys(summary) },
     edits: [],

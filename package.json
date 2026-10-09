@@ -21,6 +21,7 @@
     "proof:investigations": "node engine/proof-investigations.mjs",
     "proof:files": "node engine/proof-files.mjs",
     "proof:document": "node engine/proof-document.mjs",
+    "proof:delete": "node engine/proof-delete.mjs",
     "proof:ingest": "node engine/proof-ingest.mjs",
     "proof:resolve": "node engine/proof-resolve.mjs",
     "proof:graph": "node engine/proof-graph.mjs",

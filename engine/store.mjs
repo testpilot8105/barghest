@@ -102,6 +102,7 @@ export function openStore(path) {
     'INSERT INTO passage_embedding (passage_id, model, dim, vector) VALUES (?, ?, ?, ?) ON CONFLICT(passage_id) DO UPDATE SET model = excluded.model, dim = excluded.dim, vector = excluded.vector',
   );
   const embeddingsAll = db.prepare('SELECT passage_id, model, dim, vector FROM passage_embedding');
+  const embeddingRemove = db.prepare('DELETE FROM passage_embedding WHERE passage_id = ?');
   const investigationUpsert = db.prepare(
     'INSERT INTO investigations (id, name, template, blocks, created_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name = excluded.name, template = excluded.template, blocks = excluded.blocks',
   );
@@ -172,6 +173,12 @@ export function openStore(path) {
         model: row.model,
         vector: new Float32Array(row.vector.buffer, row.vector.byteOffset, row.dim),
       }));
+    },
+    /** Drop the embeddings of these passages. Returns how many rows went. */
+    removeEmbeddings(passageIds) {
+      let n = 0;
+      for (const id of passageIds) n += Number(embeddingRemove.run(String(id)).changes ?? 0);
+      return n;
     },
     /** Investigations live here, outside the ontology: { id, name, template, blocks, createdAt }. */
     putInvestigation({ id, name, template = null, blocks, createdAt }) {
