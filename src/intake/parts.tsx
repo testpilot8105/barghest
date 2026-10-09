@@ -1,9 +1,11 @@
 // Pieces Files and Data Sources share: a file's status, its name cut to fit, the "…" menu every row carries (the same
 // menu right-click opens), the Import files button and the drop zone. Status is quiet when all is well: only Reading,
 // Done with gaps and Failed carry colour (owner, 09.10.2026).
-import { Button, Classes, ContextMenu, Intent, Menu, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
-import { Document as DocumentIcon, Import, More, SmallTick, Th, Time, WarningSign } from '@blueprintjs/icons';
+import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuDivider, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
+import { Document as DocumentIcon, Import, More, SmallTick, Th, Time, Trash, WarningSign } from '@blueprintjs/icons';
 import { useRef, useState, type DragEvent, type ReactElement, type ReactNode } from 'react';
+import { deleteDocument, EngineError, useDataClient } from '../data/index.ts';
+import { toast } from './toaster.ts';
 import { NO_TEXT } from './useIntake.ts';
 import type { IntakeFile } from './status.ts';
 
@@ -108,22 +110,76 @@ export function RowMenu({ menu, label }: { menu: ReactElement; label: string }) 
 }
 
 /** A table row that opens `menu` on right-click. */
-export function MenuRow({ menu, children, className }: { menu: ReactElement; children: ReactNode; className?: string }) {
+export function MenuRow({ menu, children, className, onOpen }: { menu: ReactElement; children: ReactNode; className?: string; onOpen?: () => void }) {
   return (
-    <ContextMenu content={menu} tagName="tr" className={className}>
+    <ContextMenu content={menu} tagName="tr" className={className} onDoubleClick={onOpen}>
       {children}
     </ContextMenu>
   );
 }
 
-/** The menu a file row carries in both views while only the intake routes are real. */
-export function FileMenu({ file, onRunAgain, originalUrl }: { file: IntakeFile; onRunAgain: (f: IntakeFile) => void; originalUrl: string | null }) {
+interface FileMenuProps {
+  file: IntakeFile;
+  onRunAgain: (f: IntakeFile) => void;
+  originalUrl: string | null;
+  /** Open the file in Files; the label says where. */
+  onOpen?: () => void;
+  openLabel?: string;
+  onDelete?: (f: IntakeFile) => void;
+}
+
+/** The menu a file row carries, from right-click and from its "…". */
+export function FileMenu({ file, onRunAgain, originalUrl, onOpen, openLabel = 'Open', onDelete }: FileMenuProps) {
+  const reading = file.status === 'reading' || file.status === 'importing';
   return (
     <Menu className="intake-menu">
+      {onOpen && <MenuItem text={openLabel} onClick={onOpen} />}
       {originalUrl && <MenuItem text="Open original" href={originalUrl} target="_blank" />}
-      <MenuItem text="Run the model again" disabled={file.status === 'notext' || file.status === 'importing'} onClick={() => onRunAgain(file)} />
+      <MenuItem text="Run the model again" disabled={file.status === 'notext' || reading} onClick={() => onRunAgain(file)} />
+      {onDelete && (
+        <>
+          <MenuDivider />
+          <MenuItem text="Delete…" intent={Intent.DANGER} disabled={reading} onClick={() => onDelete(file)} />
+        </>
+      )}
     </Menu>
   );
+}
+
+/** Delete a file after Blueprint's own confirm, never a browser dialog. `alert` goes somewhere in the view. */
+export function useDeleteFile(onDeleted: (id: string) => void) {
+  const { dc } = useDataClient();
+  const [file, setFile] = useState<{ id: string; name: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const confirm = () => {
+    if (!dc || !file) return;
+    setBusy(true);
+    deleteDocument(dc, file.id)
+      .then(() => onDeleted(file.id))
+      .catch((e: Error) => toast(`${file.name}: ${e instanceof EngineError ? e.message : 'the engine did not answer.'}`))
+      .finally(() => {
+        setBusy(false);
+        setFile(null);
+      });
+  };
+  return {
+    ask: (f: { id: string; name: string }) => setFile(f),
+    alert: (
+      <Alert
+        isOpen={!!file}
+        intent={Intent.DANGER}
+        icon={<Trash size={40} color="var(--bp-palette-red-5)" />}
+        confirmButtonText="Delete"
+        cancelButtonText="Cancel"
+        loading={busy}
+        onConfirm={confirm}
+        onCancel={() => setFile(null)}
+        className="intake-alert"
+      >
+        <p>Delete {file?.name}? What the model pulled from it goes too.</p>
+      </Alert>
+    ),
+  };
 }
 
 /** Import files: Blueprint's button over a hidden file picker that takes several files at once. */

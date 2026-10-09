@@ -14,6 +14,15 @@ export const OBJECT_PARAM = 'object';
 /** Files: the open folder and the open file, by their ids. */
 export const FOLDER_PARAM = 'folder';
 export const DOCUMENT_PARAM = 'document';
+/** A passage in the open file: scrolled to and outlined. Other views link to evidence this way. */
+export const PASSAGE_PARAM = 'passage';
+
+/** A file in Files, at a passage when given. */
+export function fileHref(investigation: string, documentId: string, passageId?: string): string {
+  const q = new URLSearchParams({ [DOCUMENT_PARAM]: documentId });
+  if (passageId) q.set(PASSAGE_PARAM, passageId);
+  return `${viewHref(investigation, 'files')}?${q}`;
+}
 
 const CHANGE = 'barghest:navigate';
 

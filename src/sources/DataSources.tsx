@@ -11,6 +11,7 @@ import { FileMenu, FitName, FormatIcon, ImportButton, MenuRow, RowMenu, Skeleton
 import { aboutLeft, byRegister, callLabel, clock, passageNumber, type IntakeFile } from '../intake/status';
 import { MODEL_OFF, useIntake, type Intake } from '../intake/useIntake';
 import { useInvestigationList } from '../shell/investigations';
+import { fileHref, navigate } from '../shell/route';
 import { paletteVar } from '../shell/nav';
 import { useDocumentTitle } from '../shell/title';
 
@@ -66,7 +67,7 @@ function SourcesScreen({ investigation }: { investigation: string }) {
                 </thead>
                 <tbody>
                   {[...intake.pending, ...files].map((f) => (
-                    <SourceRow key={f.id} file={f} intake={intake} />
+                    <SourceRow key={f.id} file={f} intake={intake} investigation={investigation} />
                   ))}
                 </tbody>
               </HTMLTable>
@@ -79,10 +80,11 @@ function SourcesScreen({ investigation }: { investigation: string }) {
   );
 }
 
-function SourceRow({ file, intake }: { file: IntakeFile; intake: Intake }) {
+function SourceRow({ file, intake, investigation }: { file: IntakeFile; intake: Intake; investigation: string }) {
   const { dc } = useDataClient();
   const pending = file.status === 'importing';
-  const menu = <FileMenu file={file} onRunAgain={intake.runAgain} originalUrl={dc && !pending ? fileUrl(dc, file.id) : null} />;
+  const open = () => navigate(fileHref(investigation, file.id));
+  const menu = <FileMenu file={file} onRunAgain={intake.runAgain} originalUrl={dc && !pending ? fileUrl(dc, file.id) : null} onOpen={open} openLabel="Open in Files" />;
   const cells = (
     <>
       <td>
@@ -103,7 +105,7 @@ function SourceRow({ file, intake }: { file: IntakeFile; intake: Intake }) {
       <td className="intake-table__menu">{!pending && <RowMenu menu={menu} label={file.name} />}</td>
     </>
   );
-  return pending ? <tr>{cells}</tr> : <MenuRow menu={menu}>{cells}</MenuRow>;
+  return pending ? <tr>{cells}</tr> : <MenuRow menu={menu} onOpen={open}>{cells}</MenuRow>;
 }
 
 interface Totals {

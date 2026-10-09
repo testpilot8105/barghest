@@ -9,12 +9,13 @@
 // platforms (demo step 3), View results into Browser's list and back (the profile is smoke-profile's), a broken link; all-caps headings in D-DIN Bold.
 // Then Data Sources (the strip naming the model's state, the files or the empty state, the model log) and Files (the
 // investigations by name, never an id; the files or the empty state; the Investigation menu and New investigation
-// dialog, opened and closed, nothing created). Screenshots to dist-shots/. Exit 1 on any failure. Needs the engine on
+// dialog, opened and closed, nothing created; with the model off, a file imported, opened by double-click, deleted
+// through the confirm, and checked gone from the engine). Screenshots to dist-shots/. Exit 1 on any failure. Needs the engine on
 // 8787 (BARGHEST_OLLAMA=off pnpm dev:engine), or on BARGHEST_ENGINE_PORT.
 // Run: pnpm --filter @atlas/barghest smoke   --geometry prints the measured boxes as well.
 import { chromium } from 'playwright';
 import { createServer, request } from 'node:http';
-import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -182,6 +183,34 @@ async function intakeFlow(page, tag, fail) {
   await page.screenshot({ path: join(shots, `files-${tag}-new-investigation.png`) });
   await page.getByRole('button', { name: 'Cancel' }).click();
   await page.locator('.new-investigation').waitFor({ state: 'detached', timeout: 3000 }).catch(() => fail('New investigation dialog did not close'));
+
+  // Import, open, delete, and nothing left behind. Only with the model off, so the smoke never makes the model read.
+  if (health.ollama) return;
+  const probe = `smoke-${tag}-${Date.now()}.txt`;
+  const probePath = join(shots, probe);
+  writeFileSync(probePath, 'SYNTHETIC: BARGHEST smoke file. Imported, opened and deleted by the smoke.\n');
+  await page.locator('.files .intake-card__head input[type=file]').setInputFiles(probePath);
+  rmSync(probePath);
+  const row = page.locator('.files .intake-table tbody tr', { hasText: probe });
+  await row.waitFor({ timeout: 10000 }).catch(() => fail(`imported ${probe} never showed in the list`));
+  await row.dblclick();
+  await page.locator('.file-view__name', { hasText: probe }).waitFor({ timeout: 5000 }).catch(() => fail('double-click did not open the file'));
+  const documentId = new URL(page.url()).searchParams.get('document');
+  if (!documentId) fail(`the open file is not in the address: ${page.url()}`);
+  const passageCards = await page.locator('.file-pass').count();
+  if (!passageCards) fail('the open file shows no passages');
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: join(shots, `files-${tag}-open.png`) });
+  await page.getByRole('button', { name: 'Delete' }).click();
+  const alertText = await page.locator('.intake-alert').innerText({ timeout: 3000 }).catch(() => '');
+  if (!alertText.includes(`Delete ${probe}? What the model pulled from it goes too.`)) fail(`delete confirm reads "${alertText}"`);
+  await page.locator('.intake-alert').getByRole('button', { name: 'Delete' }).click();
+  await page.locator('.files .intake-table, .files .bp6-non-ideal-state').first().waitFor({ timeout: 10000 }).catch(() => fail('delete did not return to the list'));
+  await page.waitForTimeout(500);
+  if (await row.count()) fail(`${probe} is still listed after delete`);
+  // A clean teardown is not a clean database: ask the engine for the file itself.
+  const left = await fetch(`http://${ENGINE.host}:${ENGINE.port}/barghest/document?documentId=${encodeURIComponent(documentId ?? '')}`).then((r) => r.status);
+  if (left !== 404) fail(`the engine still holds ${probe} (${documentId}): status ${left}`);
 }
 
 async function exploreFlow(page, tag, fail, width) {

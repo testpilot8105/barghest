@@ -1,22 +1,21 @@
 // Files: what we have, and where it is (Foundry's Compass, in BARGHEST's look). The investigations down the left,
-// the open one's files on the right. Folders, the file view, rename, move and delete land here as the engine's file
-// manager routes become real (docs/engine-api.md); until then the list is flat and every action shown is one the
-// engine can do. Dropped files land in the open investigation.
+// the open one's files on the right; `?document=` swaps the list for the file itself (FileView), `&passage=` at one
+// passage. Double-click or Open opens a file; Delete asks first. Dropped files land in the open investigation.
 import { Breadcrumbs, Button, Classes, HTMLTable, NonIdealState, Tooltip, Tree, type TreeNodeInfo } from '@blueprintjs/core';
 import { Import, Plus, Projects } from '@blueprintjs/icons';
 import { fileUrl, useDataClient } from '../data/index.ts';
+import { FileView } from './FileView';
 import { Connecting, EngineDown } from '../explorer/parts';
-import { FileMenu, FitName, FormatIcon, ImportButton, MenuRow, RowMenu, SkeletonRows, StatusCell, useDropZone } from '../intake/parts';
+import { FileMenu, FitName, FormatIcon, ImportButton, MenuRow, RowMenu, SkeletonRows, StatusCell, useDeleteFile, useDropZone } from '../intake/parts';
 import { importedLabel, type IntakeFile } from '../intake/status';
 import { useIntake, type Intake } from '../intake/useIntake';
 import { useInvestigationList } from '../shell/investigations';
-import { navigate, viewHref } from '../shell/route';
+import { DOCUMENT_PARAM, fileHref, navigate, PASSAGE_PARAM, useSearchParam, viewHref } from '../shell/route';
 import { useDocumentTitle } from '../shell/title';
 
 export function Files({ investigation }: { investigation: string }) {
   const { dc, error } = useDataClient();
   const name = useInvestigationList().find(investigation)?.name ?? null;
-  useDocumentTitle(name);
   if (error) return <EngineDown />;
   if (!dc) return <Connecting />;
   return <FilesScreen investigation={investigation} name={name} />;
@@ -25,13 +24,32 @@ export function Files({ investigation }: { investigation: string }) {
 function FilesScreen({ investigation, name }: { investigation: string; name: string | null }) {
   const intake = useIntake(investigation);
   const drop = useDropZone((files) => intake.importFiles(files));
-  const files = [...intake.files].sort((a, b) => a.name.localeCompare(b.name));
-  const place = name ?? 'this investigation';
+  const documentId = useSearchParam(DOCUMENT_PARAM);
+  const passageId = useSearchParam(PASSAGE_PARAM);
+  const listHref = viewHref(investigation, 'files');
 
   return (
     <div className={`files${drop.dragging ? ' intake-dropping' : ''}`} {...drop.props}>
       <InvestigationList current={investigation} />
       <section className="view-panel intake-card">
+        {documentId ? (
+          <FileView key={documentId} investigation={investigation} investigationName={name} documentId={documentId} passageId={passageId} listHref={listHref} onDeleted={intake.refresh} />
+        ) : (
+          <FileList investigation={investigation} name={name} intake={intake} />
+        )}
+      </section>
+    </div>
+  );
+}
+
+function FileList({ investigation, name, intake }: { investigation: string; name: string | null; intake: Intake }) {
+  useDocumentTitle(name);
+  const files = [...intake.files].sort((a, b) => a.name.localeCompare(b.name));
+  const del = useDeleteFile(intake.refresh);
+  const open = (f: IntakeFile) => navigate(fileHref(investigation, f.id));
+
+  return (
+    <>
         <header className="intake-card__head">
           <div className="intake-card__title">
             <Breadcrumbs className="files__crumbs" items={[{ text: name ?? '' }]} />
@@ -57,24 +75,21 @@ function FilesScreen({ investigation, name }: { investigation: string; name: str
               </thead>
               <tbody>
                 {[...intake.pending, ...files].map((f) => (
-                  <FileRow key={f.id} file={f} intake={intake} />
+                  <FileRow key={f.id} file={f} intake={intake} onOpen={() => open(f)} onDelete={() => del.ask(f)} />
                 ))}
               </tbody>
             </HTMLTable>
           )}
         </div>
-        <footer className="explorer__selection intake-card__foot">
-          <span className={Classes.TEXT_MUTED}>Drop files here to import them into {place}.</span>
-        </footer>
-      </section>
-    </div>
+        {del.alert}
+    </>
   );
 }
 
-function FileRow({ file, intake }: { file: IntakeFile; intake: Intake }) {
+function FileRow({ file, intake, onOpen, onDelete }: { file: IntakeFile; intake: Intake; onOpen: () => void; onDelete: () => void }) {
   const { dc } = useDataClient();
   const pending = file.status === 'importing';
-  const menu = <FileMenu file={file} onRunAgain={intake.runAgain} originalUrl={dc && !pending ? fileUrl(dc, file.id) : null} />;
+  const menu = <FileMenu file={file} onRunAgain={intake.runAgain} originalUrl={dc && !pending ? fileUrl(dc, file.id) : null} onOpen={onOpen} onDelete={onDelete} />;
   const cells = (
     <>
       <td>
@@ -96,7 +111,7 @@ function FileRow({ file, intake }: { file: IntakeFile; intake: Intake }) {
       <td className="intake-table__menu">{!pending && <RowMenu menu={menu} label={file.name} />}</td>
     </>
   );
-  return pending ? <tr>{cells}</tr> : <MenuRow menu={menu}>{cells}</MenuRow>;
+  return pending ? <tr>{cells}</tr> : <MenuRow menu={menu} onOpen={onOpen}>{cells}</MenuRow>;
 }
 
 /** The investigations, down the left like Compass's projects. Folders nest under them once the engine has them. */

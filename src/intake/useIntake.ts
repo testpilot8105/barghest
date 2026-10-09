@@ -50,6 +50,8 @@ export interface Intake {
   lastDone: IntakeFile | null;
   importFiles: (files: File[], folderId?: string) => void;
   runAgain: (file: IntakeFile) => void;
+  /** Read the files again, after a delete, a move or a rename. */
+  refresh: () => void;
 }
 
 async function fileRows(dc: DataClient, investigation: string) {
@@ -182,6 +184,7 @@ export function useIntake(investigation: string): Intake {
     lastDone,
     importFiles,
     runAgain,
+    refresh,
   };
 }
 
