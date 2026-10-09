@@ -16,6 +16,7 @@
     "smoke": "node scripts/smoke-barghest.mjs",
     "ontology:build": "node ontology/build.mjs",
     "seed:dev": "node engine/dev-seed.mjs",
+    "import:pack": "node engine/import-pack.mjs",
     "proof:p1": "node engine/proof-p1.mjs",
     "proof:explorer": "node engine/proof-explorer.mjs",
     "proof:investigations": "node engine/proof-investigations.mjs",
