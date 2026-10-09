@@ -1,0 +1,272 @@
+/* BARGHEST shell: the one stylesheet. Blueprint's CSS loads first (src/main.tsx) and carries every component; this
+   file names the faces, lays out the frame and paints the few chrome surfaces, every colour from Blueprint's palette.
+   Views ship no CSS of their own. The --bh-* values in :root are taste knobs: change one and the frame follows. */
+
+@font-face {
+  font-family: 'D-DIN';
+  src: url('/fonts/D-DIN.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'D-DIN';
+  src: url('/fonts/D-DIN-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bp-typography-family-default: 'Source Sans 3 Variable';
+  --bh-face-label: 'D-DIN', 'Source Sans 3 Variable';
+
+  /* Sizes, measured off the owner's Gotham reference (09.10.2026) and lifted to the 14px text floor. */
+  --bh-rail-w: 40px;
+  --bh-rail-expanded-w: 200px;
+  --bh-rail-gap: 4px;
+  --bh-rail-motion: 150ms;
+  --bh-appbar-h: 36px;
+  --bh-menubar-h: 30px;
+  --bh-main-gutter: 16px;
+
+  /* The app bar's brand and search, from the owner's Figma version: the dog 12px in from the bar's edge, then the
+     name in D-DIN, then search. The dog and the name cut about 10% on the owner's word (09.10.2026: dog 24 to 22px,
+     name 22 to 20px). */
+  --bh-brand-inset: 8px;
+  --bh-mark-h: 22px;
+  --bh-wordmark-size: 20px;
+  --bh-wordmark-gap: 8px;
+  --bh-brand-gap: 11px;
+  --bh-search-w: 200px;
+
+  /* Paints: Graphite, the owner's pick of three options (09.10.2026), all Blueprint palette. The chrome is dark gray
+     1, the main screen one step up, its panel another. Each view's icon wears its own colour (src/shell/nav.ts,
+     "Spectrum, vivid"); the open view's highlight stays Blueprint's own grey, the same for every view. */
+  --bh-chrome-bg: var(--bp-palette-dark-gray-1);
+  --bh-chrome-line: var(--bp-palette-dark-gray-3);
+  --bh-chrome-icon: var(--bp-palette-light-gray-5);
+  --bh-main-bg: var(--bp-palette-dark-gray-2);
+  --bh-panel-bg: var(--bp-palette-dark-gray-3);
+  --bh-panel-line: var(--bp-palette-dark-gray-4);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--bp-typography-family-default);
+  background: var(--bh-chrome-bg);
+}
+
+/* Form controls do not take the page's face by default: without this a Blueprint input paints in the system font. */
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+/* D-DIN on everything that labels: headings, buttons, menu items, tabs, form labels. Running text and table data
+   stay Source Sans 3. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.bp6-heading,
+.bp6-button,
+.bp6-menu-item,
+.bp6-tab,
+.bp6-label,
+.menubar__title {
+  font-family: var(--bh-face-label);
+}
+
+/* ---- The frame. The rail spans all three rows; the app bar, menu bar and main stack to its right. ---- */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: var(--bh-appbar-h) var(--bh-menubar-h) minmax(0, 1fr);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---- Rail ---- */
+
+.rail {
+  grid-row: 1 / -1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  width: var(--bh-rail-w);
+  min-height: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--bh-chrome-bg);
+  border-right: 1px solid var(--bh-chrome-line);
+  transition: width var(--bh-rail-motion) ease-out;
+}
+
+.app-shell[data-rail='expanded'] .rail {
+  width: var(--bh-rail-expanded-w);
+}
+
+/* The toggle sits in the rail's top cell, level with the app bar. */
+.rail__top {
+  flex: 0 0 var(--bh-appbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.rail__views,
+.rail__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bh-rail-gap);
+  padding: 4px;
+}
+
+.rail__views {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.rail__foot {
+  flex: 0 0 auto;
+}
+
+/* Icons stay pinned to the left edge in every state: Blueprint centres a button's content, which slid the icons
+   sideways while the rail changed width. The label never leaves the DOM; it fades with the width change instead of
+   popping in and out. */
+.app-shell .rail .rail__entry.bp6-button {
+  flex-shrink: 0;
+  justify-content: flex-start;
+  width: 100%;
+  padding-inline: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.app-shell .rail .rail__entry .bp6-button-text {
+  flex: 0 0 auto;
+  transition: opacity var(--bh-rail-motion) ease-out;
+}
+
+.app-shell[data-rail='collapsed'] .rail .rail__entry .bp6-button-text {
+  opacity: 0;
+}
+
+/* ---- App bar (row 1). Blueprint's .bp6-dark .bp6-navbar outranks a bare class, so the selector carries both. ---- */
+
+.app-shell .appbar.bp6-navbar {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  height: var(--bh-appbar-h);
+  padding: 0 4px;
+  box-sizing: border-box;
+  background: var(--bh-chrome-bg);
+  border-bottom: 1px solid var(--bh-chrome-line);
+  box-shadow: none;
+}
+
+.app-shell .appbar .bp6-navbar-group {
+  height: 100%;
+  gap: 4px;
+}
+
+.appbar__brand {
+  display: flex;
+  align-items: center;
+  margin-left: var(--bh-brand-inset);
+  margin-right: var(--bh-brand-gap);
+}
+
+.appbar__mark {
+  display: block;
+  height: var(--bh-mark-h);
+  aspect-ratio: 71 / 82;
+  color: var(--bp-palette-white);
+}
+
+.appbar__wordmark {
+  margin-left: var(--bh-wordmark-gap);
+  font-family: var(--bh-face-label);
+  font-size: var(--bh-wordmark-size);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--bp-palette-white);
+  white-space: nowrap;
+}
+
+.appbar__search {
+  width: var(--bh-search-w);
+}
+
+/* ---- Menu bar (row 2): menus left, the open document's title centred, refresh right. ---- */
+
+.menubar {
+  grid-row: 2;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  height: var(--bh-menubar-h);
+  padding: 0 4px;
+  background: var(--bh-chrome-bg);
+}
+
+.menubar__menus {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.menubar__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.menubar__end {
+  justify-self: end;
+}
+
+/* ---- Main: the only scroller. ---- */
+
+.app-shell__main {
+  grid-row: 3;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: var(--bh-main-gutter);
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--bh-main-bg);
+}
+
+.view-panel {
+  flex: 1 0 auto;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  background: var(--bh-panel-bg);
+  border: 1px solid var(--bh-panel-line);
+}

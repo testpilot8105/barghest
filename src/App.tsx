@@ -1,11 +1,11 @@
 import { BlueprintProvider } from '@blueprintjs/core';
-import { Home } from './home/Home';
+import { Shell } from './shell/Shell';
 
 // Blueprint's providers around everything (overlays, hotkeys, portals), as Blueprint v6 asks of an app.
 export function App() {
   return (
     <BlueprintProvider>
-      <Home />
+      <Shell />
     </BlueprintProvider>
   );
 }

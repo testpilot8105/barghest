@@ -12,7 +12,9 @@ export default defineConfig({
     port: 5180,
     proxy: {
       '/api': ENGINE,
-      '/barghest': ENGINE,
+      // The trailing slash matters: a bare '/barghest' prefix also catches the brand files in public/
+      // (barghest-mark-white.svg and the rest) and sends them to the engine.
+      '/barghest/': ENGINE,
     },
   },
   // cssTarget keeps modern CSS (color-mix(), light-dark(), nesting) native in the build instead of lowered for

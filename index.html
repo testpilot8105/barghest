@@ -4,8 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BARGHEST</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
   </head>
-  <body>
+  <!-- bp6-dark on body, not on #root: popovers, tooltips and dialogs portal to body and inherit the theme from here. -->
+  <body class="bp6-dark">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
