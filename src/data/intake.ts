@@ -2,7 +2,21 @@
 // the engine's health. Plain functions over the engine's own routes; the hooks in hooks.tsx poll these. Every one
 // takes the connection first so the proofs run them under Node over HTTP.
 import { engineGet, enginePost, type DataClient } from './client.ts';
-import type { CreateInvestigationRequest, DeleteResult, DocumentView, ExtractResult, Health, ImportRequest, ImportResult, InferenceRow, Investigation, InvestigationsResult } from './types.ts';
+import type {
+  CreateFolderRequest,
+  CreateInvestigationRequest,
+  DeleteResult,
+  DocumentView,
+  ExtractResult,
+  Folder,
+  FoldersResult,
+  Health,
+  ImportRequest,
+  ImportResult,
+  InferenceRow,
+  Investigation,
+  InvestigationsResult,
+} from './types.ts';
 
 /** Store a file in an investigation; the model starts reading it unless `extract` is false or the model is off. */
 export async function importFile(dc: DataClient, req: ImportRequest): Promise<ImportResult> {
@@ -23,6 +37,34 @@ export function extractAgain(dc: DataClient, documentId: string): Promise<Extrac
 /** The file view in one call: the document, its passages with what the model pulled, its rows, its model log. */
 export function getDocumentView(dc: DataClient, documentId: string): Promise<DocumentView> {
   return engineGet<DocumentView>(dc, '/barghest/document', { documentId });
+}
+
+/** The investigation's folders as a flat list with counts, plus the files at its top level. */
+export function getFolders(dc: DataClient, investigation: string): Promise<FoldersResult> {
+  return engineGet<FoldersResult>(dc, '/barghest/folders', { investigation });
+}
+
+export function createFolder(dc: DataClient, req: CreateFolderRequest): Promise<Folder> {
+  return enginePost<Folder>(dc, '/barghest/folders', {}, { ...req });
+}
+
+export function renameFolder(dc: DataClient, folderId: string, name: string): Promise<Folder> {
+  return enginePost<Folder>(dc, '/barghest/rename-folder', {}, { folderId, name });
+}
+
+/** Move a folder under another (empty `parentId` is the top level). Refused into itself or its own subfolders. */
+export function moveFolder(dc: DataClient, folderId: string, parentId: string): Promise<Folder> {
+  return enginePost<Folder>(dc, '/barghest/move-folder', {}, { folderId, parentId });
+}
+
+/** Delete an empty folder. Fails with 409 ("Move or delete what's inside first.") when it holds anything. */
+export function deleteFolder(dc: DataClient, folderId: string): Promise<{ folderId: string; deleted: true }> {
+  return enginePost<{ folderId: string; deleted: true }>(dc, '/barghest/delete-folder', {}, { folderId });
+}
+
+/** Move a file to a folder of its investigation (empty `folderId` is the top level). */
+export function moveDocument(dc: DataClient, documentId: string, folderId: string): Promise<{ documentId: string; folderId: string }> {
+  return enginePost<{ documentId: string; folderId: string }>(dc, '/barghest/move-document', {}, { documentId, folderId });
 }
 
 /** Delete a file and everything the model pulled from it. Fails with 409 while the model is reading the file. */

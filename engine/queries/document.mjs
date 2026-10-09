@@ -11,7 +11,7 @@ const byPk = (a, b) => a.pk.localeCompare(b.pk);
  * @param {object} args
  * @param {any} args.data faux's data store
  * @param {object} args.meta ontology.json
- * @param {{ inferenceFor(documentId: string): object[] }} args.store
+ * @param {{ inferenceFor(documentId: string): object[], folder(id: string): object | null }} args.store
  * @param {string} args.documentId
  * @param {boolean} [args.extracting] whether the engine is reading this document right now
  */
@@ -61,9 +61,10 @@ export function documentView({ data, meta, store, documentId, extracting = false
     for (const id of cited) push(relationshipsByPassage, id, view);
   }
 
+  const folder = document.folderId ? store.folder(String(document.folderId)) : null;
   return {
     document: { ...plain(document), extracting },
-    folder: null,
+    folder: folder ? { id: folder.id, name: folder.name } : null,
     passages: passages.map((p) => {
       const pk = String(p.__primaryKey);
       return {

@@ -254,6 +254,36 @@
                 "type": "active",
                 "active": {}
               }
+            },
+            "folderId": {
+              "apiName": "folderId",
+              "displayMetadata": {
+                "displayName": "Folder",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
             }
           },
           "titlePropertyTypeRid": "title",
@@ -305,6 +335,10 @@
                   "status": {
                     "type": "column",
                     "column": "status"
+                  },
+                  "folderId": {
+                    "type": "column",
+                    "column": "folderId"
                   }
                 }
               }

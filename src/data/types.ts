@@ -286,12 +286,45 @@ export interface DocumentView {
     /** True while the model is reading this file; the hook keeps asking until it is false. */
     extracting: boolean;
   };
-  /** Null until folders land (step 6). */
+  /** The folder the file lives in; null at the investigation's top level. */
   folder: { id: string; name: string } | null;
   passages: DocumentPassage[];
   records: DocumentRecord[];
   /** This document's model log, oldest first. */
   inference: InferenceRow[];
+}
+
+/** A folder: a store record inside one investigation. The id never changes; the name is a label on it. */
+export interface Folder {
+  id: string;
+  name: string;
+  /** Empty at the investigation's top level. */
+  parentId: string;
+  investigation: string;
+  createdAt?: string;
+}
+
+/** One row of `GET folders`: a folder with its direct counts; the shell builds the tree from the flat list. */
+export interface FolderEntry {
+  id: string;
+  name: string;
+  parentId: string;
+  files: number;
+  subfolders: number;
+}
+
+export interface FoldersResult {
+  investigation: string;
+  folders: FolderEntry[];
+  /** Files at the investigation's top level, outside any folder. */
+  topLevelFiles: number;
+}
+
+export interface CreateFolderRequest {
+  investigation: string;
+  name: string;
+  /** Empty or missing means the top level. */
+  parentId?: string;
 }
 
 /** What `POST delete-document` answers: what went with the file, and what the re-run of resolution wrote. */

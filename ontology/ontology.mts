@@ -53,6 +53,8 @@ const Document = defineObject({
     scenario: str('Investigation'),
     importedAt: when('Imported at'),
     status: str('Status'),
+    // The folder the file lives in (a store record, engine/folders.mjs); empty at the investigation's top level.
+    folderId: str('Folder'),
   },
 });
 

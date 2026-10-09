@@ -19,6 +19,7 @@ import type {
 export namespace Document {
   export type PropertyKeys =
     | 'documentId'
+    | 'folderId'
     | 'format'
     | 'importedAt'
     | 'path'
@@ -39,6 +40,12 @@ export namespace Document {
      *   display name: 'Document id'
      */
     readonly documentId: $PropType['string'];
+    /**
+     *   property status: active
+     *
+     *   display name: 'Folder'
+     */
+    readonly folderId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -134,6 +141,12 @@ export interface Document extends $ObjectTypeDefinition {
        *   display name: 'Document id'
        */
       documentId: $PropertyDef<'string', 'non-nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Folder'
+       */
+      folderId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

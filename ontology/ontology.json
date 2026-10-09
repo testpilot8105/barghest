@@ -111,6 +111,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "folderId": {
+            "displayName": "Folder",
+            "rid": "ri.Document.folderId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Document",

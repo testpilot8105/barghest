@@ -5,7 +5,24 @@ export { connect, EngineError, type DataClient } from './client.ts';
 export { buildCatalog, linkOf, propertyOf } from './catalog.ts';
 export { currentType, decodeExploration, encodeExploration, startExploration, typeAt, withStep } from './exploration.ts';
 export { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround, toRefs, toWhere } from './reads.ts';
-export { createInvestigation, deleteDocument, extractAgain, fetchInferenceLog, fileUrl, getDocumentView, getHealth, getInvestigations, importFile, mergeInferenceRows } from './intake.ts';
+export {
+  createFolder,
+  createInvestigation,
+  deleteDocument,
+  deleteFolder,
+  extractAgain,
+  fetchInferenceLog,
+  fileUrl,
+  getDocumentView,
+  getFolders,
+  getHealth,
+  getInvestigations,
+  importFile,
+  mergeInferenceRows,
+  moveDocument,
+  moveFolder,
+  renameFolder,
+} from './intake.ts';
 export {
   BarghestDataProvider,
   useAsync,
@@ -14,6 +31,7 @@ export {
   useDataClient,
   useDocumentView,
   useExtracting,
+  useFolders,
   useHealth,
   useHistogram,
   useInferenceLog,
@@ -25,6 +43,7 @@ export {
   useSearchAround,
   type AsyncState,
   type DocumentViewState,
+  type FoldersState,
   type InvestigationsState,
   type RowsState,
 } from './hooks.tsx';

@@ -23,6 +23,7 @@ import { documentView } from './queries/document.mjs';
 import { ask, embedAll, searchPassages } from './ask/index.mjs';
 import { createInvestigation, ensureDemoInvestigations, listInvestigations } from './investigations.mjs';
 import { deleteDocument } from './documents.mjs';
+import { createFolder, deleteFolder, folderFor, listFolders, moveDocument, moveFolder, renameFolder } from './folders.mjs';
 import { ownership } from '../ontology/ownership.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -146,6 +147,13 @@ const routes = {
     if (jobs.has(documentId)) throw Object.assign(new Error('the model is still reading this file; wait for it to finish'), { status: 409 });
     return deleteDocument({ engine, meta, store, documentId, filesDir: FILES, root });
   },
+  // Folders: store records inside one investigation (engine-api.md 2.7). One POST per action, each audited.
+  'GET /barghest/folders': (url) => listFolders(store, engine.data, requireInvestigation(investigationParam(url)).id),
+  'POST /barghest/folders': async (url, req) => createFolder(store, await jsonBodyOf(req)),
+  'POST /barghest/rename-folder': async (url, req) => renameFolder(store, await jsonBodyOf(req)),
+  'POST /barghest/move-folder': async (url, req) => moveFolder(store, await jsonBodyOf(req)),
+  'POST /barghest/delete-folder': async (url, req) => deleteFolder(store, engine.data, await jsonBodyOf(req)),
+  'POST /barghest/move-document': async (url, req) => moveDocument(engine, store, await jsonBodyOf(req)),
   // Investigations: store records, outside the ontology (engine-api.md 2.6).
   'GET /barghest/investigations': () => listInvestigations(store, engine.data),
   'POST /barghest/investigations': async (url, req) => createInvestigation(store, await jsonBodyOf(req)),
@@ -154,11 +162,12 @@ const routes = {
     const file = form.get('file');
     const investigation = requireInvestigation(String(form.get('investigation') ?? form.get('scenario') ?? ''));
     const system = String(form.get('system') ?? '');
+    const folderId = folderFor(store, investigation.id, String(form.get('folderId') ?? ''));
     if (!file || typeof file === 'string') throw bad('a file field is required (multipart)');
     const ext = (file.name ?? '').split('.').pop().toLowerCase();
     if (!FORMATS.includes(ext) && ext !== 'md') throw bad(`unsupported file type .${ext}; one of ${FORMATS.join(', ')}`);
     const buffer = Buffer.from(await file.arrayBuffer());
-    const result = await ingestFile({ engine, meta, store, scenario: investigation.id, filename: file.name, buffer, system, filesDir: FILES, root });
+    const result = await ingestFile({ engine, meta, store, scenario: investigation.id, filename: file.name, buffer, system, folderId, filesDir: FILES, root });
     // Nothing to read in a scan or an empty file: the reply says so and the model never starts on it.
     const extraction = result.status === 'no text' ? 'no text' : llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, investigation.id) : 'off';
     return { ...result, extraction };

@@ -117,6 +117,27 @@ What an investigation looks for is its `blocks`, each one kind of thing the mode
 produce exactly the extraction schema and prompt they did before (checked byte for byte against
 `engine/extract/snapshots/` in `proof:investigations`).
 
+### 2.7 Folders (real, 09.10.2026)
+
+Folders are store records inside one investigation, the way Compass folders are not ontology objects:
+`{ id, name, parentId, investigation }`, `parentId` empty at the top level. A file lives in one folder: the
+Document's `folderId` (an ontology-owned property, empty at the top level). Folders and files never cross
+investigations. Every change writes an audit row with the old and the new value. A folder's `id` is a slug of its
+first name plus a short hash and never changes, so the address bar's `?folder=` survives a rename.
+
+| Function | Hook | Underneath | Returns |
+|---|---|---|---|
+| `getFolders(dc, investigation)` | `useFolders(investigation)`, with `reload()` | `GET folders?investigation=` | `{ investigation, folders: [{ id, name, parentId, files, subfolders }], topLevelFiles }`, a flat list the shell builds the tree from |
+| `createFolder(dc, { investigation, name, parentId? })` | | `POST folders` | the new folder |
+| `renameFolder(dc, folderId, name)` | | `POST rename-folder` | the folder |
+| `moveFolder(dc, folderId, parentId)` | | `POST move-folder` | the folder; empty `parentId` is the top level. Refused into itself or one of its own subfolders |
+| `deleteFolder(dc, folderId)` | | `POST delete-folder` | `{ folderId, deleted: true }`. Refused (409, "Move or delete what's inside first.") unless it holds no files and no subfolders |
+| `moveDocument(dc, documentId, folderId)` | | `POST move-document` | `{ documentId, folderId }`; empty `folderId` is the top level |
+
+`importFile` takes `folderId`; a folder from another investigation is refused. The file view's `folder` is
+`{ id, name }` or `null` at the top level. The list of files in a folder is the Document exploration with a filter
+step `folderId eq <id>` (`isEmpty` for the top level) beside the `scenario` filter.
+
 ## 3. Endpoints under `/barghest/`
 
 | Endpoint | Returns | Real at |
@@ -126,9 +147,15 @@ produce exactly the extraction schema and prompt they did before (checked byte f
 | `GET audit?objectId=Type:pk` | action history for one object: `[{ id, at, action, actor, outcome, params, edits, objectIds }]` | real |
 | `GET investigations` | `{ investigations: [{ id, name, template, blocks, documents, createdAt }], templates: [{ id, name, blocks }], blocks: [{ id, label, types }] }`. The blocks, in the order schemas and prompts list them: `persons` People (Person), `organizations` Organisations (Organization), `locations` Places (Location), `events` Events (Event), `incidents` Incidents (Incident), `accounts` Online accounts (DigitalAccount), `groups` Online groups (OnlineGroup), `firearms` Firearms (Firearm), `evidence` Evidence items (EvidenceItem), `schools` Schools (School), `lgus` LGUs (LGU), `barangays` Barangays (Barangay), `haulers` Haulers (Hauler), `contracts` Contracts (Contract), `facilities` Facilities (Facility), `vehicles` Vehicles (Vehicle), `inspections` Inspections (Inspection), `complaints` Complaints (Complaint), `others` Other things (Thing) | real |
 | `POST investigations` | JSON `{ name, template?, blocks? }` in; the new investigation out. The id is a URL-safe slug of the name plus a short hash and never changes. Writes an audit row (`createInvestigation`, `objectIds: ["Investigation:<id>"]`). 400 on an empty name, an unknown template or an unknown block | real |
-| `POST import` | multipart: `file`, `investigation` (an id from `GET investigations`; `scenario` is read as an alias), optional `system`, optional `folderId` (ignored until step 6), `extract=no` to store without reading; `{ documentId, format, passages, records, pages, chars, status, path, extraction }` out. The bytes are kept as the stored original at `data/files/<documentId>.<ext>` (`path`; gitignored, never in the public repo) and the file becomes a Document, its Passages (about 300 tokens each, with character offsets) and one SourceRecord per table row. A file that yields no characters (a scanned PDF, an empty file) gets `status: "no text"` and `extraction: "no text"`, and the model never starts on it. Same file again: same Document, no duplicate. Accepts pdf, csv, txt, md, json; anything else is 400; an unknown investigation is 400 | real |
+| `GET folders?investigation=` | `{ investigation, folders: [{ id, name, parentId, files, subfolders }], topLevelFiles }`: every folder of the investigation as a flat list (`parentId` empty at the top level), each with its direct file and subfolder counts, plus the count of files at the top level. 400 for an unknown investigation | real |
+| `POST folders` | JSON `{ investigation, name, parentId? }` in; the new folder `{ id, name, parentId, investigation }` out. 400 on an empty name, an unknown investigation or parent, a parent from another investigation, or a sibling with the same name. Audit row `createFolder` | real |
+| `POST rename-folder` | JSON `{ folderId, name }`; the folder. 400 on an empty name or a sibling with the same name. Audit row `renameFolder` with the old and the new name | real |
+| `POST move-folder` | JSON `{ folderId, parentId }` (empty `parentId` is the top level); the folder. 400 when the new parent is the folder itself, one of its own subfolders, another investigation's folder, or holds a sibling with the same name. Audit row `moveFolder` with the old and the new parent | real |
+| `POST delete-folder` | JSON `{ folderId }`; `{ folderId, deleted: true }`. 409 with "Move or delete what's inside first." unless the folder holds no files and no subfolders. Audit row `deleteFolder` | real |
+| `POST move-document` | JSON `{ documentId, folderId }` (empty is the top level); `{ documentId, folderId }`. 400 when the folder belongs to another investigation. Audit row `moveDocument` with the old and the new folder | real |
+| `POST import` | multipart: `file`, `investigation` (an id from `GET investigations`; `scenario` is read as an alias), optional `system`, optional `folderId` (a folder of that investigation; another investigation's is 400; empty is the top level), `extract=no` to store without reading; `{ documentId, format, passages, records, pages, chars, status, path, extraction }` out. The bytes are kept as the stored original at `data/files/<documentId>.<ext>` (`path`; gitignored, never in the public repo) and the file becomes a Document, its Passages (about 300 tokens each, with character offsets) and one SourceRecord per table row. A file that yields no characters (a scanned PDF, an empty file) gets `status: "no text"` and `extraction: "no text"`, and the model never starts on it. Same file again: same Document, no duplicate. Accepts pdf, csv, txt, md, json; anything else is 400; an unknown investigation is 400 | real |
 | `GET file?documentId=` | streams the stored original with its content type (`application/pdf`, `text/csv`, `text/plain`, `text/markdown`, `application/json`) and `content-disposition: inline`, so a PDF opens in a browser tab. 400 without an id, 404 for an unknown document or a missing copy | real |
-| `GET document?documentId=` | the file view in one call: `{ document, folder, passages, records, inference }`. `document` is the Document's properties plus `extracting` (true while the model is reading it). `folder` is `null` until folders land (step 6). `passages` in index order, each `{ pk, index, text, charStart, charEnd, mentions, relationships }`: `mentions` are the objects whose `passageId` points at that passage, as `{ type, pk, title, canonicalId }` (a mention carries no confidence of its own; links do), sorted by title; `relationships` are the Relationships citing that passage, as `{ pk, kind, kindLabel, label, from: { type, pk, title }, to: { type, pk, title }, confidence, status, method }`, with `from` and `to` the mentions as the passage names them. `records` are the table rows, `{ pk, label, observedAt, system, mentions }`, mentions by `recordId`. `inference` is this document's inference-log rows, oldest first. 400 without an id, 404 for an unknown document | real |
+| `GET document?documentId=` | the file view in one call: `{ document, folder, passages, records, inference }`. `document` is the Document's properties plus `extracting` (true while the model is reading it). `folder` is `{ id, name }`, or `null` at the top level. `passages` in index order, each `{ pk, index, text, charStart, charEnd, mentions, relationships }`: `mentions` are the objects whose `passageId` points at that passage, as `{ type, pk, title, canonicalId }` (a mention carries no confidence of its own; links do), sorted by title; `relationships` are the Relationships citing that passage, as `{ pk, kind, kindLabel, label, from: { type, pk, title }, to: { type, pk, title }, confidence, status, method }`, with `from` and `to` the mentions as the passage names them. `records` are the table rows, `{ pk, label, observedAt, system, mentions }`, mentions by `recordId`. `inference` is this document's inference-log rows, oldest first. 400 without an id, 404 for an unknown document | real |
 | `POST delete-document?documentId=` | writes an audit row (`deleteDocument`, by the analyst, naming the file), then removes the Document, its Passages and SourceRecords, every mention that came from them (any entity whose `passageId` or `recordId` points into the file), their embeddings, and the stored copy (only a copy under `data/files/`; a pack's own source file is never touched). A Relationship cited only by this file is deleted; one also cited elsewhere just loses this file's passage ids. Then resolution runs again for the investigation without the model, reusing every earlier model decision whose two sides survive, so no canonical object or Resolution points at a deleted mention. Inference-log rows stay, as history. Reply: `{ documentId, removed: { passages, records, mentions, relationships, embeddings, storedFile }, trimmedRelationships, resolved }`. 400 without an id, 404 for an unknown document, 409 while the file is being read | real |
 | `GET inference-log?after=` | rows of `{ id, at, model, purpose, documentId, passageId, promptHash, latencyMs, promptTokens, outputTokens, ok }` | real (rows appear once the model runs, P5) |
 | `POST extract?documentId=` | re-runs extraction on one document with its investigation's blocks, in the background; `{ documentId, extraction }`. 503 with the model off; 400 on a `no text` document | real |
@@ -179,7 +206,8 @@ and its value is the investigation id (`school-incident`, `solid-waste`, or a cr
 Document, Relationship and Resolution. Relationship carries `kindLabel` ("Kind, as written": the passage's own
 words for a `related_to` link, such as "paid" or "met with"; empty for every other kind) and `from<Type>Id` /
 `to<Type>Id` per entity type with the
-links `from<Type>` / `to<Type>`; the catalog marks those keys `hidden`. The one-hop links: Person.digitalAccounts /
+links `from<Type>` / `to<Type>`; the catalog marks those keys `hidden`. Document carries `folderId` ("Folder",
+ontology-owned, added 09.10.2026): the folder it lives in, empty at the top level. The one-hop links: Person.digitalAccounts /
 DigitalAccount.owner, Person.school / School.people, Person.firearmsRegistered / Firearm.registeredTo,
 Person.firearmsInCustody / Firearm.custodian, Organization.firearms / Firearm.registeredAgency,
 Firearm.evidenceItems / EvidenceItem.matchedTo, Incident.evidenceItems / EvidenceItem.recoveredAt,
@@ -264,3 +292,8 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   pulled from it, trims shared Relationships, deletes the stored copy, and re-resolves the investigation without the
   model while keeping earlier model decisions; `deleteDocument` in the data layer. The live demo file can now be
   imported in rehearsal and wiped before the judges.
+- 09.10.2026, file manager step 6: folders (section 2.7). Store records per investigation with a fixed id; the
+  Document gained `folderId`; `GET folders`, `POST folders`, `rename-folder`, `move-folder`, `delete-folder` and
+  `move-document`, each writing an audit row with the old and the new value; `import` honours `folderId`; the file
+  view's `folder` is filled. Data layer: `getFolders` / `useFolders`, `createFolder`, `renameFolder`, `moveFolder`,
+  `deleteFolder`, `moveDocument`.

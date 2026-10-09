@@ -260,10 +260,11 @@ async function realProof() {
   const p1 = await getObjectView(dc, 'Person', 'P-001').catch(() => null);
   check("P-001's object view lists seven representations", (p1?.candidates.length ?? 0) >= 7, `${p1?.candidates.length ?? 'no P-001'} candidates`);
 
+  // The pack's hauler is Mabansag Hauling Services, under several spellings (the look-alike Mabansay stays apart).
   const haulers = await fetchRows(dc, withStep(startExploration('Hauler'), filterStep('canonicalId', 'isEmpty')));
-  const jrm = haulers.rows.find((r) => /jrm/i.test(r.title));
-  const hv = jrm ? await getObjectView(dc, 'Hauler', jrm.pk) : null;
-  check('the hauler resolves to one Hauler with three candidates', !!hv && hv.candidates.length === 3, hv ? `${hv.title}: ${hv.candidates.length} candidates` : 'no canonical JRM hauler');
+  const mabansag = haulers.rows.find((r) => /mabansag/i.test(r.title));
+  const hv = mabansag ? await getObjectView(dc, 'Hauler', mabansag.pk) : null;
+  check('the hauler resolves to one Hauler with at least three candidates', !!hv && hv.candidates.length >= 3, hv ? `${hv.title}: ${hv.candidates.length} candidates` : 'no canonical Mabansag hauler');
 
   const answers = join(root, 'data', 'school-incident', 'ANSWERS.md');
   check('ANSWERS.md is present to check the planted links against', existsSync(answers), answers.replace(root + '/', ''));

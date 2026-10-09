@@ -3,9 +3,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { connect, type DataClient } from './client.ts';
 import { encodeExploration } from './exploration.ts';
-import { fetchInferenceLog, getDocumentView, getHealth, getInvestigations, INFERENCE_LOG_PAGE, mergeInferenceRows } from './intake.ts';
+import { fetchInferenceLog, getDocumentView, getFolders, getHealth, getInvestigations, INFERENCE_LOG_PAGE, mergeInferenceRows } from './intake.ts';
 import { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround } from './reads.ts';
-import type { Catalog, DocumentView, Exploration, Health, Histogram, InferenceRow, InvestigationsResult, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
+import type { Catalog, DocumentView, Exploration, FoldersResult, Health, Histogram, InferenceRow, InvestigationsResult, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
 
 export interface AsyncState<T> {
   data: T | null;
@@ -132,6 +132,19 @@ export interface InvestigationsState extends AsyncState<InvestigationsResult> {
 export function useInvestigations(): InvestigationsState {
   const [tick, setTick] = useState(0);
   const state = useAsync((dc) => getInvestigations(dc), `investigations:${tick}`);
+  const reload = useCallback(() => setTick((t) => t + 1), []);
+  return { ...state, reload };
+}
+
+export interface FoldersState extends AsyncState<FoldersResult> {
+  /** Ask again, after creating, renaming, moving or deleting a folder, or moving or importing a file. */
+  reload: () => void;
+}
+
+/** The investigation's folders as a flat list with counts; the shell builds the tree. */
+export function useFolders(investigation: string): FoldersState {
+  const [tick, setTick] = useState(0);
+  const state = useAsync((dc) => getFolders(dc, investigation), `folders:${investigation}:${tick}`);
   const reload = useCallback(() => setTick((t) => t + 1), []);
   return { ...state, reload };
 }

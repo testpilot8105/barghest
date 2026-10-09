@@ -36,10 +36,11 @@ function recordLabel(filename, row, i) {
  * @param {string} args.filename
  * @param {Uint8Array | Buffer} args.buffer
  * @param {string} [args.system] which register the file pretends to come from
+ * @param {string} [args.folderId] the folder the file lands in; empty is the investigation's top level
  * @param {string} [args.filesDir] where the stored original goes (absolute); without it no copy is kept
  * @param {string} [args.root] the app folder, so the Document's `path` is relative to it
  */
-export async function ingestFile({ engine, meta, store, scenario, filename, buffer, system = '', filesDir = null, root = null }) {
+export async function ingestFile({ engine, meta, store, scenario, filename, buffer, system = '', folderId = '', filesDir = null, root = null }) {
   const parsed = await parseFile(filename, buffer);
   const documentId = shortId('D', scenario, filename, createHash('sha1').update(Buffer.from(buffer)).digest('hex'));
   const format = filename.split('.').pop().toLowerCase();
@@ -67,6 +68,7 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
       scenario,
       importedAt,
       status,
+      folderId: folderId || undefined,
     }),
   );
 
@@ -104,7 +106,7 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
     action: 'importDocument',
     actor: 'analyst',
     outcome: 'applied',
-    params: { filename, scenario, system, format, bytes: buffer.length, path, status },
+    params: { filename, scenario, system, format, bytes: buffer.length, path, status, folderId: folderId || '' },
     edits: [{ type: 'addObject', objectType: 'Document', primaryKey: documentId }],
     objectIds: [`Document:${documentId}`],
   });

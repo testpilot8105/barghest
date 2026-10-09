@@ -96,7 +96,7 @@ writeFileSync(
   join(fixtures, 'messenger-thread.txt'),
   `Facebook Messenger thread, extract from Digital Forensic Examination Report DFER-R14-2026-0188 (device E-019, Samsung A15 of Joaquin Dela Peña).
 
-M-0107 27 Jul 2026 21:12 VesperK to Joaquin DP: dito na tayo mag-usap. add me hollow.ix sa discord
+M-0107 27 Jul 2026 21:12 Joaquin DP to VesperK: dito na tayo mag-usap. add me sa discord, hollow.ix
 M-0140 15 Aug 2026 22:03 Marco V. to Joaquin DP: nullveil is me
 M-0188 11 Sep 2026 23:41 Joaquin DP to Marco V.: nakuha ko na. sa locker lang pala. bukas na
 M-0190 13 Sep 2026 22:15 Joaquin DP to Marco V.: nasa bag ko na si glock

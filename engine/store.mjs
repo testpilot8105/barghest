@@ -49,6 +49,13 @@ CREATE TABLE IF NOT EXISTS investigations (
   blocks TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS folders (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  parent_id TEXT NOT NULL DEFAULT '',
+  investigation TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
 `;
 
 export function openStore(path) {
@@ -109,6 +116,13 @@ export function openStore(path) {
   const investigationGet = db.prepare('SELECT id, name, template, blocks, created_at FROM investigations WHERE id = ?');
   const investigationsAll = db.prepare('SELECT id, name, template, blocks, created_at FROM investigations ORDER BY created_at, id');
   const investigationRow = (row) => (row ? { id: row.id, name: row.name, template: row.template, blocks: JSON.parse(row.blocks), createdAt: row.created_at } : null);
+  const folderUpsert = db.prepare(
+    'INSERT INTO folders (id, name, parent_id, investigation, created_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name = excluded.name, parent_id = excluded.parent_id',
+  );
+  const folderGet = db.prepare('SELECT id, name, parent_id, investigation, created_at FROM folders WHERE id = ?');
+  const foldersOf = db.prepare('SELECT id, name, parent_id, investigation, created_at FROM folders WHERE investigation = ? ORDER BY parent_id, name, id');
+  const folderRemove = db.prepare('DELETE FROM folders WHERE id = ?');
+  const folderRow = (row) => (row ? { id: row.id, name: row.name, parentId: row.parent_id, investigation: row.investigation, createdAt: row.created_at } : null);
 
   return {
     path,
@@ -189,6 +203,19 @@ export function openStore(path) {
     },
     investigations() {
       return investigationsAll.all().map(investigationRow);
+    },
+    /** Folders live here too: { id, name, parentId ('' at the top level), investigation, createdAt }. */
+    putFolder({ id, name, parentId = '', investigation, createdAt }) {
+      folderUpsert.run(id, name, parentId ?? '', investigation, createdAt ?? new Date().toISOString());
+    },
+    folder(id) {
+      return folderRow(folderGet.get(String(id)));
+    },
+    folders(investigation) {
+      return foldersOf.all(String(investigation)).map(folderRow);
+    },
+    removeFolder(id) {
+      folderRemove.run(String(id));
     },
     close() {
       db.close();
