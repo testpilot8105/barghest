@@ -1,0 +1,31 @@
+{
+  "guild": [
+    { "id": "1183322990011223344", "name": "VOIDHOUSE", "platform": "Discord", "member_count": 44, "channels": "#gates, #void-logs, #proof", "note": "Server export examined under DFER-R14-2026-0188." }
+  ],
+  "channels": [
+    { "guild": "VOIDHOUSE", "name": "#gates", "note": "Public channel of the server." },
+    { "guild": "VOIDHOUSE", "name": "#void-logs", "note": "Log channel of the server." },
+    { "guild": "VOIDHOUSE", "name": "#proof", "note": "Posting channel of the server." }
+  ],
+  "members": [
+    { "platform": "Discord", "username": "hollow.ix", "user_id": "912338817221345280", "guild": "VOIDHOUSE", "note": "Member of the server." },
+    { "platform": "Discord", "username": "nullveil", "user_id": "915402211783901", "guild": "VOIDHOUSE", "note": "Member of the server." },
+    { "platform": "Discord", "username": "Vesper_Krael", "user_id": "884217700112233", "guild": "VOIDHOUSE", "note": "Member of the server who created the invite used by hollow.ix." },
+    { "platform": "Discord", "username": "ashgrave_", "user_id": "901155420077118", "guild": "VOIDHOUSE", "note": "Member of the server." },
+    { "platform": "Discord", "username": "lowtide.kk", "user_id": "907723310045672", "guild": "VOIDHOUSE", "note": "Member of the server." }
+  ],
+  "audit_log": [
+    { "timestamp": "2026-08-03T21:14:00+08:00", "action": "MEMBER_JOIN", "user": "hollow.ix", "guild": "VOIDHOUSE", "note": "Joined through an invite created by Vesper_Krael." },
+    { "timestamp": "2026-08-27T20:41:00+08:00", "action": "MEMBER_JOIN", "user": "nullveil", "guild": "VOIDHOUSE", "note": "Joined through an invite link." },
+    { "timestamp": "2026-09-14T09:31:00+08:00", "action": "MESSAGE_BULK_DELETE", "user": "hollow.ix", "guild": "VOIDHOUSE", "count": 14, "window_start": "2026-09-14T09:24:00+08:00", "window_end": "2026-09-14T09:31:00+08:00", "note": "14 messages by hollow.ix were deleted between 09:24 and 09:31 and recovered from the device cache." }
+  ],
+  "messages": [
+    { "timestamp": "2026-08-15T21:03:00+08:00", "channel": "#gates", "author": "Vesper_Krael", "guild": "VOIDHOUSE", "content": "[attachment, one document, withheld by the examiner]." },
+    { "timestamp": "2026-08-15T21:09:00+08:00", "channel": "#gates", "author": "hollow.ix", "guild": "VOIDHOUSE", "content": "[reaction added to the message above]." },
+    { "timestamp": "2026-09-02T22:40:00+08:00", "channel": "#proof", "author": "hollow.ix", "guild": "VOIDHOUSE", "content": "[image forwarded from a Facebook post by the profile Rowena DP, 100045566778899]." },
+    { "timestamp": "2026-09-02T22:44:00+08:00", "channel": "#proof", "author": "Vesper_Krael", "guild": "VOIDHOUSE", "reply_to": "hollow.ix, 22:40, the image forwarded from a Facebook post by the profile Rowena DP (100045566778899)", "content": "that one." },
+    { "timestamp": "2026-09-11T21:18:00+08:00", "channel": "#void-logs", "author": "hollow.ix", "guild": "VOIDHOUSE", "content": "[message withheld by the examiner]." },
+    { "timestamp": "2026-09-12T19:30:00+08:00", "channel": "#void-logs", "author": "nullveil", "guild": "VOIDHOUSE", "content": "[message withheld by the examiner]." },
+    { "timestamp": "2026-09-14T09:22:00+08:00", "channel": "#void-logs", "author": "Vesper_Krael", "guild": "VOIDHOUSE", "content": "wipe everything." }
+  ]
+}

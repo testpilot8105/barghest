@@ -1,0 +1,1203 @@
+{
+  "scenario": "a",
+  "entities": [
+    {
+      "castId": "P-001",
+      "type": "Person",
+      "canonical": "Joaquin Dela Peña",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "J. M. Dela Peña"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "DELA PENA, JOAQUIN"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "DELA PEÑA, JOAQUIN MANALO"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "Joaquin Dela Peña"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "Wacky"
+        },
+        {
+          "file": "roblox-chat.txt",
+          "text": "wckyy_09"
+        },
+        {
+          "file": "messenger-thread.txt",
+          "text": "Joaquin DP"
+        },
+        {
+          "file": "discord-export.json",
+          "text": "hollow.ix"
+        },
+        {
+          "file": "tiktok-takedown.csv",
+          "text": "@hollow.ix"
+        }
+      ],
+      "role": "subject",
+      "lrn": "109876543210"
+    },
+    {
+      "castId": "P-002",
+      "type": "Person",
+      "canonical": "Marco Villarin",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "Marco Villarin"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "VILLARIN, MARCO"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "VILLARIN, MARCO DIZON"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "Marc"
+        }
+      ],
+      "role": "co-planner",
+      "lrn": "109876551234"
+    },
+    {
+      "castId": "P-003",
+      "type": "Person",
+      "canonical": "Althea Ramos",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "RAMOS, Althea"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "RAMOS, ALTHEA"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "RAMOS, ALTHEA REYES"
+        }
+      ],
+      "role": "victim, deceased",
+      "lrn": "109876544001"
+    },
+    {
+      "castId": "P-004",
+      "type": "Person",
+      "canonical": "Jerome Catacutan",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "CATACUTAN, Jerome"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "CATACUTAN, JEROME"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "CATACUTAN, JEROME SANTOS"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "Jerome Catacutan"
+        }
+      ],
+      "role": "victim, deceased",
+      "lrn": "109876521877"
+    },
+    {
+      "castId": "P-005",
+      "type": "Person",
+      "canonical": "Princess Mae Bautista",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "BAUTISTA, Princess Mae"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "BAUTISTA, PRINCESS MAE"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "BAUTISTA, PRINCESS MAE CRUZ"
+        }
+      ],
+      "role": "victim, injured",
+      "lrn": "109876544019"
+    },
+    {
+      "castId": "P-006",
+      "type": "Person",
+      "canonical": "Lorna Abalos",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "ABALOS, Lorna"
+        },
+        {
+          "file": "spot-report.pdf",
+          "text": "Ms. Lorna Abalos"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "ABALOS, LORNA"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "Ms. L. Abalos"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "Ms. L. Abalos"
+        }
+      ],
+      "role": "teacher, injured"
+    },
+    {
+      "castId": "P-007",
+      "type": "Person",
+      "canonical": "Rowena Dela Peña",
+      "appearsAs": [
+        {
+          "file": "irf-blotter.txt",
+          "text": "PSSg ROWENA DELA PENA"
+        },
+        {
+          "file": "pnp-par.txt",
+          "text": "PSSg Rowena Dela Peña"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "PSSg Rowena Dela Peña"
+        }
+      ],
+      "role": "police officer, aunt of P-001"
+    },
+    {
+      "castId": "P-008",
+      "type": "Person",
+      "canonical": "Ramon Villarin",
+      "appearsAs": [
+        {
+          "file": "irf-blotter.txt",
+          "text": "VILLARIN, RAMON"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "Ramon Villarin"
+        },
+        {
+          "file": "feo-firearm-records.csv",
+          "text": "Ramon Villarin"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "Ramon Villarin"
+        }
+      ],
+      "role": "parent, licensed owner of F-002"
+    },
+    {
+      "castId": "P-009",
+      "type": "Person",
+      "canonical": "unidentified handler",
+      "appearsAs": [
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "unidentified handler"
+        }
+      ],
+      "role": "unknown, never resolves to a named person"
+    },
+    {
+      "castId": "P-010",
+      "type": "Person",
+      "canonical": "Nestor Dela Peña",
+      "appearsAs": [
+        {
+          "file": "irf-blotter.txt",
+          "text": "DELA PENA, NESTOR"
+        },
+        {
+          "file": "deped-lis-export.csv",
+          "text": "Nestor Dela Peña"
+        }
+      ],
+      "role": "parent, seafarer overseas"
+    },
+    {
+      "castId": "A-001",
+      "type": "DigitalAccount",
+      "canonical": "wckyy_09",
+      "appearsAs": [
+        {
+          "file": "roblox-chat.txt",
+          "text": "wckyy_09"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "wckyy_09"
+        }
+      ],
+      "platform": "Roblox",
+      "platformId": "4417820931",
+      "owner": "P-001"
+    },
+    {
+      "castId": "A-002",
+      "type": "DigitalAccount",
+      "canonical": "Joaquin DP",
+      "appearsAs": [
+        {
+          "file": "messenger-thread.txt",
+          "text": "Joaquin DP"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "Joaquin DP"
+        }
+      ],
+      "platform": "Facebook Messenger",
+      "platformId": "100071122334455",
+      "owner": "P-001"
+    },
+    {
+      "castId": "A-003",
+      "type": "DigitalAccount",
+      "canonical": "hollow.ix",
+      "appearsAs": [
+        {
+          "file": "discord-export.json",
+          "text": "hollow.ix"
+        },
+        {
+          "file": "messenger-thread.txt",
+          "text": "add me hollow.ix"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "hollow.ix"
+        }
+      ],
+      "platform": "Discord",
+      "platformId": "912338817221345280",
+      "owner": "P-001"
+    },
+    {
+      "castId": "A-004",
+      "type": "DigitalAccount",
+      "canonical": "@hollow.ix",
+      "appearsAs": [
+        {
+          "file": "tiktok-takedown.csv",
+          "text": "@hollow.ix"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "@hollow.ix"
+        }
+      ],
+      "platform": "TikTok",
+      "platformId": "7219944830021",
+      "owner": "P-001"
+    },
+    {
+      "castId": "A-005",
+      "type": "DigitalAccount",
+      "canonical": "mrc_v14",
+      "appearsAs": [
+        {
+          "file": "roblox-chat.txt",
+          "text": "mrc_v14"
+        },
+        {
+          "file": "messenger-thread.txt",
+          "text": "mrc_v14"
+        }
+      ],
+      "platform": "Roblox",
+      "platformId": "4418123377",
+      "owner": "P-002"
+    },
+    {
+      "castId": "A-006",
+      "type": "DigitalAccount",
+      "canonical": "nullveil",
+      "appearsAs": [
+        {
+          "file": "discord-export.json",
+          "text": "nullveil"
+        },
+        {
+          "file": "messenger-thread.txt",
+          "text": "nullveil"
+        }
+      ],
+      "platform": "Discord",
+      "platformId": "915402211783901",
+      "owner": "P-002"
+    },
+    {
+      "castId": "A-007",
+      "type": "DigitalAccount",
+      "canonical": "Marco V.",
+      "appearsAs": [
+        {
+          "file": "messenger-thread.txt",
+          "text": "Marco V."
+        }
+      ],
+      "platform": "Facebook Messenger",
+      "platformId": "100072299001122",
+      "owner": "P-002"
+    },
+    {
+      "castId": "A-008",
+      "type": "DigitalAccount",
+      "canonical": "Vesper_Krael",
+      "appearsAs": [
+        {
+          "file": "discord-export.json",
+          "text": "Vesper_Krael"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "Vesper_Krael"
+        }
+      ],
+      "platform": "Discord",
+      "platformId": "884217700112233",
+      "owner": "none, alias of the unidentified handler"
+    },
+    {
+      "castId": "A-009",
+      "type": "DigitalAccount",
+      "canonical": "@vkrael",
+      "appearsAs": [
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "@vkrael"
+        }
+      ],
+      "platform": "Telegram",
+      "platformId": "6613 2211 09",
+      "owner": "none, alias of the unidentified handler"
+    },
+    {
+      "castId": "A-010",
+      "type": "DigitalAccount",
+      "canonical": "VesperK",
+      "appearsAs": [
+        {
+          "file": "roblox-chat.txt",
+          "text": "VesperK"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "VesperK"
+        }
+      ],
+      "platform": "Roblox",
+      "platformId": "3901177205",
+      "owner": "none, alias of the unidentified handler"
+    },
+    {
+      "castId": "A-011",
+      "type": "DigitalAccount",
+      "canonical": "Rowena DP",
+      "appearsAs": [
+        {
+          "file": "discord-export.json",
+          "text": "Rowena DP"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "Rowena DP"
+        }
+      ],
+      "platform": "Facebook",
+      "platformId": "100045566778899",
+      "owner": "P-007 (assessed)"
+    },
+    {
+      "castId": "G-001",
+      "type": "OnlineGroup",
+      "canonical": "SIDEWINDER RP",
+      "appearsAs": [
+        {
+          "file": "roblox-chat.txt",
+          "text": "SIDEWINDER RP"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "SIDEWINDER RP"
+        }
+      ],
+      "platform": "Roblox",
+      "platformId": "33871204"
+    },
+    {
+      "castId": "G-002",
+      "type": "OnlineGroup",
+      "canonical": "VOIDHOUSE",
+      "appearsAs": [
+        {
+          "file": "discord-export.json",
+          "text": "VOIDHOUSE"
+        },
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "VOIDHOUSE"
+        }
+      ],
+      "platform": "Discord",
+      "platformId": "1183322990011223344"
+    },
+    {
+      "castId": "G-003",
+      "type": "OnlineGroup",
+      "canonical": "vkrael_drops",
+      "appearsAs": [
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "vkrael_drops"
+        }
+      ],
+      "platform": "Telegram",
+      "platformId": "-1001882211009"
+    },
+    {
+      "castId": "O-001",
+      "type": "Organization",
+      "canonical": "764",
+      "appearsAs": [
+        {
+          "file": "acg-intel-report.pdf",
+          "text": "764"
+        },
+        {
+          "file": "cicc-advisory.txt",
+          "text": "764"
+        }
+      ],
+      "kind": "network, alleged"
+    },
+    {
+      "castId": "O-002",
+      "type": "Organization",
+      "canonical": "No Lives Matter (NLM)",
+      "appearsAs": [
+        {
+          "file": "cicc-advisory.txt",
+          "text": "No Lives Matter (NLM)"
+        }
+      ],
+      "kind": "ideology, alleged"
+    },
+    {
+      "castId": "O-003",
+      "type": "Organization",
+      "canonical": "Philippine National Police",
+      "appearsAs": [
+        {
+          "file": "feo-firearm-records.csv",
+          "text": "Philippine National Police"
+        },
+        {
+          "file": "pnp-par.txt",
+          "text": "Philippine National Police"
+        }
+      ],
+      "kind": "agency"
+    },
+    {
+      "castId": "S-001",
+      "type": "School",
+      "canonical": "San Isidro National High School",
+      "appearsAs": [
+        {
+          "file": "deped-lis-export.csv",
+          "text": "San Isidro National High School"
+        },
+        {
+          "file": "spot-report.pdf",
+          "text": "San Isidro National High School"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "San Isidro National High School"
+        },
+        {
+          "file": "guidance-intake-sheets.txt",
+          "text": "SAN ISIDRO NATIONAL HIGH SCHOOL"
+        }
+      ],
+      "depedId": "303912"
+    },
+    {
+      "castId": "I-001",
+      "type": "Incident",
+      "canonical": "I-001, 14 September 2026, 0842H",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "SR-SMPPO-2026-09-14-001"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "IRF-2026-09-14-004"
+        }
+      ]
+    },
+    {
+      "castId": "F-001",
+      "type": "Firearm",
+      "canonical": "Glock 17 Gen 4 BHPZ417",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "BHPZ417"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "BHPZ417"
+        },
+        {
+          "file": "feo-firearm-records.csv",
+          "text": "BHPZ417"
+        },
+        {
+          "file": "pnp-par.txt",
+          "text": "BHPZ417"
+        },
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "BHPZ417"
+        }
+      ],
+      "feoReference": "GOV-PNP-2024-18827",
+      "parNo": "PAR-PRO14-2024-03318"
+    },
+    {
+      "castId": "F-002",
+      "type": "Firearm",
+      "canonical": "Armscor M200 RIA38-1177093",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "RIA38-1177093"
+        },
+        {
+          "file": "irf-blotter.txt",
+          "text": "RIA38-1177093"
+        },
+        {
+          "file": "feo-firearm-records.csv",
+          "text": "RIA38-1177093"
+        },
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "RIA38-1177093"
+        }
+      ],
+      "ltopf": "Type 1, 2023-04-118822",
+      "fr": "FR-2023-0917-55021"
+    },
+    {
+      "castId": "E-001",
+      "type": "EvidenceItem",
+      "canonical": "E-001",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "E-001"
+        },
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-001"
+        }
+      ],
+      "item": "Glock 17 recovered at the scene"
+    },
+    {
+      "castId": "E-002",
+      "type": "EvidenceItem",
+      "canonical": "E-002",
+      "appearsAs": [
+        {
+          "file": "spot-report.pdf",
+          "text": "E-002"
+        },
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-002"
+        }
+      ],
+      "item": "Armscor M200 recovered at the scene"
+    },
+    {
+      "castId": "E-003",
+      "type": "EvidenceItem",
+      "canonical": "E-003",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-003"
+        }
+      ],
+      "item": "FCC-1",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-004",
+      "type": "EvidenceItem",
+      "canonical": "E-004",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-004"
+        }
+      ],
+      "item": "FCC-2",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-005",
+      "type": "EvidenceItem",
+      "canonical": "E-005",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-005"
+        }
+      ],
+      "item": "FCC-3",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-006",
+      "type": "EvidenceItem",
+      "canonical": "E-006",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-006"
+        }
+      ],
+      "item": "FCC-4",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-007",
+      "type": "EvidenceItem",
+      "canonical": "E-007",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-007"
+        }
+      ],
+      "item": "FCC-5",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-008",
+      "type": "EvidenceItem",
+      "canonical": "E-008",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-008"
+        }
+      ],
+      "item": "FCC-6",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-009",
+      "type": "EvidenceItem",
+      "canonical": "E-009",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-009"
+        }
+      ],
+      "item": "FCC-7",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-010",
+      "type": "EvidenceItem",
+      "canonical": "E-010",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-010"
+        }
+      ],
+      "item": "FCC-8",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-011",
+      "type": "EvidenceItem",
+      "canonical": "E-011",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-011"
+        }
+      ],
+      "item": "FCC-9",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-012",
+      "type": "EvidenceItem",
+      "canonical": "E-012",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-012"
+        }
+      ],
+      "item": "FCC-10",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-013",
+      "type": "EvidenceItem",
+      "canonical": "E-013",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-013"
+        }
+      ],
+      "item": "FCC-11",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-014",
+      "type": "EvidenceItem",
+      "canonical": "E-014",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-014"
+        }
+      ],
+      "item": "B-1",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-015",
+      "type": "EvidenceItem",
+      "canonical": "E-015",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-015"
+        }
+      ],
+      "item": "B-2",
+      "matchedTo": "F-001"
+    },
+    {
+      "castId": "E-016",
+      "type": "EvidenceItem",
+      "canonical": "E-016",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-016"
+        }
+      ],
+      "item": "FCC-12",
+      "matchedTo": "F-002"
+    },
+    {
+      "castId": "E-017",
+      "type": "EvidenceItem",
+      "canonical": "E-017",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-017"
+        }
+      ],
+      "item": "FCC-13",
+      "matchedTo": "F-002"
+    },
+    {
+      "castId": "E-018",
+      "type": "EvidenceItem",
+      "canonical": "E-018",
+      "appearsAs": [
+        {
+          "file": "firearms-identification-report.pdf",
+          "text": "E-018"
+        }
+      ],
+      "item": "FCC-14",
+      "matchedTo": "F-002"
+    }
+  ],
+  "mustStaySeparate": [
+    [
+      "P-001",
+      "P-007"
+    ],
+    [
+      "P-001",
+      "P-010"
+    ],
+    [
+      "P-007",
+      "P-010"
+    ],
+    [
+      "P-002",
+      "P-008"
+    ]
+  ],
+  "relationships": [
+    {
+      "from": "P-001",
+      "kind": "took",
+      "to": "F-001",
+      "file": "irf-blotter.txt",
+      "note": "stated as belief of the custodian and the investigator"
+    },
+    {
+      "from": "P-002",
+      "kind": "took",
+      "to": "F-002",
+      "file": "irf-blotter.txt",
+      "note": "stated as belief of the licensed owner"
+    },
+    {
+      "from": "P-007",
+      "kind": "custodian_of",
+      "to": "F-001",
+      "file": "pnp-par.txt"
+    },
+    {
+      "from": "F-001",
+      "kind": "registered_to",
+      "to": "O-003",
+      "file": "feo-firearm-records.csv"
+    },
+    {
+      "from": "F-002",
+      "kind": "registered_to",
+      "to": "P-008",
+      "file": "feo-firearm-records.csv"
+    },
+    {
+      "from": "E-001",
+      "kind": "recovered_at",
+      "to": "I-001",
+      "file": "spot-report.pdf"
+    },
+    {
+      "from": "E-002",
+      "kind": "recovered_at",
+      "to": "I-001",
+      "file": "spot-report.pdf"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-001",
+      "file": "roblox-chat.txt"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-002",
+      "file": "messenger-thread.txt"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-003",
+      "file": "messenger-thread.txt"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-004",
+      "file": "tiktok-takedown.csv"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-001",
+      "file": "acg-intel-report.pdf"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-002",
+      "file": "acg-intel-report.pdf"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-003",
+      "file": "acg-intel-report.pdf"
+    },
+    {
+      "from": "P-001",
+      "kind": "owns",
+      "to": "A-004",
+      "file": "acg-intel-report.pdf"
+    },
+    {
+      "from": "P-002",
+      "kind": "owns",
+      "to": "A-005",
+      "file": "messenger-thread.txt"
+    },
+    {
+      "from": "P-002",
+      "kind": "owns",
+      "to": "A-006",
+      "file": "messenger-thread.txt"
+    },
+    {
+      "from": "P-002",
+      "kind": "owns",
+      "to": "A-007",
+      "file": "messenger-thread.txt"
+    },
+    {
+      "from": "P-007",
+      "kind": "owns",
+      "to": "A-011",
+      "file": "acg-intel-report.pdf",
+      "note": "assessed"
+    },
+    {
+      "from": "A-001",
+      "kind": "messaged",
+      "to": "A-010",
+      "file": "roblox-chat.txt"
+    },
+    {
+      "from": "A-002",
+      "kind": "messaged",
+      "to": "A-007",
+      "file": "messenger-thread.txt"
+    },
+    {
+      "from": "A-001",
+      "kind": "member_of",
+      "to": "G-001",
+      "file": "roblox-chat.txt"
+    },
+    {
+      "from": "A-010",
+      "kind": "member_of",
+      "to": "G-001",
+      "file": "roblox-chat.txt"
+    },
+    {
+      "from": "A-003",
+      "kind": "member_of",
+      "to": "G-002",
+      "file": "discord-export.json"
+    },
+    {
+      "from": "A-006",
+      "kind": "member_of",
+      "to": "G-002",
+      "file": "discord-export.json"
+    },
+    {
+      "from": "A-008",
+      "kind": "member_of",
+      "to": "G-002",
+      "file": "discord-export.json"
+    },
+    {
+      "from": "A-003",
+      "kind": "groomed_by",
+      "to": "A-008",
+      "file": "acg-intel-report.pdf",
+      "note": "assessed, held below 0.9"
+    },
+    {
+      "from": "G-002",
+      "kind": "member_of",
+      "to": "O-001",
+      "file": "acg-intel-report.pdf",
+      "note": "assessed as a possible Cell 09, held below 0.9"
+    },
+    {
+      "from": "P-001",
+      "kind": "filed_against",
+      "to": "P-004",
+      "file": "guidance-intake-sheets.txt",
+      "note": "GO-2026-031, mediated"
+    },
+    {
+      "from": "P-001",
+      "kind": "attends",
+      "to": "S-001",
+      "file": "deped-lis-export.csv"
+    },
+    {
+      "from": "P-006",
+      "kind": "teaches_at",
+      "to": "S-001",
+      "file": "deped-lis-export.csv"
+    },
+    {
+      "from": "P-010",
+      "kind": "guardian_of",
+      "to": "P-001",
+      "file": "deped-lis-export.csv"
+    },
+    {
+      "from": "P-008",
+      "kind": "guardian_of",
+      "to": "P-002",
+      "file": "deped-lis-export.csv"
+    },
+    {
+      "from": "P-007",
+      "kind": "relative_of",
+      "to": "P-001",
+      "file": "irf-blotter.txt",
+      "note": "aunt"
+    },
+    {
+      "from": "E-003",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-004",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-005",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-006",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-007",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-008",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-009",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-010",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-011",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-012",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-013",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-014",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-015",
+      "kind": "matched_to",
+      "to": "F-001",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-016",
+      "kind": "matched_to",
+      "to": "F-002",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-017",
+      "kind": "matched_to",
+      "to": "F-002",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    },
+    {
+      "from": "E-018",
+      "kind": "matched_to",
+      "to": "F-002",
+      "file": "firearms-identification-report.pdf",
+      "note": "IBIS correlation"
+    }
+  ]
+}

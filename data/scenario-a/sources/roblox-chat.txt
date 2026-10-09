@@ -1,0 +1,17 @@
+SYNTHETIC: BARGHEST demo data. Fictional.
+
+Roblox chat export, extract from Digital Forensic Examination Report DFER-R14-2026-0188, PNP-ACG Cyber Forensics. Source device: item E-019, Samsung A15 of J. M. Dela Peña. Account examined: wckyy_09 (Roblox user 4417820931, display name Wacky). Group: SIDEWINDER RP (Roblox group 33871204). Game: Sidewinder RP.
+
+12 Jul 2026
+[19:02] System: wckyy_09 and mrc_v14 (Roblox user 4418123377, display name Marc) are now friends.
+
+20 Jul 2026
+[21:36] VesperK (Roblox user 3901177205) in SIDEWINDER RP: nice build.
+[21:37] wckyy_09: thanks
+[21:40] VesperK: you play late.
+[21:41] wckyy_09: yeah
+[21:44] VesperK: i watch the good ones.
+
+27 Jul 2026
+[20:55] VesperK to wckyy_09: move to messenger.
+[20:56] wckyy_09 to VesperK: ok

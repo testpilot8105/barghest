@@ -1,0 +1,8 @@
+{
+  "stream": [
+    { "created_at": "2026-09-14T08:41:52+08:00", "platform": "Facebook Live", "video_id": "1022334455667788", "reported_at": "2026-09-14T08:46:00+08:00", "removed_at": "2026-09-14T08:55:00+08:00", "duration_before_removal": "9 minutes", "source_device": "Body-worn camera, item E-020, 32 GB card, examined under DFER-R14-2026-0189", "evidence_tag": "E-021", "note": "Stream metadata only; the video itself is not reproduced." }
+  ],
+  "mirror": [
+    { "created_at": "2026-09-14T09:10:00+08:00", "platform": "gore site (domain redacted)", "copy_of": "Facebook Live video 1022334455667788", "block_order": "NTC-MC-2026-091", "note": "The mirror is blocked under the National Telecommunications Commission order." }
+  ]
+}

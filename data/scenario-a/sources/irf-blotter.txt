@@ -1,0 +1,39 @@
+SYNTHETIC: BARGHEST demo data. Fictional.
+
+Republic of the Philippines
+PHILIPPINE NATIONAL POLICE
+SAN MATEO CITY POLICE STATION
+INCIDENT RECORD FORM
+
+IRF ENTRY NUMBER: IRF-2026-09-14-004
+BLOTTER ENTRY NO.: 2026-1187
+TYPE OF INCIDENT: Murder; Frustrated Murder (children in conflict with the law, RA 9344)
+DATE AND TIME REPORTED: 14 September 2026, 0851H
+DATE AND TIME OF INCIDENT: 14 September 2026, 0842H
+PLACE OF INCIDENT: Junior high building, San Isidro National High School, Barangay Mabini, City of San Mateo
+DESK OFFICER: PSSg Alma R. Quitorio
+
+A. REPORTING PERSON
+ABALOS, LORNA, teacher, adviser of Grade 9 Section Rizal, San Isidro National High School. Reported by telephone from the school clinic.
+
+B. SUSPECT DATA
+1. DELA PENA, JOAQUIN, 15, male, Grade 9 Section Rizal, resident of Barangay Mabini. Taken into custody 0858H.
+2. VILLARIN, MARCO, 14, male, Grade 9 Section Bonifacio. Taken into custody 0858H.
+Both are children in conflict with the law and were turned over to the Women and Children Protection Desk.
+
+C. VICTIM DATA
+1. RAMOS, ALTHEA, 15, female, Grade 9 Section Rizal. Gunshot wound, chest; declared dead 0931H, San Mateo Provincial Hospital (ER-2026-09-14-007).
+2. CATACUTAN, JEROME, 16, male, Grade 10 Section Mabini. Gunshot wound; declared dead 0947H, San Mateo Provincial Hospital (ER-2026-09-14-009).
+3. BAUTISTA, PRINCESS MAE, 15, female, Grade 9 Section Rizal. Injured (ER-2026-09-14-012).
+4. ABALOS, LORNA, adult, teacher. Injured (ER-2026-09-14-015).
+
+D. NARRATIVE OF THE INCIDENT
+At about 0842H on 14 September 2026, per the reporting person, shots were fired inside the junior high building of San Isidro National High School. The north emergency exit had been unlocked since 0730H. Personnel of this station arrived at 0851H. DELA PENA, JOAQUIN and VILLARIN, MARCO were taken into custody at 0858H. Two firearms were recovered by SOCO at 0905H: a Glock 17 pistol, Serial No. BHPZ417 (tag E-001), and an Armscor M200 revolver, Serial No. RIA38-1177093 (tag E-002).
+
+DELA PENA, JOAQUIN lives in Barangay Mabini with relatives. His father, DELA PENA, NESTOR, 44, is a seafarer working overseas and has been away from the home since February 2026. His aunt, PSSg ROWENA DELA PENA, 38, of the 1st Provincial Mobile Force Company, San Mateo PPO, holds the Glock 17 pistol, Serial No. BHPZ417, under a Property Acknowledgment Receipt. By her statement the pistol was kept in a locked plastic locker at her residence. She last saw it there at about 2140H on 13 September 2026 and found it missing at about 2215H. It is believed that DELA PENA, JOAQUIN took the pistol from the locker between those times.
+
+By the statement of VILLARIN, RAMON, 47, father of VILLARIN, MARCO, the Armscor M200 revolver, Serial No. RIA38-1177093, licensed to him, was kept in the glovebox of the family vehicle. He found it missing on the evening of 13 September 2026. VILLARIN, MARCO is believed to have taken the revolver from the vehicle.
+
+CHARGES DRAFTED: Murder; Frustrated Murder. Handling of the children in conflict with the law is under RA 9344.
+
+FOLLOW-UP ENTRY, 17 September 2026: The Internal Affairs Service opened administrative case IAS-2026-0771 (grave misconduct, neglect of duty) against PSSg ROWENA DELA PENA concerning the storage of the service pistol.
