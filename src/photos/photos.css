@@ -1,0 +1,357 @@
+/* The photo pieces. Layout only, on Blueprint's palette variables and the shell's tokens; square corners throughout
+   (owner, 10.10.2026: not a soft SaaS app). The --photos-* values are taste knobs. */
+:root {
+  --photos-side-w: 420px;
+  --photos-tile-w: 160px;
+  --photos-link-w: 400px;
+  --photos-passage-h: 220px;
+  --photos-dialog-w: 960px;
+}
+
+/* ---- Small: a square crop, or the plain picture icon ---- */
+
+.photo-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: var(--photo-thumb, 30px);
+  height: var(--photo-thumb, 30px);
+  object-fit: cover;
+  background: var(--bp-palette-dark-gray-1);
+}
+
+.photo-thumb--none {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bp-palette-dark-gray-4);
+  color: var(--bp-palette-gray-3);
+}
+
+.photo-picture {
+  display: block;
+  flex-shrink: 0;
+  width: var(--photo-thumb, 56px);
+  height: var(--photo-thumb, 56px);
+  object-fit: cover;
+}
+
+/* Files and Data Sources: every file's icon in one 28px slot, so a photo's picture and a page icon line up. */
+.photo-slot {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+/* A timeline row: the picture sits inline before the event's words. */
+.photo-thumb.photo-event {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ---- Large: letterboxed on black, as big as the space allows ---- */
+
+.photo-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bp-palette-black);
+}
+
+.photo-view img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.photo-view--none {
+  background: var(--bp-palette-dark-gray-1);
+}
+
+/* ---- A photo opened in Files ---- */
+
+.photo-file {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--photos-side-w);
+  gap: var(--bh-main-gutter);
+  height: 100%;
+  min-height: 0;
+}
+
+.photo-file__side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.photo-card p {
+  margin: 0;
+}
+
+.photo-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+.photo-facts__row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.photo-facts__row dd {
+  margin: 0;
+  color: var(--bh-text);
+  overflow-wrap: anywhere;
+}
+
+.photo-card .photo-facts__note {
+  margin-top: 10px;
+}
+
+.photo-shows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photo-shows__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.photo-shows__icon {
+  width: 40px;
+  height: 40px;
+}
+
+.photo-shows .photo-shows__name {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--bh-text);
+  text-decoration: none;
+}
+
+.photo-shows__name:focus-visible {
+  outline: 2px solid var(--bp-palette-blue-4);
+  outline-offset: 2px;
+}
+
+.photo-shows__title {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.photo-shows__name:hover .photo-shows__title {
+  text-decoration: underline;
+}
+
+/* A large tag keeps 14px text; this keeps it the height of a small button in a row. */
+.photo-tag.bp6-tag.bp6-large {
+  min-height: 22px;
+  padding: 1px 6px;
+  line-height: 20px;
+}
+
+/* ---- Link to… ---- */
+
+.photo-link-to {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: var(--photos-link-w);
+  padding: 8px;
+}
+
+.photo-link-to p {
+  margin: 0;
+  padding: 0 4px;
+}
+
+.photo-link-to__results {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.photo-link-to__linked {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ---- PHOTOS on a profile ---- */
+
+.photos-section__right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.photos-section p {
+  margin: 0;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--photos-tile-w), 1fr));
+  gap: 12px;
+}
+
+.photos-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  min-width: 0;
+}
+
+.photos-tile__open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.photos-tile__open:focus-visible {
+  outline: 2px solid var(--bp-palette-blue-4);
+  outline-offset: 2px;
+}
+
+.photos-tile__picture {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+
+.photos-tile__theirs {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+}
+
+/* Popover wraps its target in a span; the span is what sits on the picture. */
+.photos-tile__more-wrap {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.photos-tile__more.bp6-button {
+  visibility: hidden;
+}
+
+.photos-tile:hover .photos-tile__more,
+.photos-tile:focus-within .photos-tile__more,
+.bp6-popover-open .photos-tile__more {
+  visibility: visible;
+}
+
+.photos-tile figcaption {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--bh-text);
+}
+
+.photos-tile__name,
+.photos-pick__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- One photo, large ---- */
+
+.photos-dialog.bp6-dialog {
+  width: min(var(--photos-dialog-w), 90vw);
+}
+
+.photos-dialog__body .photo-view {
+  height: 60vh;
+}
+
+.photos-dialog__facts {
+  margin: 10px 0 0;
+}
+
+/* ---- Pick from this investigation's photos ---- */
+
+.photos-pick.bp6-dialog {
+  width: min(680px, 90vw);
+}
+
+.photos-pick__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.photos-pick__tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--bh-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.photos-pick__picture {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+
+.photos-pick__tile--picked .photos-pick__picture {
+  outline: 3px solid var(--bp-palette-blue-4);
+  outline-offset: -3px;
+}
+
+.photos-pick__tile--linked {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.photos-pick__linked {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+}
+
+/* ---- A passage from a photo, in the evidence drawer ---- */
+
+.photo-passage .photo-view {
+  height: var(--photos-passage-h);
+}
+
+.photo-passage--none .photo-view {
+  height: auto;
+}

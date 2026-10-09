@@ -2,9 +2,10 @@
 // menu right-click opens), the Import files button and the drop zone. Status is quiet when all is well: only Reading,
 // Done with gaps and Failed carry colour (owner, 09.10.2026).
 import { Alert, Button, Classes, ContextMenu, InputGroup, Intent, Menu, MenuDivider, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
-import { Document as DocumentIcon, Import, More, SmallTick, Th, Time, Trash, WarningSign } from '@blueprintjs/icons';
+import { Document as DocumentIcon, Import, Media, More, SmallTick, Th, Time, Trash, WarningSign } from '@blueprintjs/icons';
 import { useRef, useState, type DragEvent, type ReactElement, type ReactNode } from 'react';
-import { deleteDocument, EngineError, useDataClient } from '../data/index.ts';
+import { deleteDocument, EngineError, fileUrl, isImage, useDataClient } from '../data/index.ts';
+import { PhotoThumb } from '../photos';
 import { toast } from './toaster.ts';
 import { NO_TEXT } from './useIntake.ts';
 import type { IntakeFile } from './status.ts';
@@ -74,6 +75,13 @@ export function StatusCell({ file, onRunAgain }: { file: IntakeFile; onRunAgain:
         </span>
       );
     }
+    case 'photo':
+      return (
+        <span className="intake-status">
+          <Media size={ICON} color="var(--bp-palette-gray-4)" />
+          <span className={Classes.TEXT_MUTED}>Photo, details read</span>
+        </span>
+      );
     case 'notext':
       return (
         <Tooltip content={NO_TEXT} placement="top">
@@ -85,10 +93,22 @@ export function StatusCell({ file, onRunAgain }: { file: IntakeFile; onRunAgain:
   }
 }
 
-/** A file's icon by format: a table for rows, a page for text. */
-export function FormatIcon({ format }: { format: string }) {
+/**
+ * A file's icon by format: a table for rows, a page for text, and for a photo a small square of the picture itself
+ * (approved sketch, 10.10.2026). Every icon sits in the same slot, so names line up whatever the file.
+ */
+export function FormatIcon({ format, documentId }: { format: string; documentId?: string }) {
+  const { dc } = useDataClient();
   const table = format === 'csv' || format === 'json';
-  return table ? <Th size={ICON} color="var(--bp-palette-gray-4)" /> : <DocumentIcon size={ICON} color="var(--bp-palette-gray-4)" />;
+  const icon =
+    isImage(format) && documentId && dc ? (
+      <PhotoThumb url={fileUrl(dc, documentId)} name={`photo.${format}`} size={28} />
+    ) : table ? (
+      <Th size={ICON} color="var(--bp-palette-gray-4)" />
+    ) : (
+      <DocumentIcon size={ICON} color="var(--bp-palette-gray-4)" />
+    );
+  return <span className="photo-slot">{icon}</span>;
 }
 
 /** A name that may not fit: cut with an ellipsis, the whole name in a tooltip. */
@@ -187,7 +207,7 @@ export function FileMenu({ file, onRunAgain, originalUrl, onOpen, openLabel = 'O
       {onRenameRegister && <MenuItem text="Rename register on every file" onClick={onRenameRegister} />}
       {moveTo}
       {moveToInvestigation}
-      <MenuItem text="Run the model again" disabled={file.status === 'notext' || reading} onClick={() => onRunAgain(file)} />
+      {file.status !== 'photo' && <MenuItem text="Run the model again" disabled={file.status === 'notext' || reading} onClick={() => onRunAgain(file)} />}
       {onDelete && (
         <>
           <MenuDivider />
@@ -228,7 +248,7 @@ export function useDeleteFile(onDeleted: (id: string) => void) {
         onCancel={() => setFile(null)}
         className="intake-alert"
       >
-        <p>Delete {file?.name}? What the model pulled from it goes too.</p>
+        <p>{file && isImage(file.name) ? `Delete ${file.name}? Its links to what it shows go too, and it stops being anyone's picture.` : `Delete ${file?.name}? What the model pulled from it goes too.`}</p>
       </Alert>
     ),
   };

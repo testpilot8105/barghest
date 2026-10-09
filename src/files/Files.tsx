@@ -180,7 +180,9 @@ function FolderRow({ investigation, folder, count, menu, actions }: { investigat
     <MenuRow menu={menu} onOpen={open}>
       <td>
         <span className="intake-name">
-          <FolderClose color="var(--bp-palette-gray-4)" />
+          <span className="photo-slot">
+            <FolderClose color="var(--bp-palette-gray-4)" />
+          </span>
           {actions.isRenaming(folder, 'list') ? (
             <RenameField value={folder.name} onRename={(n) => actions.rename(folder, n)} onDone={actions.stopRenaming} />
           ) : (
@@ -209,7 +211,7 @@ function FileRow({ investigation, file, intake, actions, moveTo }: { investigati
     <>
       <td>
         <span className="intake-name">
-          <FormatIcon format={file.format} />
+          <FormatIcon format={file.format} documentId={file.id} />
           {actions.nameCell(file)}
         </span>
       </td>

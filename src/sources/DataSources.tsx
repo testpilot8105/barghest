@@ -92,7 +92,7 @@ function SourceRow({ file, intake, investigation, actions }: { file: IntakeFile;
     <>
       <td>
         <span className="intake-name">
-          <FormatIcon format={file.format} />
+          <FormatIcon format={file.format} documentId={file.id} />
           {actions.nameCell(file)}
         </span>
       </td>

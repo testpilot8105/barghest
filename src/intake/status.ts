@@ -2,7 +2,7 @@
 // health (which files the model is reading now) and the model log. Plain functions, so both views say the same thing.
 import type { Health, InferenceRow, Row } from '../data/index.ts';
 
-export type FileStatus = 'importing' | 'waiting' | 'unread' | 'reading' | 'done' | 'gaps' | 'failed' | 'notext';
+export type FileStatus = 'importing' | 'waiting' | 'unread' | 'reading' | 'done' | 'gaps' | 'failed' | 'notext' | 'photo';
 
 export interface IntakeFile {
   id: string;
@@ -34,7 +34,7 @@ export const NO_REGISTER = 'No register';
 export function refusalFor(fileName: string): string {
   const ext = extensionOf(fileName);
   const kind = ext === 'doc' || ext === 'docx' ? 'Word files' : ext === 'xls' || ext === 'xlsx' ? 'Excel files' : ext ? `.${ext} files` : 'Files without an extension';
-  return `${fileName}: ${kind} can't be read yet. BARGHEST reads PDFs with text, CSV, TXT, JSON and MD.`;
+  return `${fileName}: ${kind} can't be read yet. BARGHEST reads PDFs with text, CSV, TXT, JSON and MD, and takes photos (JPEG, PNG, WebP, GIF, SVG, AVIF, BMP, TIFF, HEIC).`;
 }
 
 export function extensionOf(fileName: string): string {
@@ -100,6 +100,8 @@ export function intakeFiles(
     const docStatus = String(p.status ?? '');
     let status: FileStatus;
     if (docStatus === 'no text') status = 'notext';
+    // A photo is never read by the model: its details are read on import (engine-api.md 2.11).
+    else if (docStatus === 'photo') status = 'photo';
     else if (reading.has(id)) status = read > 0 ? 'reading' : 'waiting';
     else if (docStatus === 'extracted') status = 'done';
     else if (docStatus === 'extracted with gaps') status = 'gaps';
