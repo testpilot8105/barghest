@@ -1,0 +1,262 @@
+/* The object profile: a header, then the overview as Blueprint Sections, the body the only scroller. One column on a
+   narrow panel; from --profile-two-col on, two, the object on the left and its connections on the right (Gotham's
+   object view). In one column the sections keep the note's order: Properties, Sources, How it was resolved, Links,
+   Relationships, History. The --profile-* values are taste knobs. */
+
+:root {
+  --profile-gap: 12px;
+  --profile-label-w: 160px;
+  --profile-right-w: 44%;
+}
+
+.view-panel.profile-panel {
+  display: flex;
+  flex-direction: column;
+  place-items: normal;
+  min-width: 0;
+}
+
+/* Opened on its own, from another view: the profile takes the whole of main. */
+.profile-solo {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.profile-back {
+  padding: 8px 12px 0;
+}
+
+.profile-spinner,
+.profile-error {
+  margin: 24px auto;
+}
+
+/* ---- Header: the name with the view's icon, the type, then the jumps to other views. ---- */
+
+.profile-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bh-panel-line);
+  flex-shrink: 0;
+}
+
+.profile-head__name {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.profile-head__name > .bp6-icon {
+  margin-top: 3px;
+}
+
+.profile-head__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-head__titles h4 {
+  margin: 0;
+}
+
+.profile-head__type {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* ---- Body ---- */
+
+.profile-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--profile-gap) 16px 16px;
+  container-type: inline-size;
+}
+
+.profile-columns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--profile-gap);
+}
+
+/* One column: the two column boxes step aside and the sections line up in the note's order. */
+.profile-column {
+  display: contents;
+}
+
+.profile-column:first-child > :nth-child(1) { order: 1; }
+.profile-column:first-child > :nth-child(2) { order: 2; }
+.profile-column:first-child > :nth-child(3) { order: 3; }
+.profile-column:last-child > :nth-child(1) { order: 4; }
+.profile-column:last-child > :nth-child(2) { order: 5; }
+.profile-column:first-child > :nth-child(4) { order: 6; }
+
+@container (min-width: 960px) {
+  .profile-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--profile-right-w));
+    align-items: start;
+  }
+
+  .profile-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--profile-gap);
+    min-width: 0;
+  }
+}
+
+.profile-section {
+  flex-shrink: 0;
+}
+
+.profile-count {
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-empty,
+.profile-note {
+  margin: 0;
+}
+
+/* ---- Properties: label, value, ownership at the right of the row. ---- */
+
+.profile-props {
+  display: grid;
+  grid-template-columns: var(--profile-label-w) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 0;
+}
+
+.profile-props dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-props__owner {
+  justify-self: end;
+}
+
+/* ---- Rows: Sources, How it was resolved, Relationships, History. ---- */
+
+.profile-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-shell .profile-row.bp6-button {
+  justify-content: flex-start;
+  padding: 6px 8px;
+  font-family: var(--bp-typography-family-default);
+}
+
+.app-shell .profile-row.bp6-button > .bp6-button-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--bh-text);
+}
+
+.profile-row__cells {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.profile-line {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bh-panel-line);
+  overflow-wrap: anywhere;
+}
+
+.profile-line:last-child {
+  border-bottom: 0;
+}
+
+.profile-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.profile-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.profile-subhead {
+  margin-top: 4px;
+}
+
+.profile-rel__evidence {
+  margin-left: auto;
+}
+
+/* Said plainly when a link is unsure: the warning colour's -5 shade, the one that reads at 14px on dark gray. */
+.profile-unsure {
+  color: var(--bp-palette-orange-5);
+}
+
+.profile-history__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+/* ---- Links: one group per link, its first few objects, then Show all. ---- */
+
+.profile-link-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bh-panel-line);
+}
+
+.profile-link-group:last-child {
+  border-bottom: 0;
+}
+
+.profile-link-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.profile-link-group__all {
+  margin-left: auto;
+}
+
+.profile-link-group__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}

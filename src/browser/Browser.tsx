@@ -1,18 +1,18 @@
-// Browser, as far as S1 takes it: View results in the Object Explorer opens the set here, listed down the left the way
-// Gotham's Browser lists results (the G-Cloud 14 service definition, page 6). Each row is the title, the type and the
-// first two properties it has a value for. A click opens that object beside the list (?object= in the address bar):
-// its title, its type and every property it has a value for, and the menu bar names it. Links, relationships and
-// evidence join it with S2.
-import { AnchorButton, Button, Callout, H4, H5, H6, NonIdealState, Spinner } from '@blueprintjs/core';
+// Browser: View results in the Object Explorer opens the set here, listed down the left the way Gotham's Browser lists
+// results (the G-Cloud 14 service definition, page 6). Each row is the title, the type and the first two properties it
+// has a value for. A click opens that object's profile beside the list (?object=<key> in the address bar). Any other
+// view opens a profile on its own with ?object=<Type>:<key> and no exploration: full width, with a Back that goes back
+// in history. The menu bar names the open object.
+import { AnchorButton, Button, Callout, H5, NonIdealState, Spinner } from '@blueprintjs/core';
 import { ArrowLeft } from '@blueprintjs/icons';
 import { Fragment, type MouseEvent, type ReactElement } from 'react';
-import { useCatalog, useCount, useObjectView, useRows, type Catalog, type CatalogType, type Exploration, type Row } from '../data/index.ts';
+import { useCatalog, useCount, useRows, type Catalog, type CatalogType, type Exploration, type Row } from '../data/index.ts';
 import { openExploration, useOpenExploration } from '../explorer/exploration';
 import { BrokenLink, Connecting, CountText, EngineDown } from '../explorer/parts';
 import { showValue } from '../explorer/steps';
 import { findView, paletteVar } from '../shell/nav';
 import { navigate, OBJECT_PARAM, useSearchParam, viewHref } from '../shell/route';
-import { useDocumentTitle } from '../shell/title';
+import { Profile } from './Profile';
 
 export function Browser({ investigation }: { investigation: string }) {
   const { data: catalog, error } = useCatalog();
@@ -28,11 +28,29 @@ function openObject(pk: string) {
   navigate(`${window.location.pathname}?${params}`, { replace: true });
 }
 
+/** `?object=` as an object: `Type:key` names its type; a bare key is one of the list's type. Null when neither. */
+function pickedObject(catalog: Catalog, value: string | null, listType: string | null): { type: string; pk: string } | null {
+  if (!value) return null;
+  const colon = value.indexOf(':');
+  if (colon > 0 && catalog.types[value.slice(0, colon)]) return { type: value.slice(0, colon), pk: value.slice(colon + 1) };
+  return listType ? { type: listType, pk: value } : null;
+}
+
 function BrowserScreen({ catalog, investigation }: { catalog: Catalog; investigation: string }) {
   const open = useOpenExploration(catalog);
-  const picked = useSearchParam(OBJECT_PARAM);
+  const value = useSearchParam(OBJECT_PARAM);
+  const picked = pickedObject(catalog, value, open.kind === 'ok' ? open.type : null);
   if (open.kind === 'broken') return <BrokenLink investigation={investigation} />;
   if (open.kind === 'none') {
+    // Opened on its own from another view; a value that names no type still gets the not-found state.
+    if (value) {
+      const ref = picked ?? { type: '', pk: value };
+      return (
+        <div className="profile-solo">
+          <Profile key={`${ref.type}:${ref.pk}`} catalog={catalog} type={ref.type} pk={ref.pk} investigation={investigation} onBack={() => window.history.back()} />
+        </div>
+      );
+    }
     return (
       <div className="view-panel">
         <NoObject description="Open a set from the Object Explorer with View results." action={<Button text="Open Object Explorer" onClick={() => openExploration(investigation, 'explorer', null)} />} />
@@ -43,9 +61,9 @@ function BrowserScreen({ catalog, investigation }: { catalog: Catalog; investiga
   const back = viewHref(investigation, 'explorer', open.encoded);
   return (
     <div className="browser">
-      <ResultList def={def} exp={open.exp} back={back} picked={picked} />
+      <ResultList def={def} exp={open.exp} back={back} picked={picked && picked.type === open.type ? picked.pk : null} />
       {picked ? (
-        <Profile key={picked} def={def} pk={picked} />
+        <Profile key={`${picked.type}:${picked.pk}`} catalog={catalog} type={picked.type} pk={picked.pk} investigation={investigation} />
       ) : (
         <div className="view-panel">
           <NoObject description="Click an object in the list to open it here." />
@@ -133,42 +151,6 @@ function ResultList({ def, exp, back, picked }: { def: CatalogType; exp: Explora
         {!rows.loading && !rows.error && !list.length && <NonIdealState description="Nothing in this set." />}
         {rows.hasMore && !rows.loading && <Button variant="minimal" fill text="Load more" onClick={rows.loadMore} />}
       </div>
-    </section>
-  );
-}
-
-/** The open object: its title and type, then every property it has a value for. */
-function Profile({ def, pk }: { def: CatalogType; pk: string }) {
-  const view = useObjectView(def.apiName, pk);
-  useDocumentTitle(view.data?.title ?? null);
-  const values = new Map(view.data?.properties.map((p) => [p.apiName, p.value]));
-  return (
-    <section className="view-panel profile" aria-label="Profile">
-      {view.error ? (
-        <Callout intent="danger" compact>
-          {view.error.message}
-        </Callout>
-      ) : !view.data ? (
-        <Spinner size={20} className="result-list__spinner" />
-      ) : (
-        <>
-          <header className="profile__head">
-            <H4>{view.data.title}</H4>
-            <span className="bp6-text-muted">{def.displayName}</span>
-          </header>
-          <div className="profile__body">
-            <H6 className="caps-heading bp6-text-muted">Properties</H6>
-            <dl className="profile__props">
-              {shown(def, (n) => values.get(n)).map((p) => (
-                <Fragment key={p.apiName}>
-                  <dt className="bp6-text-muted">{p.displayName}</dt>
-                  <dd>{showValue(values.get(p.apiName))}</dd>
-                </Fragment>
-              ))}
-            </dl>
-          </div>
-        </>
-      )}
     </section>
   );
 }

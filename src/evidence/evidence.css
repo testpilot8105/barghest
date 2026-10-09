@@ -1,0 +1,50 @@
+/* The evidence drawer: one card per passage, stacked, the drawer body the only scroller. Blueprint carries the drawer
+   and the cards; this lays them out. --evidence-w is a taste knob: change it and the drawer follows. */
+
+:root {
+  --evidence-w: 480px;
+  --evidence-gap: 12px;
+}
+
+.evidence-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--evidence-gap);
+  padding: var(--evidence-gap) 16px 16px;
+}
+
+.evidence-count {
+  margin: 0;
+}
+
+.evidence-spinner {
+  margin: 24px auto;
+}
+
+.evidence-passage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* The passage as it was read: line breaks kept, nothing cut. */
+.evidence-passage__text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.evidence-passage__file {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.evidence-passage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
