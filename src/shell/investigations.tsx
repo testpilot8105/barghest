@@ -14,6 +14,8 @@ interface InvestigationsContextValue {
   error: Error | null;
   find: (id: string | null) => Investigation | null;
   openNew: () => void;
+  /** Read the list again, after a rename, a delete, or files moving in or out. */
+  reload: () => void;
 }
 
 const InvestigationsContext = createContext<InvestigationsContextValue>({
@@ -22,6 +24,7 @@ const InvestigationsContext = createContext<InvestigationsContextValue>({
   error: null,
   find: () => null,
   openNew: () => {},
+  reload: () => {},
 });
 
 export function useInvestigationList(): InvestigationsContextValue {
@@ -38,8 +41,9 @@ export function InvestigationsProvider({ children }: { children: ReactNode }) {
       error: list.error,
       find: (id) => list.data?.investigations.find((i) => i.id === id) ?? null,
       openNew: () => setCreating(true),
+      reload: list.reload,
     }),
-    [list.data, list.loading, list.error],
+    [list.data, list.loading, list.error, list.reload],
   );
   return (
     <InvestigationsContext.Provider value={value}>

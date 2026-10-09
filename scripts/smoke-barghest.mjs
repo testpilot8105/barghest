@@ -155,14 +155,18 @@ async function intakeFlow(page, tag, fail) {
   await page.locator('.files__tree').waitFor({ timeout: 10000 }).catch(() => fail('Files: no investigation list'));
   await page.locator('.files .intake-table, .files .bp6-non-ideal-state').first().waitFor({ timeout: 10000 }).catch(() => fail('Files: no list and no empty state'));
   const fl = await page.evaluate(() => ({
-    tree: [...document.querySelectorAll('.files__tree .bp6-tree-node-label')].map((n) => n.textContent),
+    tree: [...document.querySelectorAll('.files__tree .bp6-tree-root > .bp6-tree-node > .bp6-tree-node-content .bp6-tree-node-label')].map((n) => n.textContent),
     rows: document.querySelectorAll('.files .intake-table tbody tr').length,
     title: document.querySelector('.menubar__title')?.textContent ?? '',
   }));
   const names = listed.investigations.map((i) => i.name);
   if (fl.tree.join('|') !== names.join('|')) fail(`Files lists "${fl.tree.join(', ')}", want the names "${names.join(', ')}"`);
   if (fl.tree.some((t) => listed.investigations.some((i) => i.id === t && i.id !== i.name))) fail('Files shows an investigation id');
-  if (files && fl.rows !== files) fail(`Files list: ${fl.rows} rows for ${files} files`);
+  // The top level lists its folders, then the files outside any folder.
+  const engineFolders = () => fetch(`http://${ENGINE.host}:${ENGINE.port}/barghest/folders?investigation=${encodeURIComponent(FIRST.id)}`).then((r) => r.json());
+  const top = await engineFolders();
+  const topRows = top.folders.filter((f) => !f.parentId).length + top.topLevelFiles;
+  if (topRows && fl.rows !== topRows) fail(`Files list: ${fl.rows} rows for ${topRows} folders and files at the top level`);
   if (fl.title !== FIRST.name) fail(`Files menu bar names "${fl.title}", want "${FIRST.name}"`);
   if (!(await capsOk())) fail('Files: an all-caps heading is not D-DIN Bold');
   if (!(await noScroll())) fail('Files: the document scrolls');
@@ -184,6 +188,29 @@ async function intakeFlow(page, tag, fail) {
   await page.getByRole('button', { name: 'Cancel' }).click();
   await page.locator('.new-investigation').waitFor({ state: 'detached', timeout: 3000 }).catch(() => fail('New investigation dialog did not close'));
 
+  // Folders: New folder, rename it in place, delete it, then ask the engine that none of it is left.
+  const folder = `smoke-${tag}-${Date.now()}`;
+  const mine = async () => (await engineFolders()).folders.filter((f) => f.name.startsWith(folder)).map((f) => f.name);
+  await page.getByRole('button', { name: 'New folder' }).click();
+  await page.getByLabel('Name').fill(folder);
+  await page.getByRole('button', { name: 'Create' }).click();
+  const folderRow = page.locator('.files .intake-table tbody tr', { hasText: folder });
+  await folderRow.waitFor({ timeout: 5000 }).catch(() => fail('New folder never showed in the list'));
+  await folderRow.getByRole('button', { name: `Actions for ${folder}` }).click();
+  await page.getByRole('menuitem', { name: 'Rename', exact: true }).click();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.type(`${folder} renamed`);
+  await page.keyboard.press('Enter');
+  const renamedRow = page.locator('.files .intake-table tbody tr', { hasText: `${folder} renamed` });
+  await renamedRow.waitFor({ timeout: 5000 }).catch(() => fail('Rename did not change the folder in the list'));
+  if ((await mine()).join() !== `${folder} renamed`) fail(`the engine names the folder "${(await mine()).join()}", want "${folder} renamed"`);
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: join(shots, `files-${tag}-folder.png`) });
+  await renamedRow.getByRole('button', { name: `Actions for ${folder} renamed` }).click();
+  await page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
+  await renamedRow.waitFor({ state: 'detached', timeout: 5000 }).catch(() => fail('Delete left the folder in the list'));
+  if ((await mine()).length) fail(`the engine still holds folder ${folder}`);
+
   // Import, open, delete, and nothing left behind. Only with the model off, so the smoke never makes the model read.
   if (health.ollama) return;
   const probe = `smoke-${tag}-${Date.now()}.txt`;
@@ -193,10 +220,23 @@ async function intakeFlow(page, tag, fail) {
   rmSync(probePath);
   const row = page.locator('.files .intake-table tbody tr', { hasText: probe });
   await row.waitFor({ timeout: 10000 }).catch(() => fail(`imported ${probe} never showed in the list`));
+  // Rename it in place and back; the engine says what it is called each time.
+  const renameRow = async (from, to) => {
+    await page.locator('.files .intake-table tbody tr', { hasText: from }).getByRole('button', { name: `Actions for ${from}` }).click();
+    await page.getByRole('menuitem', { name: 'Rename', exact: true }).click();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.type(to);
+    await page.keyboard.press('Enter');
+    await page.locator('.files .intake-table tbody tr', { hasText: to }).waitFor({ timeout: 5000 }).catch(() => fail(`Rename did not change ${from} to ${to} in the list`));
+  };
+  await renameRow(probe, probe.replace('.txt', '-renamed.txt'));
+  await renameRow(probe.replace('.txt', '-renamed.txt'), probe);
   await row.dblclick();
   await page.locator('.file-view__name', { hasText: probe }).waitFor({ timeout: 5000 }).catch(() => fail('double-click did not open the file'));
   const documentId = new URL(page.url()).searchParams.get('document');
   if (!documentId) fail(`the open file is not in the address: ${page.url()}`);
+  const shown = await fetch(`http://${ENGINE.host}:${ENGINE.port}/barghest/document?documentId=${encodeURIComponent(documentId ?? '')}`).then((r) => r.json()).catch(() => null);
+  if (shown?.document?.name !== probe) fail(`after renaming back the engine calls the file "${shown?.document?.name}", want "${probe}"`);
   const passageCards = await page.locator('.file-pass').count();
   if (!passageCards) fail('the open file shows no passages');
   await page.waitForTimeout(300);

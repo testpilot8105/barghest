@@ -4,7 +4,7 @@
 // along the foot. `?passage=` scrolls to one passage and outlines it, for the links other views make into a file.
 import { AnchorButton, Button, Classes, EditableText, H4, HTMLTable, Intent, NonIdealState, Spinner, Tag } from '@blueprintjs/core';
 import { Error as ErrorIcon, Refresh, Share, SmallTick, Trash, WarningSign } from '@blueprintjs/icons';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import {
   EngineError,
   extractAgain,
@@ -28,16 +28,17 @@ import { useDocumentTitle } from '../shell/title';
 
 interface FileViewProps {
   investigation: string;
-  investigationName: string | null;
   documentId: string;
   passageId: string | null;
-  /** Back to the list the file was opened from. */
+  /** The path to the file's folder, every step a way back. */
+  crumbs: ReactNode;
+  /** The file's folder, where a delete lands. */
   listHref: string;
   /** After a delete: the list reads its files again before it shows. */
   onDeleted: () => void;
 }
 
-export function FileView({ investigation, investigationName, documentId, passageId, listHref, onDeleted }: FileViewProps) {
+export function FileView({ investigation, documentId, passageId, crumbs, listHref, onDeleted }: FileViewProps) {
   const { dc } = useDataClient();
   const view = useDocumentView(documentId);
   const catalog = useCatalog().data;
@@ -95,12 +96,7 @@ export function FileView({ investigation, investigationName, documentId, passage
   return (
     <div className="file-view">
       <header className="file-view__head">
-        <div className="file-view__crumbs">
-          <a className={Classes.TEXT_MUTED} href={listHref} onClick={(e) => (e.preventDefault(), navigate(listHref))}>
-            {investigationName ?? 'Files'}
-          </a>
-          {view.data.folder && <span className={Classes.TEXT_MUTED}> › {view.data.folder.name}</span>}
-        </div>
+        {crumbs}
         <div className="file-view__row">
           <div className="file-view__name">
             <FormatIcon format={doc.format} />

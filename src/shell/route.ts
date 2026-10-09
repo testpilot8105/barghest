@@ -24,6 +24,12 @@ export function fileHref(investigation: string, documentId: string, passageId?: 
   return `${viewHref(investigation, 'files')}?${q}`;
 }
 
+/** A folder in Files; the investigation's top level without one. */
+export function folderHref(investigation: string, folderId?: string | null): string {
+  const base = viewHref(investigation, 'files');
+  return folderId ? `${base}?${new URLSearchParams({ [FOLDER_PARAM]: folderId })}` : base;
+}
+
 const CHANGE = 'barghest:navigate';
 
 function subscribe(onChange: () => void): () => void {

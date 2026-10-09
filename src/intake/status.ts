@@ -17,12 +17,15 @@ export interface IntakeFile {
   read: number;
   /** Passages whose calls failed, by number (1-based). */
   failedPassages: number[];
+  /** The folder it lives in; empty at the investigation's top level. */
+  folderId: string;
 }
 
 /** An import still on its way to the engine: shown as a row at once, before the engine knows the file. */
 export interface PendingImport {
   key: string;
   name: string;
+  folderId: string;
 }
 
 export const NO_REGISTER = 'No register';
@@ -112,6 +115,7 @@ export function intakeFiles(
       passages: total,
       read,
       failedPassages: [...(failed.get(id) ?? [])].sort((a, b) => a - b),
+      folderId: String(p.folderId ?? ''),
     };
   });
 }

@@ -5,8 +5,9 @@
 import { Callout, Classes, H4, HTMLTable, Intent, NonIdealState, ProgressBar, Tag } from '@blueprintjs/core';
 import { Database, Error as ErrorIcon, Import, SmallTick, WarningSign } from '@blueprintjs/icons';
 import { useEffect, useState } from 'react';
-import { fileUrl, useDataClient, type InferenceRow } from '../data/index.ts';
+import { fileUrl, useDataClient, useDocumentView, type InferenceRow } from '../data/index.ts';
 import { Connecting, EngineDown, formatCount } from '../explorer/parts';
+import { useFileActions } from '../intake/fileActions';
 import { FileMenu, FitName, FormatIcon, ImportButton, MenuRow, RowMenu, SkeletonRows, StatusCell, useDropZone } from '../intake/parts';
 import { aboutLeft, byRegister, callLabel, clock, passageNumber, type IntakeFile } from '../intake/status';
 import { MODEL_OFF, useIntake, type Intake } from '../intake/useIntake';
@@ -29,10 +30,11 @@ function SourcesScreen({ investigation }: { investigation: string }) {
   const drop = useDropZone((files) => intake.importFiles(files));
   const files = [...intake.files].sort(byRegister);
   const totals = sumUp(intake.files);
+  const actions = useFileActions({ investigation, intake });
 
   return (
     <div className={`sources${drop.dragging ? ' intake-dropping' : ''}`} {...drop.props}>
-      <Strip intake={intake} totals={totals} />
+      <Strip investigation={investigation} intake={intake} totals={totals} />
       <div className="sources__body">
         <section className="view-panel intake-card">
           <header className="intake-card__head">
@@ -67,7 +69,7 @@ function SourcesScreen({ investigation }: { investigation: string }) {
                 </thead>
                 <tbody>
                   {[...intake.pending, ...files].map((f) => (
-                    <SourceRow key={f.id} file={f} intake={intake} investigation={investigation} />
+                    <SourceRow key={f.id} file={f} intake={intake} investigation={investigation} actions={actions} />
                   ))}
                 </tbody>
               </HTMLTable>
@@ -76,27 +78,26 @@ function SourcesScreen({ investigation }: { investigation: string }) {
         </section>
         <ModelLog intake={intake} />
       </div>
+      {actions.alerts}
     </div>
   );
 }
 
-function SourceRow({ file, intake, investigation }: { file: IntakeFile; intake: Intake; investigation: string }) {
+function SourceRow({ file, intake, investigation, actions }: { file: IntakeFile; intake: Intake; investigation: string; actions: ReturnType<typeof useFileActions> }) {
   const { dc } = useDataClient();
   const pending = file.status === 'importing';
   const open = () => navigate(fileHref(investigation, file.id));
-  const menu = <FileMenu file={file} onRunAgain={intake.runAgain} originalUrl={dc && !pending ? fileUrl(dc, file.id) : null} onOpen={open} openLabel="Open in Files" />;
+  const menu = <FileMenu file={file} onRunAgain={intake.runAgain} originalUrl={dc && !pending ? fileUrl(dc, file.id) : null} onOpen={open} openLabel="Open in Files" {...actions.menuProps(file)} />;
   const cells = (
     <>
       <td>
         <span className="intake-name">
           <FormatIcon format={file.format} />
-          <FitName name={file.name} />
+          {actions.nameCell(file)}
         </span>
       </td>
       <td>
-        <span className="intake-name">
-          <FitName name={file.register} />
-        </span>
+        <span className="intake-name">{actions.registerCell(file)}</span>
       </td>
       <td className="intake-num">{file.passages ?? ''}</td>
       <td>
@@ -151,8 +152,36 @@ function useSecondTick(on: boolean): number {
   return now;
 }
 
+/** The file the model just finished, what it pulled out of it, and the way in (owner, 8A). It holds until the next
+ * file starts reading. */
+function DoneLine({ investigation, file }: { investigation: string; file: IntakeFile }) {
+  const view = useDocumentView(file.id).data;
+  const things = new Set<string>();
+  const links = new Set<string>();
+  for (const p of view?.passages ?? []) {
+    for (const m of p.mentions) things.add(`${m.type}:${m.canonicalId || m.pk}`);
+    for (const r of p.relationships) links.add(r.pk);
+  }
+  for (const r of view?.records ?? []) for (const m of r.mentions) things.add(`${m.type}:${m.canonicalId || m.pk}`);
+  const found = !view
+    ? null
+    : !things.size && !links.size
+      ? 'nothing found'
+      : [things.size === 1 ? '1 person, place or thing' : `${things.size} people, places and things`, links.size === 1 ? '1 link' : `${links.size} links`].join(', ');
+  const href = fileHref(investigation, file.id);
+  return (
+    <div className="sources__line">
+      <SmallTick color="var(--bp-palette-green-5)" /> Done: <strong>{file.name}</strong>
+      {found && <span className="sources__clock"> · {found} ·</span>}
+      <a href={href} onClick={(e) => (e.preventDefault(), navigate(href))}>
+        Open it
+      </a>
+    </div>
+  );
+}
+
 /** The strip: what the model is doing right now, readable from the back of the room. It never hides. */
-function Strip({ intake, totals }: { intake: Intake; totals: Totals }) {
+function Strip({ investigation, intake, totals }: { investigation: string; intake: Intake; totals: Totals }) {
   const now = useSecondTick(intake.model === 'reading');
   const reading = intake.files.filter((f) => f.status === 'reading' || (intake.health?.extracting ?? []).includes(f.id));
   const stateTag =
@@ -202,11 +231,7 @@ function Strip({ intake, totals }: { intake: Intake; totals: Totals }) {
       </div>
     );
   } else if (intake.lastDone) {
-    line = (
-      <div className="sources__line">
-        <SmallTick color="var(--bp-palette-green-5)" /> Done: <strong>{intake.lastDone.name}</strong>
-      </div>
-    );
+    line = <DoneLine key={intake.lastDone.id} investigation={investigation} file={intake.lastDone} />;
   } else {
     const n = totals.waiting;
     line = (

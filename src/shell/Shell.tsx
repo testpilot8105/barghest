@@ -2,7 +2,7 @@
 // rail down the left, two short dark bars across the top (the app bar with the BARGHEST mark, name and search, then
 // the menu bar with the document title), and the main screen taking everything else. Only main scrolls; the document
 // never does.
-import { Button, InputGroup, Menu, MenuDivider, MenuItem, Navbar, NavbarGroup, NonIdealState, Popover, Tooltip } from '@blueprintjs/core';
+import { Button, InputGroup, Intent, Menu, MenuDivider, MenuItem, Navbar, NavbarGroup, NonIdealState, Popover, Tooltip } from '@blueprintjs/core';
 import { Blank, Refresh, Search, Tick } from '@blueprintjs/icons';
 import { useEffect, useState, type ComponentType } from 'react';
 import { Assistant } from '../assistant/Assistant';
@@ -101,6 +101,8 @@ function Frame() {
         <TitleContext.Provider value={setTitle}>
           {list.error && !list.data ? (
             list.error instanceof EngineError && list.error.status === 404 ? <EngineOutOfDate /> : <EngineDown />
+          ) : list.data && !list.data.investigations.length ? (
+            <NoInvestigations onNew={list.openNew} />
           ) : !investigation ? (
             <Connecting />
           ) : !known ? (
@@ -114,6 +116,15 @@ function Frame() {
           )}
         </TitleContext.Provider>
       </main>
+    </div>
+  );
+}
+
+/** Every investigation deleted: say so, and offer the way to start one. */
+function NoInvestigations({ onNew }: { onNew: () => void }) {
+  return (
+    <div className="view-panel">
+      <NonIdealState title="No investigations yet" description="Start one, then drop its files into Files." action={<Button intent={Intent.PRIMARY} text="New investigation" onClick={onNew} />} />
     </div>
   );
 }

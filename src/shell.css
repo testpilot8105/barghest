@@ -1025,6 +1025,35 @@ h4 {
   height: auto;
 }
 
+.files__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* A folder row's count sits right after its name. */
+.files__count {
+  flex: none;
+}
+
+/* A tree item's end: its file count, then its "…". */
+.files__tree-end {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A name being renamed takes the room the name had. */
+.files-rename {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Move to: the folders indented as a tree. */
+.files-move {
+  padding-left: calc(var(--files-depth) * 16px);
+}
+
 .investigation-menu {
   width: 240px;
 }

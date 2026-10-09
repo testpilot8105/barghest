@@ -1,7 +1,7 @@
 // Pieces Files and Data Sources share: a file's status, its name cut to fit, the "…" menu every row carries (the same
 // menu right-click opens), the Import files button and the drop zone. Status is quiet when all is well: only Reading,
 // Done with gaps and Failed carry colour (owner, 09.10.2026).
-import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuDivider, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
+import { Alert, Button, Classes, ContextMenu, EditableText, Intent, Menu, MenuDivider, MenuItem, Popover, ProgressBar, Spinner, Tag, Tooltip } from '@blueprintjs/core';
 import { Document as DocumentIcon, Import, More, SmallTick, Th, Time, Trash, WarningSign } from '@blueprintjs/icons';
 import { useRef, useState, type DragEvent, type ReactElement, type ReactNode } from 'react';
 import { deleteDocument, EngineError, useDataClient } from '../data/index.ts';
@@ -100,10 +100,35 @@ export function FitName({ name, children }: { name: string; children?: ReactNode
   );
 }
 
-/** The quiet "…" at the end of a row: the same menu as right-click, so no action lives only behind right-click. */
+export const EMPTY_NAME = "A name can't be empty.";
+
+/** A name being changed where it stands: Enter or a click away keeps it, Escape puts it back. `allowEmpty` for a field
+ * that may be cleared, like a register. */
+export function RenameField({ value, onRename, onDone, allowEmpty = false, placeholder }: { value: string; onRename: (next: string) => void; onDone: () => void; allowEmpty?: boolean; placeholder?: string }) {
+  const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
+  return (
+    <span className="files-rename" onClick={stop} onDoubleClick={stop} onKeyDown={stop}>
+      <EditableText
+        isEditing
+        defaultValue={value}
+        placeholder={placeholder}
+        selectAllOnFocus
+        onCancel={onDone}
+        onConfirm={(next) => {
+          onDone();
+          if (!next.trim() && !allowEmpty) toast(EMPTY_NAME);
+          else if (next.trim() !== value) onRename(next.trim());
+        }}
+      />
+    </span>
+  );
+}
+
+/** The quiet "…" at the end of a row: the same menu as right-click, so no action lives only behind right-click. Focus
+ * is free to leave it as it closes, like Blueprint's context menus, so Rename's field keeps the focus it is given. */
 export function RowMenu({ menu, label }: { menu: ReactElement; label: string }) {
   return (
-    <Popover content={menu} placement="bottom-end" minimal>
+    <Popover content={menu} placement="bottom-end" minimal enforceFocus={false}>
       <Button variant="minimal" icon={<More color="var(--bp-palette-gray-4)" />} aria-label={`Actions for ${label}`} />
     </Popover>
   );
@@ -125,16 +150,30 @@ interface FileMenuProps {
   /** Open the file in Files; the label says where. */
   onOpen?: () => void;
   openLabel?: string;
+  onRename?: () => void;
+  /** This file's register only. */
+  onChangeRegister?: () => void;
+  /** The register on every file of the investigation that carries it. */
+  onRenameRegister?: () => void;
+  /** A "Move to" submenu of folders, from Files. */
+  moveTo?: ReactNode;
+  /** A "Move to another investigation" submenu. */
+  moveToInvestigation?: ReactNode;
   onDelete?: (f: IntakeFile) => void;
 }
 
 /** The menu a file row carries, from right-click and from its "…". */
-export function FileMenu({ file, onRunAgain, originalUrl, onOpen, openLabel = 'Open', onDelete }: FileMenuProps) {
+export function FileMenu({ file, onRunAgain, originalUrl, onOpen, openLabel = 'Open', onRename, onChangeRegister, onRenameRegister, moveTo, moveToInvestigation, onDelete }: FileMenuProps) {
   const reading = file.status === 'reading' || file.status === 'importing';
   return (
     <Menu className="intake-menu">
       {onOpen && <MenuItem text={openLabel} onClick={onOpen} />}
       {originalUrl && <MenuItem text="Open original" href={originalUrl} target="_blank" />}
+      {onRename && <MenuItem text="Rename" onClick={onRename} />}
+      {onChangeRegister && <MenuItem text="Change register" onClick={onChangeRegister} />}
+      {onRenameRegister && <MenuItem text="Rename register on every file" onClick={onRenameRegister} />}
+      {moveTo}
+      {moveToInvestigation}
       <MenuItem text="Run the model again" disabled={file.status === 'notext' || reading} onClick={() => onRunAgain(file)} />
       {onDelete && (
         <>

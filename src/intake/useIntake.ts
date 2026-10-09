@@ -142,7 +142,7 @@ export function useIntake(investigation: string): Intake {
           continue;
         }
         const key = `${file.name}:${file.size}:${file.lastModified}:${Math.random()}`;
-        setPending((p) => [...p, { key, name: file.name }]);
+        setPending((p) => [...p, { key, name: file.name, folderId: folderId ?? '' }]);
         importFile(dc, { file, investigation, folderId })
           .then((r) => {
             if (r.status === 'no text') toast(`${file.name}: ${NO_TEXT}`, Intent.WARNING);
@@ -175,7 +175,7 @@ export function useIntake(investigation: string): Intake {
     health: health.data,
     model,
     modelName: health.data && !Array.isArray(health.data.models) ? health.data.models.chat : null,
-    pending: pending.map((p) => ({ id: p.key, name: p.name, register: '', format: '', importedAt: null, status: 'importing', passages: null, read: 0, failedPassages: [] })),
+    pending: pending.map((p) => ({ id: p.key, name: p.name, register: '', format: '', importedAt: null, status: 'importing', passages: null, read: 0, failedPassages: [], folderId: p.folderId })),
     files,
     log: [...log].reverse(),
     logLoading: allLog.loading && !allLog.data,
