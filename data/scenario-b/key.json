@@ -1,0 +1,1059 @@
+{
+  "scenario": "b",
+  "entities": [
+    {
+      "id": "H-001",
+      "type": "Hauler",
+      "canonical": "Mabansag Hauling Services",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "Mabansag Hauling Services"
+        },
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "Mabansag Hauling Svcs., Inc."
+        },
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "Mabansag Hauling"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "MABANSAG HAULING SERVICES"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "MABANSAG HAULING SVCS., INC."
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "MABANSAG HAULING"
+        },
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Mabansag Hauling Services"
+        },
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Mabansag Hauling Svcs., Inc."
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Mabansag Hauling Svcs."
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Mabansag Hauling Svcs., Inc."
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Mabansag Hauling Services"
+        },
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "Mabansag Hauling Svcs., Inc."
+        }
+      ],
+      "identifiers": [
+        {
+          "kind": "SEC Reg. No.",
+          "value": "CS201906274",
+          "file": "hauling-contracts.pdf"
+        },
+        {
+          "kind": "TIN",
+          "value": "417-382-905-000",
+          "file": "hauling-contracts.pdf"
+        },
+        {
+          "kind": "TIN",
+          "value": "417-382-905-000",
+          "file": "philgeps-awards.csv"
+        },
+        {
+          "kind": "PhilGEPS Certificate Ref. No.",
+          "value": "201911-094217-2481733095",
+          "file": "philgeps-awards.csv"
+        }
+      ]
+    },
+    {
+      "id": "H-002",
+      "type": "Hauler",
+      "canonical": "Mabansay Waste Haulers",
+      "appearsAs": [
+        {
+          "file": "philgeps-awards.csv",
+          "text": "MABANSAY WASTE HAULERS"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "MABANSAY WASTE HAULERS, INC."
+        },
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Mabansay Waste Haulers"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Mabansay Waste Haulers"
+        }
+      ],
+      "identifiers": [
+        {
+          "kind": "TIN",
+          "value": "502-176-834-000",
+          "file": "philgeps-awards.csv"
+        },
+        {
+          "kind": "PhilGEPS Certificate Ref. No.",
+          "value": "201805-113902-2290415307",
+          "file": "philgeps-awards.csv"
+        }
+      ]
+    },
+    {
+      "id": "LGU-1",
+      "type": "LGU",
+      "canonical": "Municipality of San Eladio",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "Municipality of San Eladio"
+        },
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Municipality of San Eladio"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "Municipality of San Eladio"
+        },
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "Municipality of San Eladio"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "San Eladio"
+        }
+      ]
+    },
+    {
+      "id": "LGU-2",
+      "type": "LGU",
+      "canonical": "Municipality of Tumanaw",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "Municipality of Tumanaw"
+        },
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Municipality of Tumanaw"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "Municipality of Tumanaw"
+        },
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "Municipality of Tumanaw"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Municipality of Tumanaw"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Tumanaw"
+        }
+      ]
+    },
+    {
+      "id": "LGU-3",
+      "type": "LGU",
+      "canonical": "City of Dalumat",
+      "appearsAs": [
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "City of Dalumat"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "City of Dalumat"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "City of Dalumat"
+        },
+        {
+          "file": "denr-landfill-permit.txt",
+          "text": "City of Dalumat"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Dalumat"
+        }
+      ]
+    },
+    {
+      "id": "BRG-1",
+      "type": "Barangay",
+      "canonical": "Mulawin Dulo",
+      "appearsAs": [
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Mulawin Dulo"
+        },
+        {
+          "file": "mrf-quarterly-reports.csv",
+          "text": "Mulawin Dulo"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Mulawin Dulo"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Mulawin Dulo"
+        }
+      ],
+      "lgu": "LGU-1"
+    },
+    {
+      "id": "BRG-2",
+      "type": "Barangay",
+      "canonical": "Kanlurang Bato",
+      "appearsAs": [
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Kanlurang Bato"
+        },
+        {
+          "file": "mrf-quarterly-reports.csv",
+          "text": "Kanlurang Bato"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Kanlurang Bato"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Kanlurang Bato"
+        }
+      ],
+      "lgu": "LGU-1"
+    },
+    {
+      "id": "BRG-3",
+      "type": "Barangay",
+      "canonical": "Putikan",
+      "appearsAs": [
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Putikan"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Putikan"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Putikan"
+        }
+      ],
+      "lgu": "LGU-1"
+    },
+    {
+      "id": "BRG-4",
+      "type": "Barangay",
+      "canonical": "Punta Silangan",
+      "appearsAs": [
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Punta Silangan"
+        },
+        {
+          "file": "mrf-quarterly-reports.csv",
+          "text": "Punta Silangan"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Punta Silangan"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Punta Silangan"
+        }
+      ],
+      "lgu": "LGU-2"
+    },
+    {
+      "id": "BRG-5",
+      "type": "Barangay",
+      "canonical": "Hilagang Ilog",
+      "appearsAs": [
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Hilagang Ilog"
+        },
+        {
+          "file": "mrf-quarterly-reports.csv",
+          "text": "Hilagang Ilog"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Hilagang Ilog"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Hilagang Ilog"
+        }
+      ],
+      "lgu": "LGU-2"
+    },
+    {
+      "id": "BRG-6",
+      "type": "Barangay",
+      "canonical": "Ugong Bayan",
+      "appearsAs": [
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Ugong Bayan"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Ugong Bayan"
+        }
+      ],
+      "lgu": "LGU-2"
+    },
+    {
+      "id": "BRG-7",
+      "type": "Barangay",
+      "canonical": "Ilaya Kanluran",
+      "appearsAs": [
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Ilaya Kanluran"
+        },
+        {
+          "file": "mrf-quarterly-reports.csv",
+          "text": "Ilaya Kanluran"
+        },
+        {
+          "file": "denr-landfill-permit.txt",
+          "text": "Ilaya Kanluran"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Ilaya Kanluran"
+        }
+      ],
+      "lgu": "LGU-3"
+    },
+    {
+      "id": "BRG-8",
+      "type": "Barangay",
+      "canonical": "Bakawan Dulo",
+      "appearsAs": [
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Bakawan Dulo"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Bakawan Dulo"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Bakawan Dulo"
+        }
+      ],
+      "lgu": "LGU-3"
+    },
+    {
+      "id": "BRG-9",
+      "type": "Barangay",
+      "canonical": "Tulay-Bato",
+      "appearsAs": [
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Tulay-Bato"
+        },
+        {
+          "file": "mrf-quarterly-reports.csv",
+          "text": "Tulay-Bato"
+        },
+        {
+          "file": "complaints-8888.csv",
+          "text": "Tulay-Bato"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Tulay-Bato"
+        }
+      ],
+      "lgu": "LGU-3"
+    },
+    {
+      "id": "FAC-1",
+      "type": "Facility",
+      "canonical": "Dalumat Sanitary Landfill",
+      "appearsAs": [
+        {
+          "file": "denr-landfill-permit.txt",
+          "text": "Dalumat Sanitary Landfill"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Dalumat Sanitary Landfill"
+        },
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Dalumat Sanitary Landfill"
+        },
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Dalumat Sanitary Landfill"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Dalumat Sanitary Landfill"
+        }
+      ],
+      "kind": "sanitary landfill",
+      "identifiers": [
+        {
+          "kind": "ECC No.",
+          "value": "ECC-R20-2023-0187",
+          "file": "denr-landfill-permit.txt"
+        }
+      ]
+    },
+    {
+      "id": "FAC-2",
+      "type": "Facility",
+      "canonical": "Tumanaw Open Dumpsite",
+      "appearsAs": [
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Tumanaw Open Dumpsite"
+        },
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Tumanaw Open Dumpsite"
+        },
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Tumanaw Open Dumpsite"
+        }
+      ],
+      "kind": "open dumpsite"
+    },
+    {
+      "id": "FAC-3",
+      "type": "Facility",
+      "canonical": "San Eladio Weighbridge",
+      "appearsAs": [
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "San Eladio Weighbridge"
+        },
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "San Eladio Weighbridge"
+        }
+      ],
+      "kind": "weighbridge"
+    },
+    {
+      "id": "FAC-4",
+      "type": "Facility",
+      "canonical": "Tumanaw Transfer Station",
+      "appearsAs": [
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "Tumanaw Transfer Station"
+        },
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Tumanaw Transfer Station"
+        }
+      ],
+      "kind": "transfer station"
+    },
+    {
+      "id": "C-1",
+      "type": "Contract",
+      "canonical": "SEL-SWM-2025-014",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "SEL-SWM-2025-014"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "SEL-SWM-2025-014"
+        },
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "SEL-SWM-2025-014"
+        }
+      ],
+      "amount": "Php 4,860,000.00"
+    },
+    {
+      "id": "C-2",
+      "type": "Contract",
+      "canonical": "TMN-SWM-2025-009",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "TMN-SWM-2025-009"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "TMN-SWM-2025-009"
+        },
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "TMN-SWM-2025-009"
+        }
+      ],
+      "amount": "Php 3,720,000.00"
+    },
+    {
+      "id": "C-3",
+      "type": "Contract",
+      "canonical": "SEL-SWM-2026-003",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "SEL-SWM-2026-003"
+        },
+        {
+          "file": "philgeps-awards.csv",
+          "text": "SEL-SWM-2026-003"
+        }
+      ],
+      "amount": "Php 5,100,000.00"
+    },
+    {
+      "id": "C-4",
+      "type": "Contract",
+      "canonical": "CDL-SWM-2025-021",
+      "appearsAs": [
+        {
+          "file": "philgeps-awards.csv",
+          "text": "CDL-SWM-2025-021"
+        }
+      ],
+      "amount": "Php 9,400,000.00"
+    },
+    {
+      "id": "C-5",
+      "type": "Contract",
+      "canonical": "CDL-SWM-2026-004",
+      "appearsAs": [
+        {
+          "file": "philgeps-awards.csv",
+          "text": "CDL-SWM-2026-004"
+        }
+      ],
+      "amount": "Php 9,900,000.00"
+    },
+    {
+      "id": "V-1",
+      "type": "Vehicle",
+      "canonical": "NBC 4172",
+      "appearsAs": [
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "NBC 4172"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "NBC 4172"
+        }
+      ],
+      "bodyNo": "MHS-03",
+      "hauler": "H-001"
+    },
+    {
+      "id": "V-2",
+      "type": "Vehicle",
+      "canonical": "NBC 4175",
+      "appearsAs": [
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "NBC 4175"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "NBC 4175"
+        }
+      ],
+      "bodyNo": "MHS-07",
+      "hauler": "H-001"
+    },
+    {
+      "id": "V-3",
+      "type": "Vehicle",
+      "canonical": "NCL 8820",
+      "appearsAs": [
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "NCL 8820"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "NCL 8820"
+        }
+      ],
+      "bodyNo": "MHS-05",
+      "hauler": "H-001"
+    },
+    {
+      "id": "V-4",
+      "type": "Vehicle",
+      "canonical": "NDX 5507",
+      "appearsAs": [
+        {
+          "file": "truck-trip-logs.csv",
+          "text": "NDX 5507"
+        }
+      ],
+      "bodyNo": "MWH-02",
+      "hauler": "H-002"
+    },
+    {
+      "id": "PER-01",
+      "type": "Person",
+      "canonical": "Jaime R. Mabansag",
+      "appearsAs": [
+        {
+          "file": "hauling-contracts.pdf",
+          "text": "Jaime R. Mabansag"
+        }
+      ],
+      "role": "President of Mabansag Hauling Services"
+    },
+    {
+      "id": "PER-02",
+      "type": "Person",
+      "canonical": "Romulo T. Basilio",
+      "appearsAs": [
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Romulo T. Basilio"
+        }
+      ],
+      "role": "Municipal Mayor of San Eladio"
+    },
+    {
+      "id": "PER-03",
+      "type": "Person",
+      "canonical": "Anselmo G. Verano",
+      "appearsAs": [
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Anselmo G. Verano"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "ANSELMO G. VERANO"
+        }
+      ],
+      "role": "Municipal Mayor of Tumanaw"
+    },
+    {
+      "id": "PER-04",
+      "type": "Person",
+      "canonical": "Ofelia S. Cabuhat",
+      "appearsAs": [
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Ofelia S. Cabuhat"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "OFELIA S. CABUHAT"
+        }
+      ],
+      "role": "City Mayor of Dalumat"
+    },
+    {
+      "id": "PER-05",
+      "type": "Person",
+      "canonical": "Armando C. Lucero",
+      "appearsAs": [
+        {
+          "file": "swm-plan-saneladio.pdf",
+          "text": "Armando C. Lucero"
+        }
+      ],
+      "role": "Municipal Environment and Natural Resources Officer, San Eladio"
+    },
+    {
+      "id": "PER-06",
+      "type": "Person",
+      "canonical": "Danilo A. Salvador",
+      "appearsAs": [
+        {
+          "file": "swm-plan-tumanaw.pdf",
+          "text": "Danilo A. Salvador"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Danilo A. Salvador"
+        }
+      ],
+      "role": "Municipal Environment and Natural Resources Officer, Tumanaw"
+    },
+    {
+      "id": "PER-07",
+      "type": "Person",
+      "canonical": "Ma. Teresa Q. Salvador",
+      "appearsAs": [
+        {
+          "file": "swm-plan-dalumat.pdf",
+          "text": "Ma. Teresa Q. Salvador"
+        },
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Ma. Teresa Q. Salvador"
+        }
+      ],
+      "role": "City Environment and Natural Resources Officer, Dalumat"
+    },
+    {
+      "id": "PER-08",
+      "type": "Person",
+      "canonical": "Corazon V. Lumbres",
+      "appearsAs": [
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "Corazon V. Lumbres"
+        }
+      ],
+      "role": "EMB Environmental Management Specialist"
+    },
+    {
+      "id": "PER-09",
+      "type": "Person",
+      "canonical": "Nestor A. Cabanilla",
+      "appearsAs": [
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "NESTOR A. CABANILLA"
+        },
+        {
+          "file": "denr-landfill-permit.txt",
+          "text": "NESTOR A. CABANILLA"
+        }
+      ],
+      "role": "EMB Regional Director"
+    },
+    {
+      "id": "PER-10",
+      "type": "Person",
+      "canonical": "Gloria D. Anunciacion",
+      "appearsAs": [
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "Gloria D. Anunciacion"
+        }
+      ],
+      "role": "COA Audit Team Leader"
+    },
+    {
+      "id": "PER-11",
+      "type": "Person",
+      "canonical": "Reynaldo J. Soriano",
+      "appearsAs": [
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "Reynaldo J. Soriano"
+        }
+      ],
+      "role": "COA Supervising Auditor"
+    },
+    {
+      "id": "ORG-1",
+      "type": "Organization",
+      "canonical": "Environmental Management Bureau",
+      "appearsAs": [
+        {
+          "file": "emb-inspection-letters.txt",
+          "text": "ENVIRONMENTAL MANAGEMENT BUREAU"
+        },
+        {
+          "file": "denr-landfill-permit.txt",
+          "text": "ENVIRONMENTAL MANAGEMENT BUREAU"
+        }
+      ],
+      "kind": "agency"
+    },
+    {
+      "id": "ORG-2",
+      "type": "Organization",
+      "canonical": "Commission on Audit",
+      "appearsAs": [
+        {
+          "file": "coa-audit-observations.pdf",
+          "text": "COMMISSION ON AUDIT"
+        }
+      ],
+      "kind": "agency"
+    }
+  ],
+  "mustStaySeparate": [
+    [
+      "H-001",
+      "H-002"
+    ],
+    [
+      "PER-06",
+      "PER-07"
+    ]
+  ],
+  "relationships": [
+    {
+      "from": "H-001",
+      "kind": "contracted_by",
+      "to": "LGU-1",
+      "file": "hauling-contracts.pdf"
+    },
+    {
+      "from": "H-001",
+      "kind": "contracted_by",
+      "to": "LGU-2",
+      "file": "hauling-contracts.pdf"
+    },
+    {
+      "from": "C-1",
+      "kind": "awarded_to",
+      "to": "H-001",
+      "file": "philgeps-awards.csv"
+    },
+    {
+      "from": "C-2",
+      "kind": "awarded_to",
+      "to": "H-001",
+      "file": "philgeps-awards.csv"
+    },
+    {
+      "from": "C-3",
+      "kind": "awarded_to",
+      "to": "H-001",
+      "file": "philgeps-awards.csv"
+    },
+    {
+      "from": "C-4",
+      "kind": "awarded_to",
+      "to": "H-002",
+      "file": "philgeps-awards.csv"
+    },
+    {
+      "from": "C-5",
+      "kind": "awarded_to",
+      "to": "H-002",
+      "file": "philgeps-awards.csv"
+    },
+    {
+      "from": "H-001",
+      "kind": "serves",
+      "to": "LGU-1",
+      "file": "swm-plan-saneladio.pdf"
+    },
+    {
+      "from": "H-001",
+      "kind": "serves",
+      "to": "LGU-2",
+      "file": "swm-plan-tumanaw.pdf"
+    },
+    {
+      "from": "H-002",
+      "kind": "serves",
+      "to": "LGU-3",
+      "file": "swm-plan-dalumat.pdf"
+    },
+    {
+      "from": "H-001",
+      "kind": "operates",
+      "to": "V-1",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "H-001",
+      "kind": "operates",
+      "to": "V-2",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "H-001",
+      "kind": "operates",
+      "to": "V-3",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "H-002",
+      "kind": "operates",
+      "to": "V-4",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "V-1",
+      "kind": "logged_at",
+      "to": "FAC-3",
+      "file": "truck-trip-logs.csv",
+      "note": "same day as the Tumanaw log, overlapping times"
+    },
+    {
+      "from": "V-1",
+      "kind": "logged_at",
+      "to": "FAC-4",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "V-2",
+      "kind": "logged_at",
+      "to": "FAC-3",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "V-2",
+      "kind": "logged_at",
+      "to": "FAC-4",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "V-3",
+      "kind": "logged_at",
+      "to": "FAC-3",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "V-3",
+      "kind": "logged_at",
+      "to": "FAC-4",
+      "file": "truck-trip-logs.csv"
+    },
+    {
+      "from": "H-001",
+      "kind": "operates",
+      "to": "V-1",
+      "file": "emb-inspection-letters.txt",
+      "note": "NBC 4172 and NBC 4175 seen unloading"
+    },
+    {
+      "from": "H-001",
+      "kind": "operates",
+      "to": "V-2",
+      "file": "emb-inspection-letters.txt"
+    },
+    {
+      "from": "V-1",
+      "kind": "logged_at",
+      "to": "FAC-2",
+      "file": "emb-inspection-letters.txt",
+      "note": "seen unloading at the dumpsite"
+    },
+    {
+      "from": "V-2",
+      "kind": "logged_at",
+      "to": "FAC-2",
+      "file": "emb-inspection-letters.txt"
+    },
+    {
+      "from": "H-001",
+      "kind": "operates",
+      "to": "V-3",
+      "file": "emb-inspection-letters.txt",
+      "note": "NCL 8820 weighed in at the landfill"
+    },
+    {
+      "from": "V-3",
+      "kind": "logged_at",
+      "to": "FAC-1",
+      "file": "emb-inspection-letters.txt"
+    },
+    {
+      "from": "ORG-1",
+      "kind": "inspected",
+      "to": "FAC-1",
+      "file": "emb-inspection-letters.txt",
+      "note": "5 March 2026, compliant with findings"
+    },
+    {
+      "from": "ORG-1",
+      "kind": "inspected",
+      "to": "FAC-2",
+      "file": "emb-inspection-letters.txt",
+      "note": "12 March 2026, Notice of Violation"
+    },
+    {
+      "from": "FAC-1",
+      "kind": "located_at",
+      "to": "BRG-7",
+      "file": "denr-landfill-permit.txt"
+    },
+    {
+      "from": "BRG-1",
+      "kind": "part_of",
+      "to": "LGU-1",
+      "file": "swm-plan-saneladio.pdf"
+    },
+    {
+      "from": "BRG-2",
+      "kind": "part_of",
+      "to": "LGU-1",
+      "file": "swm-plan-saneladio.pdf"
+    },
+    {
+      "from": "BRG-3",
+      "kind": "part_of",
+      "to": "LGU-1",
+      "file": "swm-plan-saneladio.pdf"
+    },
+    {
+      "from": "BRG-4",
+      "kind": "part_of",
+      "to": "LGU-2",
+      "file": "swm-plan-tumanaw.pdf"
+    },
+    {
+      "from": "BRG-5",
+      "kind": "part_of",
+      "to": "LGU-2",
+      "file": "swm-plan-tumanaw.pdf"
+    },
+    {
+      "from": "BRG-6",
+      "kind": "part_of",
+      "to": "LGU-2",
+      "file": "swm-plan-tumanaw.pdf"
+    },
+    {
+      "from": "BRG-7",
+      "kind": "part_of",
+      "to": "LGU-3",
+      "file": "swm-plan-dalumat.pdf"
+    },
+    {
+      "from": "BRG-8",
+      "kind": "part_of",
+      "to": "LGU-3",
+      "file": "swm-plan-dalumat.pdf"
+    },
+    {
+      "from": "BRG-9",
+      "kind": "part_of",
+      "to": "LGU-3",
+      "file": "swm-plan-dalumat.pdf"
+    }
+  ]
+}
