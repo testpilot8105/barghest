@@ -18,7 +18,7 @@ const FIELDS_A = `Fields:
 - locations[].name, kind: school, barangay, city, province, building, residence, hospital, online, other.
 - events[].summary (one line), kind (what happened), when (ISO 8601), where (a location name).
 - incidents[]: a reported incident with a report or case number as label, summary, when, where, school.
-- accounts[].platform (Roblox, Discord, Facebook, Facebook Messenger, TikTok, Telegram, other), handle as written, platformId (the numeric id if given), displayName, ownerName (the person's name if the passage links them).
+- accounts[].platform (Roblox, Discord, Facebook, Facebook Messenger, TikTok, Telegram, other), handle as written, platformId (the numeric id if given), displayName, ownerName (the person's name if the passage links them). In a chat export or message log, the sender and receiver names on each line ("Joaquin DP to Marco V.:") are accounts on that platform with handle as written, not persons; list a person only when the passage gives a real name.
 - groups[]: online servers, groups or channels: name, platform, platformId, channels.
 - firearms[]: make, model, calibre, serial, registrationNo (FEO/LTOPF/FR numbers), storage (where it was kept), registeredTo (person), registeredAgency (organisation), custodian (person holding it).
 - evidence[]: tag (E-001, FCC-1, B-1 and the like), kind, custodyStatus, matchedSerial (the firearm serial a ballistics report matches it to), recoveredAt (the incident or place).
@@ -64,7 +64,7 @@ export function decisionPrompt(pair) {
 Record A: ${show(pair.a)}
 Record B: ${show(pair.b)}
 A rule scored this pair ${pair.score} for these reasons: ${pair.reasons.join('; ')}.
-Are A and B the same ${pair.type}?`;
+${pair.question ?? `Are A and B the same ${pair.type}?`}`;
 }
 
 export const SYSTEM_ASK = `You are the assistant of an investigation workbench. You answer ONLY from the records and passages given to you below. Every claim in your answer must cite a passage id from the material. If the material does not support an answer, set refused to true and say "no supporting records" in answer. Never use outside knowledge. Keep the answer under 120 words. JSON only.`;

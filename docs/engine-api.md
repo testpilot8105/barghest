@@ -163,6 +163,11 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
 - 09.10.2026, P9 written, gated: `ask`, `search` and `embed`. No agent loop: retrieve, then one call with the
   answer schema; citations verified; refusal without evidence. Keyword retrieval and refusal are proven with the
   model off; the answer and semantic search run once the model is on.
+- 09.10.2026, accounts to people: `resolve` now ends with an ownership pass (`owners` in its reply). An account
+  with no owner is matched against the scenario's canonical people by display name and handle: a full name is a
+  rule call, a first name plus initials ("Joaquin DP") or a handle carrying an alias goes to the model, and "same"
+  sets the account's `personId` and writes a Resolution (`candidateIds: ["DigitalAccount:<pk>"]`, `canonicalType:
+  "Person"`). The account is never merged into anything.
 - 09.10.2026, the model side proven (`pnpm proof:pipeline`, 19 checks, with `qwen3:4b-instruct` and
   `nomic-embed-text` on this Mac): three fictional files through import, extraction, resolution with the model
   deciding the unsure pairs, embeddings, semantic search and one question answered with three verbatim citations,

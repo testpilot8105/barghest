@@ -120,6 +120,31 @@ try {
   const rows = store.all();
   check('canonical objects, members and resolutions are in SQLite', rows.some((o) => o.__primaryKey === joaquin.__primaryKey) && rows.filter((o) => o.__apiName === 'Resolution').length >= 7, `${rows.length} rows`);
 
+  // Accounts to people: a full name in the display name is a rule call, "Joaquin DP" goes to the model
+  engine.put([
+    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A1', platform: 'Facebook Messenger', handle: 'Joaquin DP', displayName: 'Joaquin DP', passageId: 'PS-1', scenario: 'a' }),
+    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A2', platform: 'Facebook Messenger', handle: 'marco.villarin', displayName: 'Marco Villarin', passageId: 'PS-8', scenario: 'a' }),
+    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A3', platform: 'Discord', handle: 'Vesper_Krael', displayName: 'Vesper_Krael', passageId: 'PS-1', scenario: 'a' }),
+  ]);
+  // The stand-in answers both kinds of question: person pairs as before, owner pairs by the display name.
+  const ownerDecide = async (band) =>
+    band.map((p) =>
+      p.question
+        ? { same: /joaquin/i.test(p.a.displayName ?? '') && /joaquin/i.test(p.b.fullName), confidence: 0.9, reason: `stand-in: ${p.question}` }
+        : { same: isJoaquin(p.a.fullName) && isJoaquin(p.b.fullName), confidence: 0.92, reason: 'stand-in' },
+    );
+  const ro = await resolveScenario({ engine, meta, store, scenario: 'a', decide: ownerDecide, types: ['Person', 'DigitalAccount'] });
+  const a1 = data.getObject('DigitalAccount', 'M-A1');
+  const a2 = data.getObject('DigitalAccount', 'M-A2');
+  const a3 = data.getObject('DigitalAccount', 'M-A3');
+  check('"Joaquin DP" is offered to the model and becomes the canonical Joaquin\'s account', a1?.personId === joaquin.__primaryKey && ro.owners.modelPairs >= 1, `${a1?.personId} (${JSON.stringify(ro.owners)})`);
+  check('"Marco Villarin" as a display name is a rule call', a2?.personId && /villarin/i.test(data.getObject('Person', a2.personId)?.fullName ?? '') && ro.owners.autoPairs >= 1, a2?.personId);
+  check('"Vesper_Krael" matches nobody and stays ownerless', !a3?.personId);
+  const ownerRes = [...data.getObjectsOfType('Resolution')].filter((r) => (r.candidateIds ?? []).includes('DigitalAccount:M-A1'));
+  check('the ownership decision is a Resolution row naming its method', ownerRes.length === 1 && ownerRes[0].decidedBy === 'local-model' && /display name/.test(ownerRes[0].method), JSON.stringify(ownerRes.map((r) => ({ decidedBy: r.decidedBy, method: r.method, n: ownerRes.length }))));
+  const viaOwner = data.getLinksOrThrow('Person', joaquin.__primaryKey, 'digitalAccounts');
+  check('faux walks Person -> digitalAccounts to the newly owned account', viaOwner.some((a) => a.__primaryKey === 'M-A1'), `${viaOwner.length} accounts`);
+
   // Idempotent
   const r3 = await resolveScenario({ engine, meta, store, scenario: 'a', decide, types: ['Person', 'Firearm'] });
   const canon3 = [...data.getObjectsOfType('Person')].filter((p) => !p.canonicalId && !p.passageId);

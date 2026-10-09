@@ -5,6 +5,7 @@
 // run it again and the same clusters give the same canonical ids.
 import { createHash } from 'node:crypto';
 import { toServerObject } from '../faux.mjs';
+import { resolveOwners } from './owners.mjs';
 import { AUTO, candidatePairs, TYPE_RULES } from './pairs.mjs';
 
 const ID_PREFIX = {
@@ -227,5 +228,8 @@ export async function resolveScenario({ engine, meta, store, scenario, decide = 
     edits: [],
     objectIds: toPut.map((o) => `${o.__apiName}:${o.__primaryKey}`),
   });
-  return { scenario, summary, repointedRelationships: repointed, written: toPut.length };
+
+  // Then the cross-type question: which canonical person owns each ownerless account.
+  const owners = types.includes('DigitalAccount') && types.includes('Person') ? await resolveOwners({ engine, meta, store, scenario, decide }) : null;
+  return { scenario, summary, owners, repointedRelationships: repointed, written: toPut.length };
 }

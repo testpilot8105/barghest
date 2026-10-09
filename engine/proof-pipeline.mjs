@@ -175,6 +175,9 @@ try {
   check('resolutions name their method', !!jv && jv.resolutions.length >= 1 && jv.resolutions.every((r) => r.decidedBy && r.method), jv ? [...new Set(jv.resolutions.map((r) => r.decidedBy))].join(', ') : '');
   const rowena = canon.rows.filter((r) => /rowena/i.test(r.title) && !r.properties.passageId);
   check('Rowena is not merged into Joaquin', !jv || !jv.candidates.some((c) => /rowena/i.test(c.title)), rowena.map((r) => r.title).join(' | ') || 'rowena stands as her own mentions');
+  const accounts = await fetchRows(dc, startExploration('DigitalAccount', 200));
+  const owned = accounts.rows.filter((r) => r.properties.personId);
+  check('the account-to-person pass ran over the extracted accounts', !!res.body.owners, `${accounts.rows.length} accounts, ${owned.length} owned: ${owned.map((r) => `${r.title} -> ${r.properties.personId}`).join(' | ') || 'none'}; ${JSON.stringify(res.body.owners)}`);
 
   // Embeddings and semantic search
   const emb = await post('/barghest/embed?scenario=a');
