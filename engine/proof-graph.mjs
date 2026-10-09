@@ -10,7 +10,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 8791;
 const BASE = `http://localhost:${PORT}`;
 const DB = 'data/proof-graph.sqlite';
-const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT) };
+const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off' };
 
 const results = [];
 function check(name, ok, detail = '') {

@@ -1,7 +1,8 @@
 // The local model, behind one door. Every call goes to Ollama on localhost, carries the full JSON schema in
 // `format`, runs at temperature 0, and is logged to inference_log with model, prompt hash, latency and token counts:
-// that log is the proof of real local inference. Nothing here runs until the owner has said so: the door is the
-// BARGHEST_OLLAMA=on environment variable (the launcher sets it once the go is given).
+// that log is the proof of real local inference. On demand, never resident (owner, 09.10.2026): Ollama idles as a
+// service with nothing loaded, the model loads on the first call and unloads again after KEEP_ALIVE idle.
+// BARGHEST_OLLAMA=off keeps the engine away from port 11434 entirely (the proofs that need no model use it).
 import { createHash } from 'node:crypto';
 import { Ollama } from 'ollama';
 
@@ -10,17 +11,19 @@ export const MODELS = {
   chat: process.env.BARGHEST_MODEL ?? 'qwen3:4b-instruct',
   embed: process.env.BARGHEST_EMBED_MODEL ?? 'nomic-embed-text',
 };
+// How long a model stays in memory after its last call. Short on purpose: the machine is shared.
+export const KEEP_ALIVE = process.env.BARGHEST_KEEP_ALIVE ?? '2m';
 // Thinking-capable tags (qwen3:4b) need think:false so the reply is the JSON and nothing else; the 2507 instruct
 // tag has no thinking to turn off and rejects the flag.
 const thinks = (model) => /^qwen3:(?!.*instruct)/.test(model) || /deepseek-r1|qwq/.test(model);
 
 export function ollamaAllowed() {
-  return process.env.BARGHEST_OLLAMA === 'on';
+  return process.env.BARGHEST_OLLAMA !== 'off';
 }
 
 export class OllamaOff extends Error {
   constructor() {
-    super('the local model is off: start Ollama and run the engine with BARGHEST_OLLAMA=on');
+    super('the local model is off for this engine (BARGHEST_OLLAMA=off)');
     this.status = 503;
   }
 }
@@ -68,6 +71,7 @@ export function createLlm({ store, host = OLLAMA_HOST, models = MODELS } = {}) {
           messages,
           format: schema,
           stream: false,
+          keep_alive: KEEP_ALIVE,
           options: { temperature: 0, num_ctx: numCtx },
           ...(thinks(model) ? { think: false } : {}),
         });
@@ -100,7 +104,7 @@ export function createLlm({ store, host = OLLAMA_HOST, models = MODELS } = {}) {
       let vectors = [];
       let res;
       try {
-        res = await client.embed({ model, input: texts, options: { num_ctx: 4096 } });
+        res = await client.embed({ model, input: texts, keep_alive: KEEP_ALIVE, options: { num_ctx: 4096 } });
         vectors = res.embeddings;
         ok = true;
       } finally {

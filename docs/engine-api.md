@@ -153,8 +153,9 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   (`P-<hash of members>`), so a re-run is idempotent.
 - 09.10.2026, P8: `what-connects` and `timeline` are real. The seed gained EvidenceItems E-001 and E-002 (the
   recovered firearms), so P-001 reaches I-001 through the firearm chain as well as through the school.
-- 09.10.2026, model side wired, gated: the engine calls Ollama only when started with `BARGHEST_OLLAMA=on` (the
-  owner's go). With it on, `import` starts extraction in the background (`extraction: "started"`; the Document's
+- 09.10.2026, model side wired. The model is on by default and loaded on demand (owner's rule: Ollama idles as a
+  service, the model unloads 2 minutes after its last call); `BARGHEST_OLLAMA=off` keeps an engine away from it.
+  With it on, `import` starts extraction in the background (`extraction: "started"`; the Document's
   `status` goes `imported`, `extracting`, `extracted`, `extracted with gaps` or `extraction failed`; `extract=no`
   in the form skips it), `POST extract?documentId=` re-runs it, `resolve` asks the model about the 0.5 to 0.9
   pairs (`model=off` to skip), `health.ollama` reports `{ up, host, models, chat, embed }` and `health.extracting`
@@ -162,3 +163,10 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
 - 09.10.2026, P9 written, gated: `ask`, `search` and `embed`. No agent loop: retrieve, then one call with the
   answer schema; citations verified; refusal without evidence. Keyword retrieval and refusal are proven with the
   model off; the answer and semantic search run once the model is on.
+- 09.10.2026, the model side proven (`pnpm proof:pipeline`, 19 checks, with `qwen3:4b-instruct` and
+  `nomic-embed-text` on this Mac): three fictional files through import, extraction, resolution with the model
+  deciding the unsure pairs, embeddings, semantic search and one question answered with three verbatim citations,
+  an unrelated question refused, 18 inference-log rows. What it costs on an M4 with 16 GB: about 60 seconds of
+  extraction per passage of 300 tokens when calls queue one at a time, a 17 second answer, about 2 GB of memory
+  while the model is loaded. Import keeps answering while extraction runs in the background; a full document pack
+  is imported ahead of a demo, and one file is imported live.

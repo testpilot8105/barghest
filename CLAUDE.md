@@ -36,9 +36,12 @@ one each. Node 22.18 or newer (`node:sqlite`, native TypeScript imports in the e
 
 ## Local LLM rule
 
-Never start Ollama, pull a model, or run anything that calls `localhost:11434` without the owner's go in the current
-message. No `brew services start ollama`, `ollama serve`, `ollama pull`, `ollama run`. When a step reaches its first
-model call, stop and ask in one line.
+On demand, never resident (owner, 09.10.2026, after the P2 probe and the pipeline proof measured about 2 GB while
+loaded). Ollama runs as a Homebrew service (`brew services start ollama`) and idles with nothing loaded; the engine
+loads `qwen3:4b-instruct` or `nomic-embed-text` on the first call and Ollama unloads them again after 2 minutes idle
+(`KEEP_ALIVE` in `engine/llm.mjs`). Never pin a model in memory, never raise the keep-alive, never pull another model
+without asking. `BARGHEST_OLLAMA=off` keeps an engine away from port 11434 entirely; the model-free proofs run that
+way. Extraction costs about 60 seconds per passage on this Mac, so document packs are imported well ahead of a demo.
 
 ## Layout
 

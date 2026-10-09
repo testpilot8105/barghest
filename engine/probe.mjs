@@ -1,12 +1,12 @@
-// P2 model probe (BARGHEST_OLLAMA=on node engine/probe.mjs): one paragraph written from the spot report goes to the
-// local model with the full JSON schema; the reply is validated with zod; latency and token counts are printed.
-// Runs only with the owner's go (BARGHEST_OLLAMA=on). Nothing is written to the store.
+// P2 model probe (node engine/probe.mjs): one paragraph written from the spot report goes to the local model with
+// the full JSON schema; the reply is validated with zod; latency and token counts are printed. Needs Ollama up with
+// the chat model pulled. Nothing is written to the store.
 import { createLlm, MODELS, ollamaAllowed } from './llm.mjs';
 import { jsonSchemaOf, probeSchema } from './extract/schemas.mjs';
 import { SYSTEM_EXTRACT } from './extract/prompts.mjs';
 
 if (!ollamaAllowed()) {
-  console.error('probe: the local model is off. Run with BARGHEST_OLLAMA=on once the owner has said so.');
+  console.error('probe: the local model is off for this process (BARGHEST_OLLAMA=off).');
   process.exit(2);
 }
 
