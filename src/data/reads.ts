@@ -53,6 +53,17 @@ export function toWhere(filter: Filter, isArray: boolean): Record<string, unknow
   }
 }
 
+/**
+ * A pivot that returns distinct objects. Faux's own pivot yields one result per link, so a many-to-one hop
+ * (accounts to their owner) repeats the owner once per account and counts and histograms count the repeats; Foundry
+ * returns a set. Faux's union dedupes by object, so the pivot unioned with itself is that set. Checked in
+ * proof:explorer; drop the union if a later faux dedupes pivots itself.
+ */
+function distinctPivot(os: Any, link: string): Any {
+  const pivoted = os.pivotTo(link);
+  return pivoted.union(pivoted);
+}
+
 /** Apply the exploration's steps to an object set. */
 export function toObjectSet(dc: DataClient, exp: Exploration): { os: Any; type: string } {
   let type = exp.start;
@@ -61,7 +72,7 @@ export function toObjectSet(dc: DataClient, exp: Exploration): { os: Any; type: 
     if ('pivot' in step) {
       const link = linkOf(dc.catalog, type, step.pivot);
       if (!link) throw new Error(`${type} has no link ${step.pivot}`);
-      os = os.pivotTo(step.pivot);
+      os = distinctPivot(os, step.pivot);
       type = link.targetType;
     } else {
       const prop = propertyOf(dc.catalog, typeAt(dc.catalog, exp, i), step.filter.property);
@@ -136,7 +147,7 @@ export async function searchAround(dc: DataClient, exp: Exploration): Promise<Se
   const links = dc.catalog.types[type]?.links ?? [];
   return Promise.all(
     links.map(async (link) => {
-      const r = await os.pivotTo(link.apiName).aggregate({ $select: { $count: 'unordered' } });
+      const r = await distinctPivot(os, link.apiName).aggregate({ $select: { $count: 'unordered' } });
       return { link: link.apiName, displayName: link.displayName, targetType: link.targetType, count: Number(r.$count ?? 0) };
     }),
   );

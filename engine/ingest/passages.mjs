@@ -10,19 +10,35 @@ const MIN_TAIL = 200; // a trailing fragment shorter than this joins the passage
 /** @returns {Array<{ index: number, text: string, charStart: number, charEnd: number }>} */
 export function splitPassages(text) {
   const units = [];
-  // Paragraphs first (blank line or a table row), then sentences inside a paragraph that is still too long.
+  // Paragraphs first (a blank line ends one). A paragraph that is too long is cut on its own lines, so table rows,
+  // chat lines and JSON rows each stay a unit whether or not they end in a full stop; only a single line that is
+  // still too long is cut on sentences, with the trailing fragment kept.
   const paraRe = /[^\n]+(?:\n(?!\n)[^\n]+)*/g;
+  const lineRe = /[^\n]+/g;
+  const sentRe = /[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g;
   let m;
   while ((m = paraRe.exec(text)) !== null) {
     const start = m.index;
     const para = m[0];
-    if (para.length <= TARGET) units.push({ start, end: start + para.length });
-    else {
-      const sentRe = /[^.!?\n]+[.!?]+["')\]]*\s*|[^.!?\n]+$/g;
+    if (para.length <= TARGET) {
+      units.push({ start, end: start + para.length });
+      continue;
+    }
+    let l;
+    lineRe.lastIndex = 0;
+    while ((l = lineRe.exec(para)) !== null) {
+      const lineStart = start + l.index;
+      const line = l[0];
+      if (!line.trim()) continue;
+      if (line.length <= TARGET) {
+        units.push({ start: lineStart, end: lineStart + line.length });
+        continue;
+      }
       let s;
-      while ((s = sentRe.exec(para)) !== null) {
+      sentRe.lastIndex = 0;
+      while ((s = sentRe.exec(line)) !== null) {
         if (!s[0].trim()) continue;
-        units.push({ start: start + s.index, end: start + s.index + s[0].length });
+        units.push({ start: lineStart + s.index, end: lineStart + s.index + s[0].length });
       }
     }
   }

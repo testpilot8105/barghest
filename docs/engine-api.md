@@ -75,6 +75,26 @@ Every hook returns `{ data, loading, error }`. The app is wrapped in `BarghestDa
   audit: [{ at, action, actor, summary }] }
 ```
 
+### 2.5 Intake: import, the model log and health (real, 09.10.2026)
+
+The Files and Data Sources views call the engine only through these. Every call that the engine refuses throws an
+`EngineError` carrying `status` and the engine's own message, so a screen can say why.
+
+| Function | Hook | Underneath | Returns |
+|---|---|---|---|
+| `importFile(dc, { file, investigation, system?, folderId?, extract? })` | | `POST import` | `{ documentId, format, passages, records, pages, chars, extraction }`. `extraction` is `started`, `running` or `off`. `extract: false` stores the file without reading it |
+| `extractAgain(dc, documentId)` | | `POST extract?documentId=` | `{ documentId, extraction }`. With the model off it fails with status 503 |
+| `fetchInferenceLog(dc, after)` | `useInferenceLog(intervalMs = 2000)` | `GET inference-log?after=` | rows in id order. The hook polls, appends only rows newer than what it holds, never repeats one, and catches up in one go after a long gap |
+| `getHealth(dc)` | `useHealth(intervalMs = 2000)` | `GET health` | the health body of section 3 |
+| | `useExtracting()` | `health.extracting` | the document ids the model is reading now, polled |
+
+- `investigation` travels as the form field `scenario` (the Document property keeps that internal name). Today the
+  engine accepts only the two demo ids; step 2 of the file-manager work makes it accept any investigation it holds.
+- `folderId` is sent as a form field and ignored until folders land (step 6).
+- The file list is the exploration reads on `Document`: `startExploration('Document')` with a filter step
+  `scenario eq <investigation>`, and the histogram on `Document.system` groups the files by register. Both run on
+  faux 0.57 and are checked in `proof:explorer`.
+
 ## 3. Endpoints under `/barghest/`
 
 | Endpoint | Returns | Real at |
@@ -163,6 +183,11 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
 - 09.10.2026, P9 written, gated: `ask`, `search` and `embed`. No agent loop: retrieve, then one call with the
   answer schema; citations verified; refusal without evidence. Keyword retrieval and refusal are proven with the
   model off; the answer and semantic search run once the model is on.
+- 09.10.2026, two fixes from the other sessions. Passages: a long block is cut on its own lines before the
+  sentence pass, so table rows, chat lines and JSON rows are never dropped (reported by the case-files session).
+  Pivots: faux returns one result per link, so a many-to-one hop repeated objects in rows, counts and histograms;
+  every pivot in `src/data/` is now the pivot unioned with itself, which faux dedupes, so a hop returns distinct
+  objects as Foundry would (reported by the shell session). Both have regression checks in the proofs.
 - 09.10.2026, accounts to people: `resolve` now ends with an ownership pass (`owners` in its reply). An account
   with no owner is matched against the scenario's canonical people by display name and handle: a full name is a
   rule call, a first name plus initials ("Joaquin DP") or a handle carrying an alias goes to the model, and "same"
@@ -175,3 +200,7 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   extraction per passage of 300 tokens when calls queue one at a time, a 17 second answer, about 2 GB of memory
   while the model is loaded. Import keeps answering while extraction runs in the background; a full document pack
   is imported ahead of a demo, and one file is imported live.
+- 09.10.2026, file manager step 1: section 2.5. The data layer wraps `import`, `extract`, `inference-log` and
+  `health` as `importFile`, `extractAgain`, `fetchInferenceLog` / `useInferenceLog`, `getHealth` / `useHealth` and
+  `useExtracting`. A refused engine call throws `EngineError` with `status`. The Document filter by `scenario` and
+  the histogram on `Document.system` are confirmed on faux and checked in `proof:explorer`. No route changed.

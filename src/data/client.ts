@@ -29,10 +29,51 @@ export function objectSet(dc: DataClient, apiName: string): any {
   return dc.client({ type: 'object', apiName } as any);
 }
 
-export async function engineGet<T>(dc: DataClient, path: string, params: Record<string, string> = {}): Promise<T> {
+/** A refused or failed engine call: the HTTP status and the engine's own message, so a screen can say why. */
+export class EngineError extends Error {
+  status: number;
+  path: string;
+  constructor(path: string, status: number, message: string) {
+    super(message);
+    this.name = 'EngineError';
+    this.status = status;
+    this.path = path;
+  }
+}
+
+async function engineResponse<T>(path: string, res: Response): Promise<T> {
+  if (!res.ok) {
+    let message = `${path}: ${res.status}`;
+    try {
+      const body = (await res.json()) as { error?: string };
+      if (body?.error) message = body.error;
+    } catch {
+      // not JSON: keep the status message
+    }
+    throw new EngineError(path, res.status, message);
+  }
+  return (await res.json()) as T;
+}
+
+function engineUrl(dc: DataClient, path: string, params: Record<string, string>): URL {
   const url = new URL(`${dc.baseUrl}${path}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${path}: ${res.status}`);
-  return (await res.json()) as T;
+  return url;
+}
+
+export async function engineGet<T>(dc: DataClient, path: string, params: Record<string, string> = {}): Promise<T> {
+  const res = await fetch(engineUrl(dc, path, params));
+  return engineResponse<T>(path, res);
+}
+
+/** POST to the engine: a FormData body goes as multipart, anything else as JSON, nothing as an empty body. */
+export async function enginePost<T>(dc: DataClient, path: string, params: Record<string, string> = {}, body?: FormData | Record<string, unknown>): Promise<T> {
+  const init: RequestInit = { method: 'POST' };
+  if (body instanceof FormData) init.body = body;
+  else if (body !== undefined) {
+    init.body = JSON.stringify(body);
+    init.headers = { 'content-type': 'application/json' };
+  }
+  const res = await fetch(engineUrl(dc, path, params), init);
+  return engineResponse<T>(path, res);
 }

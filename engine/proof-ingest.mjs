@@ -123,12 +123,26 @@ try {
   const json = await importFile(join(fixtures, 'discord-export.json'));
   check('discord-export.json imports as 2 source records', json.records === 2, `${json.records} records`);
 
+  // A long table with no full stops: every row must survive the passage split (reported by the case-files session).
+  const lrns = Array.from({ length: 40 }, (_, i) => String(109876500000 + i));
+  writeFileSync(
+    join(fixtures, 'big-roster.csv'),
+    'LRN,Learner Name,Grade,Section,Adviser,Guardian,Remarks\n' + lrns.map((lrn, i) => `${lrn},"LEARNER ${i} WITH A LONG FAMILY NAME",9,Rizal,"ABALOS, LORNA","GUARDIAN ${i}",enrolled and attending regularly this school year`).join('\n') + '\n',
+  );
+  const big = await importFile(join(fixtures, 'big-roster.csv'));
+  const lost = [];
+  for (const lrn of lrns) {
+    const hit = await fetchRows(dc, withStep(startExploration('Passage', 10), { filter: { property: 'text', op: 'contains', value: lrn } }));
+    if (hit.rows.length === 0) lost.push(lrn);
+  }
+  check('a 40-row table with no full stops keeps every row in its passages', big.passages >= 2 && lost.length === 0, `${big.passages} passages, ${lost.length} rows lost`);
+
   const docs = await countRows(dc, startExploration('Document'));
-  check('four Documents in the store', docs === 4, `${docs}`);
+  check('five Documents in the store', docs === 5, `${docs}`);
 
   const twice = await importFile(join(fixtures, 'deped-lis-export.csv'));
   const docsAfter = await countRows(dc, startExploration('Document'));
-  check('importing the same file again does not duplicate it', twice.documentId === csv.documentId && docsAfter === 4, `${docsAfter} documents`);
+  check('importing the same file again does not duplicate it', twice.documentId === csv.documentId && docsAfter === 5, `${docsAfter} documents`);
 
   const audit = await fetch(`${BASE}/barghest/audit?objectId=Document:${csv.documentId}`).then((r) => r.json());
   check('each import is in the audit log', audit.length === 2 && audit.every((a) => a.action === 'importDocument'), `${audit.length} entries`);

@@ -3,8 +3,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { connect, type DataClient } from './client.ts';
 import { encodeExploration } from './exploration.ts';
+import { fetchInferenceLog, getHealth, INFERENCE_LOG_PAGE, mergeInferenceRows } from './intake.ts';
 import { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround } from './reads.ts';
-import type { Catalog, Exploration, Histogram, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
+import type { Catalog, Exploration, Health, Histogram, InferenceRow, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
 
 export interface AsyncState<T> {
   data: T | null;
@@ -120,4 +121,85 @@ export function useObjectView(type: string | null, pk: string | null): AsyncStat
 export function useSearchAll(text: string): AsyncState<Record<string, SearchAllEntry>> {
   const q = useMemo(() => text.trim(), [text]);
   return useAsync((dc) => searchAll(dc, q), q);
+}
+
+/**
+ * Re-run a read every `intervalMs` while mounted. The last good value stays on screen through a failed poll; the
+ * error is reported beside it. Stops when the component unmounts or the connection changes.
+ */
+export function usePoll<T>(fn: (dc: DataClient) => Promise<T>, intervalMs: number, key = ''): AsyncState<T> {
+  const { dc, error: connectError } = useDataClient();
+  const [state, setState] = useState<AsyncState<T>>({ data: null, loading: true, error: null });
+  const fnRef = useRef(fn);
+  fnRef.current = fn;
+  useEffect(() => {
+    if (!dc) return;
+    let live = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    setState({ data: null, loading: true, error: null });
+    const tick = async () => {
+      try {
+        const data = await fnRef.current(dc);
+        if (live) setState({ data, loading: false, error: null });
+      } catch (error) {
+        if (live) setState((s) => ({ data: s.data, loading: false, error: error as Error }));
+      }
+      if (live) timer = setTimeout(tick, intervalMs);
+    };
+    tick();
+    return () => {
+      live = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, [dc, intervalMs, key]);
+  if (connectError) return { data: null, loading: false, error: connectError };
+  return state;
+}
+
+/** The engine's health, polled: whether the model is off, idle or reading, and what is in flight. */
+export function useHealth(intervalMs = 2000): AsyncState<Health> {
+  return usePoll((dc) => getHealth(dc), intervalMs);
+}
+
+/** The document ids the model is reading right now, from `health.extracting`, polled. */
+export function useExtracting(intervalMs = 2000): AsyncState<string[]> {
+  const h = useHealth(intervalMs);
+  return { data: h.data ? h.data.extracting : null, loading: h.loading, error: h.error };
+}
+
+/**
+ * The model log, oldest first, growing as the engine logs calls. Each poll asks only for rows newer than the last
+ * one held, so nothing repeats; a full page means more is waiting and the next ask follows at once.
+ */
+export function useInferenceLog(intervalMs = 2000): AsyncState<InferenceRow[]> {
+  const { dc, error: connectError } = useDataClient();
+  const [state, setState] = useState<AsyncState<InferenceRow[]>>({ data: null, loading: true, error: null });
+  useEffect(() => {
+    if (!dc) return;
+    let live = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let held: InferenceRow[] = [];
+    setState({ data: null, loading: true, error: null });
+    const tick = async () => {
+      let delay = intervalMs;
+      try {
+        const after = held.length ? held[held.length - 1].id : 0;
+        const incoming = await fetchInferenceLog(dc, after);
+        if (!live) return;
+        held = mergeInferenceRows(held, incoming);
+        setState({ data: held, loading: false, error: null });
+        if (incoming.length >= INFERENCE_LOG_PAGE) delay = 0;
+      } catch (error) {
+        if (live) setState({ data: held, loading: false, error: error as Error });
+      }
+      if (live) timer = setTimeout(tick, delay);
+    };
+    tick();
+    return () => {
+      live = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, [dc, intervalMs]);
+  if (connectError) return { data: null, loading: false, error: connectError };
+  return state;
 }

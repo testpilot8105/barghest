@@ -175,3 +175,69 @@ export interface SearchAllEntry {
   count: number;
   top: Array<{ pk: string; title: string }>;
 }
+
+/** What `POST import` answers. `extraction` says whether the model started reading the file. */
+export interface ImportResult {
+  documentId: string;
+  format: string;
+  passages: number;
+  records: number;
+  pages: number | null;
+  chars: number;
+  extraction: 'started' | 'running' | 'off';
+}
+
+export interface ImportRequest {
+  file: File;
+  /** The investigation the file belongs to (its id, never a name). */
+  investigation: string;
+  /** The register the file comes from, shown as the Document's `system`. */
+  system?: string;
+  /** The folder it lands in; the top level when empty. Read by the engine once folders exist. */
+  folderId?: string;
+  /** `false` stores the file without the model reading it. */
+  extract?: boolean;
+}
+
+export interface ExtractResult {
+  documentId: string;
+  extraction: 'started' | 'running';
+}
+
+/** One model call, as the engine logged it. */
+export interface InferenceRow {
+  id: number;
+  at: string;
+  model: string;
+  purpose: string;
+  documentId: string | null;
+  passageId: string | null;
+  promptHash: string;
+  latencyMs: number;
+  promptTokens: number | null;
+  outputTokens: number | null;
+  ok: boolean;
+}
+
+export interface OllamaHealth {
+  up: boolean;
+  host: string;
+  models: string[];
+  chat?: boolean;
+  embed?: boolean;
+  error?: string;
+}
+
+export interface Health {
+  ok: boolean;
+  engine: string;
+  ontology: { rid: string; types: number; objects: Record<string, number> };
+  /** `null` while the model is off for this engine. */
+  ollama: OllamaHealth | null;
+  /** The model names, or an empty list with the model off. */
+  models: { chat: string; embed: string } | [];
+  /** Document ids the model is reading right now. */
+  extracting: string[];
+  /** File extensions `import` accepts. */
+  formats: string[];
+}

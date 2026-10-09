@@ -8,7 +8,11 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { connect } from '../src/data/client.ts';
 import { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround, toObjectSet } from '../src/data/reads.ts';
+import { extractAgain, fetchInferenceLog, getHealth, importFile, mergeInferenceRows } from '../src/data/intake.ts';
 import { decodeExploration, encodeExploration, startExploration, withStep } from '../src/data/exploration.ts';
+
+// The investigation id the engine accepts today. Step 2 of the file-manager work retires it for `school-incident`.
+const DEMO_INVESTIGATION = 'a';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REAL = process.argv.includes('--real');
@@ -101,12 +105,60 @@ async function seededChecks(dc, pass) {
   const custodians = await fetchRows(dc, hops);
   check(`6 P-001 -> relationshipsFrom -> toFirearm -> custodian returns P-007${tag}`, same(custodians.rows.map((r) => r.pk), ['P-007']), custodians.rows.map((r) => r.title).join(', '));
 
+  // 6b. A many-to-one pivot returns distinct objects (reported by the shell session): 11 accounts to 4 owners
+  const owners = withStep(startExploration('DigitalAccount'), pivot('owner'));
+  const ownerRows = await fetchRows(dc, owners);
+  const ownerCount = await countRows(dc, owners);
+  const ownerHist = await histogram(dc, owners, 'role');
+  const back = await searchAround(dc, withStep(owners, filterStep('personId', 'eq', 'P-001')));
+  check(`6b DigitalAccount -> owner returns 4 distinct people, count 4, histogram total 4, round trip 4${tag}`, ownerRows.rows.length === 4 && new Set(ownerRows.rows.map((r) => r.pk)).size === 4 && ownerCount === 4 && ownerHist.total === 4 && back.find((b) => b.link === 'digitalAccounts')?.count === 4, `${ownerRows.rows.length} rows, count ${ownerCount}, histogram ${ownerHist.total}, accounts back ${back.find((b) => b.link === 'digitalAccounts')?.count}`);
+
   // 7. The object view of the "took" Relationship carries the M-0188 passage text
   const view = await getObjectView(dc, 'Relationship', 'R-001');
   const text = view.passages.map((p) => p.text).join(' ');
   check(`7 object view of R-001 returns the M-0188 passage text${tag}`, text.includes('nakuha ko na'), view.passages.map((p) => p.pk).join(', '));
 
   return { p1 };
+}
+
+/** The intake calls the Files and Data Sources views make (engine-api.md 2.5), model off. */
+async function intakeChecks(dc) {
+  // I1. Health: the model is off for this engine, nothing is extracting, txt is accepted
+  const h = await getHealth(dc);
+  check('I1 getHealth: model off, nothing extracting, txt accepted', h.ok === true && h.ollama === null && Array.isArray(h.extracting) && h.extracting.length === 0 && h.formats.includes('txt'), `extracting ${JSON.stringify(h.extracting)}, formats ${h.formats.join(', ')}`);
+
+  // I2. Histogram on Document.system before the import: the seed's one register
+  const before = await histogram(dc, startExploration('Document'), 'system');
+  check('I2 histogram on Document.system groups the seed document by its register', before.total === 1 && before.buckets.length === 1 && before.buckets[0].bucket === 'PNP-ACG Cyber Forensics', JSON.stringify(before.buckets));
+
+  // I3. importFile over POST import, with the model off, so the file is stored and not read
+  const text = 'Proof of intake. The register is Proof register and the file is intake-check.txt. Nothing here names anyone.';
+  const file = new File([text], 'intake-check.txt', { type: 'text/plain' });
+  const imported = await importFile(dc, { file, investigation: DEMO_INVESTIGATION, system: 'Proof register', extract: false });
+  check('I3 importFile returns a Document id, one passage, extraction off', typeof imported.documentId === 'string' && imported.documentId.startsWith('D-') && imported.passages === 1 && imported.extraction === 'off', JSON.stringify(imported));
+
+  // I4. The Document filter by scenario: the seed's document and the imported file share the demo id; another id has none
+  const byInvestigation = await fetchRows(dc, withStep(startExploration('Document'), filterStep('scenario', 'eq', DEMO_INVESTIGATION)));
+  const elsewhere = await fetchRows(dc, withStep(startExploration('Document'), filterStep('scenario', 'eq', 'no-such-investigation')));
+  check('I4 Document filtered by scenario returns the seed document and the imported file; an unknown id returns none', same(byInvestigation.rows.map((r) => r.pk).sort(), ['D-001', imported.documentId].sort()) && elsewhere.rows.length === 0, `${byInvestigation.rows.map((r) => r.title).join(', ') || 'no rows'}; unknown id ${elsewhere.rows.length}`);
+
+  // I5. The register histogram now has two buckets
+  const after = await histogram(dc, startExploration('Document'), 'system');
+  const regs = Object.fromEntries(after.buckets.map((b) => [b.bucket, b.count]));
+  check('I5 histogram on Document.system now shows both registers, one file each', after.total === 2 && regs['Proof register'] === 1 && regs['PNP-ACG Cyber Forensics'] === 1, JSON.stringify(regs));
+
+  // I6. extractAgain reaches POST extract and is refused while the model is off, with the status a screen needs
+  const refused = await extractAgain(dc, imported.documentId).then(() => null, (e) => e);
+  check('I6 extractAgain is refused with 503 while the model is off', refused?.status === 503 && /model is off/.test(refused?.message ?? ''), refused ? `${refused.status} ${refused.message}` : 'not refused');
+
+  // I7. fetchInferenceLog answers a list (empty: no model call was made); the merge keeps id order without repeats
+  const log = await fetchInferenceLog(dc, 0);
+  const row = (id) => ({ id, at: '', model: 'm', purpose: 'extract', documentId: null, passageId: null, promptHash: '', latencyMs: 0, promptTokens: null, outputTokens: null, ok: true });
+  const merged = mergeInferenceRows(mergeInferenceRows([], [row(2), row(1)]), [row(2), row(4), row(3)]);
+  const again = mergeInferenceRows(merged, [row(3)]);
+  check('I7 inference log is a list; merge keeps id order, drops repeats and older rows', Array.isArray(log) && log.length === 0 && same(merged.map((r) => r.id), [1, 2, 3, 4]) && same(again.map((r) => r.id), [1, 2, 3, 4]), `${log.length} rows logged, merged ${merged.map((r) => r.id).join(',')}`);
+
+  return { documentId: imported.documentId };
 }
 
 async function seededProof() {
@@ -166,11 +218,16 @@ async function seededProof() {
     const pv = await getObjectView(dc, 'Person', 'P-001');
     check('object view of P-001: 4 accounts, 1 relationship out, 1 resolution', pv.links.find((l) => l.link === 'digitalAccounts')?.count === 4 && pv.relationships.out.length === 1 && pv.resolutions.length === 1, `${pv.links.length} link groups`);
 
+    // Intake (engine-api.md 2.5): import, the register histogram, the scenario filter, extract, the model log
+    const { documentId } = await intakeChecks(dc);
+
     // 10. Restart, then checks 2 to 7 again
     await stopEngine(engine);
     engine = await startEngine();
     const dc2 = await connect(BASE);
     await seededChecks(dc2, 'after restart');
+    const docs = await fetchRows(dc2, startExploration('Document'));
+    check('the imported Document survives the restart', docs.rows.length === 2 && docs.rows.some((r) => r.pk === documentId), docs.rows.map((r) => r.title).join(', '));
   } catch (e) {
     check('no exception', false, e?.message ?? String(e));
     console.error(e);
