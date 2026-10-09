@@ -102,8 +102,8 @@ H-002 "Mabansay Waste Haulers" (one letter from Mabansag) has a different TIN (5
 
 - Complaints: 16 rows, 13 of them "uncollected waste". 11 of those 13 are in Mulawin Dulo (6) and Punta Silangan (5), 8 July to 9 September 2025.
 - MRF reports: Mulawin Dulo and Punta Silangan have "no report" for Q3 2025. The other four barangays report all quarters.
-- Trip logs: 9 to 20 February 2026. NBC 4172 is logged in both San Eladio and Tumanaw on 10, 11 and 17 Feb; NBC 4175 on 10, 12 and 18 Feb; NCL 8820 on 11 and 17 Feb. Each pair of logs overlaps by 15 to 35 minutes. Two Dalumat rows belong to H-002.
-- Audit memo: AOM No. 2026-007 (20 April 2026) names TMN-SWM-2025-009 (Php 3,720,000.00) and SEL-SWM-2025-014 (Php 4,860,000.00) as billing the same four trucks, body nos. MHS-03, MHS-05, MHS-07 and MHS-09. It asks for comment within 15 calendar days and states it is not a finding of fraud.
+- Trip logs: 10 to 18 February 2026. NBC 4172 is logged in both San Eladio and Tumanaw on 10, 11 and 17 Feb; NBC 4175 on 10, 12 and 18 Feb; NCL 8820 on 11 and 17 Feb. Each pair of logs overlaps by 32 to 40 minutes. Two Dalumat rows belong to H-002.
+- Audit memo: AOM No. 2026-007 (20 April 2026) names TMN-SWM-2025-009 (Php 3,720,000.00) and SEL-SWM-2025-014 (Php 4,860,000.00) as listing the same four trucks, body nos. MHS-03, MHS-05, MHS-07 and MHS-09. It asks for comment within 15 calendar days and states it is not a finding of fraud.
 - Inspections: the Dalumat Sanitary Landfill (5 March 2026) is compliant with findings and notes truck NCL 8820; the Tumanaw Open Dumpsite (12 March 2026) gets a Notice of Violation that names NBC 4172 and NBC 4175 unloading. The notice states it is not a finding of liability.
 - Demo question: "Which hauler serves more than one LGU and what did the inspections say" resolves to H-001, San Eladio and Tumanaw, the two inspections above.
 

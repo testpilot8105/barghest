@@ -13,7 +13,7 @@ Eleven files shaped like the Philippine registers they imitate, for a local mode
 - `complaints-8888.csv`: 8888 complaint records, sixteen rows. Most uncollected-waste complaints fall in the two barangays with the missing reports.
 - `truck-trip-logs.csv`: gate and transfer-station logs, eighteen rows, February 2026. The same plates logged in two LGUs on the same days at overlapping times.
 - `emb-inspection-letters.txt`: two EMB letters. A landfill found compliant with findings, and a Notice of Violation for an open dumpsite that names the hauler's trucks.
-- `coa-audit-observations.pdf`: COA Audit Observation Memorandum, two pages. Two contracts that bill the same four trucks, with their amounts.
+- `coa-audit-observations.pdf`: COA Audit Observation Memorandum, two pages. Two contracts that list the same four trucks, with their amounts.
 - `denr-landfill-permit.txt`: Environmental Compliance Certificate for the sanitary landfill. Number, operator, capacity, expiry.
 
 ## Size and import time
