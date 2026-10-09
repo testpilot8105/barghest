@@ -19,6 +19,7 @@ import { createDecide } from './resolve/decide.mjs';
 import { extractDocument } from './extract/index.mjs';
 import { createLlm, MODELS } from './llm.mjs';
 import { timeline, whatConnects } from './queries/graph.mjs';
+import { documentView } from './queries/document.mjs';
 import { ask, embedAll, searchPassages } from './ask/index.mjs';
 import { createInvestigation, ensureDemoInvestigations, listInvestigations } from './investigations.mjs';
 import { ownership } from '../ontology/ownership.ts';
@@ -131,6 +132,12 @@ const routes = {
     return store.auditFor(objectId);
   },
   'GET /barghest/inference-log': (url) => store.inferenceLog(Number(url.searchParams.get('after') ?? 0)),
+  // The file view in one call: the document, its passages with what the model pulled from them, its rows, its log.
+  'GET /barghest/document': (url) => {
+    const documentId = url.searchParams.get('documentId');
+    if (!documentId) throw bad('documentId is required');
+    return documentView({ data: engine.data, meta, store, documentId, extracting: jobs.has(documentId) });
+  },
   // Investigations: store records, outside the ontology (engine-api.md 2.6).
   'GET /barghest/investigations': () => listInvestigations(store, engine.data),
   'POST /barghest/investigations': async (url, req) => createInvestigation(store, await jsonBodyOf(req)),

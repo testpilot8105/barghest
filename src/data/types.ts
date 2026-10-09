@@ -232,6 +232,68 @@ export interface OllamaHealth {
   error?: string;
 }
 
+/** An object the model pulled from a passage or a table row. A mention has no confidence of its own; links do. */
+export interface DocumentMention {
+  type: string;
+  pk: string;
+  title: string;
+  canonicalId: string | null;
+}
+
+/** A link cited by a passage, with its ends as the passage names them. */
+export interface DocumentRelationship {
+  pk: string;
+  kind: string;
+  /** The passage's own words for a related_to link; empty otherwise. */
+  kindLabel: string;
+  label: string;
+  from: { type: string; pk: string; title: string };
+  to: { type: string; pk: string; title: string };
+  confidence: number | null;
+  status: string;
+  method: string;
+}
+
+export interface DocumentPassage {
+  pk: string;
+  index: number;
+  text: string;
+  charStart: number;
+  charEnd: number;
+  mentions: DocumentMention[];
+  relationships: DocumentRelationship[];
+}
+
+export interface DocumentRecord {
+  pk: string;
+  label: string;
+  observedAt: string | null;
+  system: string;
+  mentions: DocumentMention[];
+}
+
+/** The file view in one call. */
+export interface DocumentView {
+  document: {
+    documentId: string;
+    title: string;
+    path: string;
+    format: string;
+    system: string;
+    scenario: string;
+    importedAt: string;
+    status: string;
+    /** True while the model is reading this file; the hook keeps asking until it is false. */
+    extracting: boolean;
+  };
+  /** Null until folders land (step 6). */
+  folder: { id: string; name: string } | null;
+  passages: DocumentPassage[];
+  records: DocumentRecord[];
+  /** This document's model log, oldest first. */
+  inference: InferenceRow[];
+}
+
 /** One kind of thing the model can be asked to list, and the ontology type it lands as. */
 export interface InvestigationBlock {
   id: string;

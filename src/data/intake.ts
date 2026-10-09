@@ -2,7 +2,7 @@
 // the engine's health. Plain functions over the engine's own routes; the hooks in hooks.tsx poll these. Every one
 // takes the connection first so the proofs run them under Node over HTTP.
 import { engineGet, enginePost, type DataClient } from './client.ts';
-import type { CreateInvestigationRequest, ExtractResult, Health, ImportRequest, ImportResult, InferenceRow, Investigation, InvestigationsResult } from './types.ts';
+import type { CreateInvestigationRequest, DocumentView, ExtractResult, Health, ImportRequest, ImportResult, InferenceRow, Investigation, InvestigationsResult } from './types.ts';
 
 /** Store a file in an investigation; the model starts reading it unless `extract` is false or the model is off. */
 export async function importFile(dc: DataClient, req: ImportRequest): Promise<ImportResult> {
@@ -18,6 +18,11 @@ export async function importFile(dc: DataClient, req: ImportRequest): Promise<Im
 /** Run the model over one imported document again. Fails with status 503 while the model is off, 400 on a no-text file. */
 export function extractAgain(dc: DataClient, documentId: string): Promise<ExtractResult> {
   return enginePost<ExtractResult>(dc, '/barghest/extract', { documentId });
+}
+
+/** The file view in one call: the document, its passages with what the model pulled, its rows, its model log. */
+export function getDocumentView(dc: DataClient, documentId: string): Promise<DocumentView> {
+  return engineGet<DocumentView>(dc, '/barghest/document', { documentId });
 }
 
 /** The URL of the stored original, for an "Open original" link in a new tab; a PDF renders in the browser. */

@@ -84,6 +84,20 @@ export function openStore(path) {
     'INSERT INTO inference_log (at, model, purpose, document_id, passage_id, prompt_hash, latency_ms, prompt_tokens, output_tokens, ok) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   );
   const inferenceAfterStmt = db.prepare('SELECT * FROM inference_log WHERE id > ? ORDER BY id LIMIT 500');
+  const inferenceForStmt = db.prepare('SELECT * FROM inference_log WHERE document_id = ? ORDER BY id');
+  const inferenceRow = (row) => ({
+    id: row.id,
+    at: row.at,
+    model: row.model,
+    purpose: row.purpose,
+    documentId: row.document_id,
+    passageId: row.passage_id,
+    promptHash: row.prompt_hash,
+    latencyMs: row.latency_ms,
+    promptTokens: row.prompt_tokens,
+    outputTokens: row.output_tokens,
+    ok: row.ok === 1,
+  });
   const embeddingUpsert = db.prepare(
     'INSERT INTO passage_embedding (passage_id, model, dim, vector) VALUES (?, ?, ?, ?) ON CONFLICT(passage_id) DO UPDATE SET model = excluded.model, dim = excluded.dim, vector = excluded.vector',
   );
@@ -142,19 +156,11 @@ export function openStore(path) {
       inferenceStmt.run(new Date().toISOString(), model, purpose, documentId, passageId, promptHash, latencyMs, promptTokens, outputTokens, ok ? 1 : 0);
     },
     inferenceLog(after = 0) {
-      return inferenceAfterStmt.all(Number(after)).map((row) => ({
-        id: row.id,
-        at: row.at,
-        model: row.model,
-        purpose: row.purpose,
-        documentId: row.document_id,
-        passageId: row.passage_id,
-        promptHash: row.prompt_hash,
-        latencyMs: row.latency_ms,
-        promptTokens: row.prompt_tokens,
-        outputTokens: row.output_tokens,
-        ok: row.ok === 1,
-      }));
+      return inferenceAfterStmt.all(Number(after)).map(inferenceRow);
+    },
+    /** Every model call made for one document, oldest first. */
+    inferenceFor(documentId) {
+      return inferenceForStmt.all(String(documentId)).map(inferenceRow);
     },
     putEmbedding(passageId, model, vector) {
       const arr = Float32Array.from(vector);

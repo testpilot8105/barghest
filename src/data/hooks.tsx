@@ -3,9 +3,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { connect, type DataClient } from './client.ts';
 import { encodeExploration } from './exploration.ts';
-import { fetchInferenceLog, getHealth, getInvestigations, INFERENCE_LOG_PAGE, mergeInferenceRows } from './intake.ts';
+import { fetchInferenceLog, getDocumentView, getHealth, getInvestigations, INFERENCE_LOG_PAGE, mergeInferenceRows } from './intake.ts';
 import { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround } from './reads.ts';
-import type { Catalog, Exploration, Health, Histogram, InferenceRow, InvestigationsResult, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
+import type { Catalog, DocumentView, Exploration, Health, Histogram, InferenceRow, InvestigationsResult, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
 
 export interface AsyncState<T> {
   data: T | null;
@@ -133,6 +133,46 @@ export function useInvestigations(): InvestigationsState {
   const [tick, setTick] = useState(0);
   const state = useAsync((dc) => getInvestigations(dc), `investigations:${tick}`);
   const reload = useCallback(() => setTick((t) => t + 1), []);
+  return { ...state, reload };
+}
+
+export interface DocumentViewState extends AsyncState<DocumentView> {
+  /** Ask again now, for instance right after `extractAgain`; polling resumes if the file is being read. */
+  reload: () => void;
+}
+
+/**
+ * The file view. Fetched once; while `document.extracting` is true it is fetched again every `intervalMs`, so the
+ * passages fill in with what the model pulled as it finishes them. The last good view stays through a failed poll.
+ */
+export function useDocumentView(documentId: string | null, intervalMs = 2000): DocumentViewState {
+  const { dc, error: connectError } = useDataClient();
+  const [state, setState] = useState<AsyncState<DocumentView>>({ data: null, loading: true, error: null });
+  const [tick, setTick] = useState(0);
+  const reload = useCallback(() => setTick((t) => t + 1), []);
+  useEffect(() => {
+    if (!dc || !documentId) return;
+    let live = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    setState((s) => ({ data: s.data, loading: true, error: null }));
+    const fetchView = async () => {
+      try {
+        const view = await getDocumentView(dc, documentId);
+        if (!live) return;
+        setState({ data: view, loading: false, error: null });
+        if (view.document.extracting) timer = setTimeout(fetchView, intervalMs);
+      } catch (error) {
+        if (live) setState((s) => ({ data: s.data, loading: false, error: error as Error }));
+      }
+    };
+    fetchView();
+    return () => {
+      live = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, [dc, documentId, intervalMs, tick]);
+  if (connectError) return { data: null, loading: false, error: connectError, reload };
+  if (!documentId) return { data: null, loading: false, error: null, reload };
   return { ...state, reload };
 }
 
