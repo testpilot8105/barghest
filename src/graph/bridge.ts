@@ -106,3 +106,14 @@ export function useObjectsTimeline(keys: string[]): AsyncState<TimelineEvent[]> 
     return [...seen.values()].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id));
   }, sorted.join('|'));
 }
+
+/** Several subjects' timelines merged by event id, oldest first; `objects` is how many the walk reached from one subject. */
+export function useSubjectsTimeline(subjects: string[], hops: number): AsyncState<{ events: TimelineEvent[]; objects: number | null }> {
+  return useAsync(async (dc) => {
+    const all = await Promise.all(subjects.map((k) => getTimeline(dc, k, hops)));
+    const seen = new Map<string, TimelineEvent>();
+    for (const t of all) for (const e of t.events) seen.set(e.id, e);
+    const events = [...seen.values()].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id));
+    return { events, objects: all.length === 1 ? all[0].objects : null };
+  }, `${subjects.join('|')}#${hops}`);
+}

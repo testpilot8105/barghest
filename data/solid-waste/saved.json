@@ -4,12 +4,12 @@
     {
       "kind": "graph",
       "name": "One hauler, three LGUs",
-      "focus": { "type": "Hauler", "name": "Mabansag Hauling Services" }
+      "focus": { "type": "Hauler", "name": "Mabansag Hauling" }
     },
     {
       "kind": "timeline",
       "name": "Contracts and inspections",
-      "subjects": [{ "type": "Hauler", "name": "Mabansag Hauling Services" }],
+      "subjects": [{ "type": "Hauler", "name": "Mabansag Hauling" }],
       "hops": 2
     }
   ]

@@ -52,6 +52,14 @@
   background: var(--bp-palette-dark-gray-5);
 }
 
+.graph__toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.graph__toolbar > .file-status {
+  margin-right: 8px;
+}
+
 .graph-toolmenu {
   min-width: 240px;
 }
@@ -166,6 +174,15 @@
   background: var(--bp-palette-dark-gray-4);
   border: 1px solid var(--bp-palette-dark-gray-5);
   border-radius: 3px;
+}
+
+.graph-node__tile--photo {
+  overflow: hidden;
+}
+
+.graph-node__tile--photo .photo-thumb {
+  display: block;
+  border-radius: 0;
 }
 
 .graph-node__label {

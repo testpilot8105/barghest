@@ -55,21 +55,30 @@ function fromBase64Url(s: string): string {
 }
 
 export function encodeNodes(nodes: CanvasNode[]): string {
-  return toBase64Url(JSON.stringify(nodes.map((n) => [n.type, n.pk, Math.round(n.x), Math.round(n.y)])));
+  return toBase64Url(JSON.stringify(nodesToRows(nodes)));
 }
 
 /** Null for a missing or unreadable value, so a broken link opens an empty canvas instead of failing. */
 export function decodeNodes(encoded: string | null): CanvasNode[] | null {
   if (!encoded) return null;
   try {
-    const rows = JSON.parse(fromBase64Url(encoded)) as unknown;
-    if (!Array.isArray(rows)) return null;
-    return rows
-      .filter((r): r is [string, string, number, number] => Array.isArray(r) && typeof r[0] === 'string' && typeof r[1] === 'string' && Number.isFinite(r[2]) && Number.isFinite(r[3]))
-      .map(([type, pk, x, y]) => ({ key: objectKey(type, pk), type, pk, x, y }));
+    return rowsToNodes(JSON.parse(fromBase64Url(encoded)));
   } catch {
     return null;
   }
+}
+
+/** The canvas as a saved graph keeps it: [type, pk, x, y] per object. */
+export function nodesToRows(nodes: CanvasNode[]): Array<[string, string, number, number]> {
+  return nodes.map((n) => [n.type, n.pk, Math.round(n.x), Math.round(n.y)]);
+}
+
+/** Rows back to the canvas, leaving out anything unreadable; null when it isn't a list at all. */
+export function rowsToNodes(rows: unknown): CanvasNode[] | null {
+  if (!Array.isArray(rows)) return null;
+  return rows
+    .filter((r): r is [string, string, number, number] => Array.isArray(r) && typeof r[0] === 'string' && typeof r[1] === 'string' && Number.isFinite(r[2]) && Number.isFinite(r[3]))
+    .map(([type, pk, x, y]) => ({ key: objectKey(type, pk), type, pk, x, y }));
 }
 
 // ---- Layout ----
@@ -174,8 +183,25 @@ export interface StepLink {
  * ontology link once, named from its single-valued side ("hollow.ix, Owner, Joaquin") when that side is loaded, so
  * a link and its reverse never both appear.
  */
+/**
+ * Every mention merged into another object, as mention key to canonical key. The graph has one node per real thing
+ * (engine-api.md, P6), so a mention folds into its canonical object and a link to it lands there too.
+ */
+export function foldsOf(views: Map<string, ObjectView>, steps: StepLink[] = []): Map<string, string> {
+  const folds = new Map<string, string>();
+  // A path that steps from an object to one of its candidates, or from a mention to its canonical object, says so itself.
+  for (const s of steps) {
+    if (s.link === 'candidates') folds.set(s.to, s.from);
+    if (s.link === 'canonical') folds.set(s.from, s.to);
+  }
+  for (const [key, v] of views) if (v.canonical && v.canonical.pk !== v.pk) folds.set(key, objectKey(v.type, v.canonical.pk));
+  return folds;
+}
+
 export function deriveEdges(nodes: CanvasNode[], views: Map<string, ObjectView>, catalog: Catalog, steps: StepLink[]): EdgeModel[] {
   const onCanvas = new Set(nodes.map((n) => n.key));
+  const folds = foldsOf(views, steps);
+  const fold = (k: string) => folds.get(k) ?? k;
   const edges = new Map<string, EdgeModel>();
   const linkSide = new Map<string, string>();
 
@@ -187,7 +213,7 @@ export function deriveEdges(nodes: CanvasNode[], views: Map<string, ObjectView>,
       [view.relationships.in, false],
     ] as const) {
       for (const r of list) {
-        const other = objectKey(r.otherType, r.otherPk);
+        const other = fold(objectKey(r.otherType, r.otherPk));
         if (other === n.key || !onCanvas.has(other) || edges.has(`rel:${r.pk}`)) continue;
         edges.set(`rel:${r.pk}`, {
           id: `rel:${r.pk}`,
@@ -219,14 +245,15 @@ export function deriveEdges(nodes: CanvasNode[], views: Map<string, ObjectView>,
       if (!view) continue;
       for (const g of graphLinks(view)) {
         if (catalog.types[n.type]?.links.find((l) => l.apiName === g.link)?.cardinality !== card) continue;
-        for (const t of g.first) addLink(n.key, g.link, g.displayName, objectKey(g.targetType, t.pk));
+        for (const t of g.first) addLink(n.key, g.link, g.displayName, fold(objectKey(g.targetType, t.pk)));
       }
     }
   }
   for (const s of steps) {
-    if (!onCanvas.has(s.from) || s.from.startsWith('Relationship:') || s.to.startsWith('Relationship:')) continue;
-    const type = s.from.slice(0, s.from.indexOf(':'));
-    addLink(s.from, s.link, catalog.types[type]?.links.find((l) => l.apiName === s.link)?.displayName ?? s.link, s.to);
+    const from = fold(s.from);
+    if (!onCanvas.has(from) || from.startsWith('Relationship:') || s.to.startsWith('Relationship:')) continue;
+    const type = from.slice(0, from.indexOf(':'));
+    addLink(from, s.link, catalog.types[type]?.links.find((l) => l.apiName === s.link)?.displayName ?? s.link, fold(s.to));
   }
 
   // Parallel edges between one pair bend apart, each the same way whichever end it starts from.

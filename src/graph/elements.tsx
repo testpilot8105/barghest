@@ -6,6 +6,7 @@ import { ContextMenu, Menu, MenuDivider, MenuItem, Spinner } from '@blueprintjs/
 import { BaseEdge, EdgeLabelRenderer, Handle, Position, useInternalNode, type Edge, type EdgeProps, type InternalNode, type Node, type NodeProps } from '@xyflow/react';
 import { createContext, useContext } from 'react';
 import type { ObjectView } from '../data/index.ts';
+import { PhotoThumb } from '../photos';
 import { graphLinks, ICON_BOX, kindText, NODE_W, relationshipsOf, type EdgeModel } from './canvas';
 import { typeIcon } from './icons';
 
@@ -18,6 +19,8 @@ export interface ObjectNodeData extends Record<string, unknown> {
   busy: boolean;
   /** a path is lit and this object isn't on it */
   dim: boolean;
+  /** the object's picture (the first photo linked to it), shown in the tile in place of its type icon */
+  photoUrl?: string;
 }
 
 export type ObjectNodeType = Node<ObjectNodeData, 'object'>;
@@ -52,7 +55,7 @@ export function ObjectNode({ id, data, selected }: NodeProps<ObjectNodeType>) {
     <ContextMenu content={actions ? <NodeMenu id={id} actions={actions} /> : <Menu />} className={classes}>
       {/* Edges need a handle at each end; they are hidden, since lines run between tile centres. */}
       <Handle type="target" position={Position.Top} className="graph-node__handle" isConnectable={false} />
-      <div className="graph-node__tile">{data.busy ? <Spinner size={18} /> : <Icon size={20} />}</div>
+      <div className={`graph-node__tile${data.photoUrl && !data.busy ? ' graph-node__tile--photo' : ''}`}>{data.busy ? <Spinner size={18} /> : data.photoUrl ? <PhotoThumb url={data.photoUrl} name="photo.jpg" size={38} /> : <Icon size={20} />}</div>
       <div className={`graph-node__label${data.pending ? ' bp6-skeleton' : ''}`}>{data.title}</div>
       <Handle type="source" position={Position.Bottom} className="graph-node__handle" isConnectable={false} />
     </ContextMenu>

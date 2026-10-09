@@ -1,58 +1,83 @@
 // Timeline (S5), the owner's pick of 10.10.2026 (the Content file, "BARGHEST Timeline 1440 x 900, Builder 3 redesign",
-// the calmer version): everything dated within a few hops of one object. Full bleed: the subject bar, then Gotham's
-// chart (bars stacked by tag, the shown range, a bin size, the deletion gap as a band and a marker, an overview of the
-// whole span to zoom from, tags and kinds to tick), then the events as a table beside the picked event's panel (its
-// passage, its objects). The address carries the subject (?object=), the hops (?hops=) and the zoom (?from=, ?until=).
+// the calmer version): everything dated within a few hops of one or more objects. Full bleed: the subject bar, then
+// Gotham's chart (bars stacked by tag, the shown range, a bin size, the deletion gap as a band and a marker, an overview
+// of the whole span to zoom from, tags and kinds to tick), then the events as a table beside the picked event's panel
+// (its passage, its objects). A timeline is a file (../graph/files.tsx): ?saved=<id> opens one and every change saves
+// itself; it holds the subjects, the hops and the zoom. With nothing open the view lists this investigation's timelines.
 import { AnchorButton, Blockquote, Button, Callout, Checkbox, Classes, H6, InputGroup, Menu, MenuItem, NonIdealState, Popover, SegmentedControl, Spinner, Tag } from '@blueprintjs/core';
 import { CaretDown, Cross, Document, Graph as GraphIcon, Search, Tick, WarningSign } from '@blueprintjs/icons';
-import { Fragment, useMemo, useRef, useState } from 'react';
-import { getObjectView, useAsync, useCatalog, useObjectView, type Catalog } from '../data/index.ts';
+import { Fragment, useCallback, useMemo, useRef, useState } from 'react';
+import { getObjectView, useAsync, useCatalog, type Catalog } from '../data/index.ts';
 import { filesHref, follow } from '../browser/links';
 import { usePassageFiles } from '../evidence/passages';
 import { Connecting, EngineDown, formatCount } from '../explorer/parts';
-import { useTimeline, type TimelineEvent, type TimelineTag } from '../graph/bridge';
+import { useSubjectsTimeline, type TimelineEvent, type TimelineTag } from '../graph/bridge';
 import { encodeNodes } from '../graph/canvas';
+import { FileGone, FileLoading, OpenFromLink, SaveStatus, useAutosave, useSavedFile, type FileLink, type SaveState } from '../graph/files';
+import { SavedHome } from '../graph/home';
 import { parseKey, typeIcon } from '../graph/icons';
-import { SearchBox, SearchResults } from '../graph/search';
+import { SearchBox, SearchResults, type Found } from '../graph/search';
+import { EventPhoto } from '../photos';
 import { findView, paletteVar } from '../shell/nav';
 import { navigate, useSearchParam, viewHref } from '../shell/route';
 import { useDocumentTitle } from '../shell/title';
 import { BIN_WORDS, binSizeFor, formatAt, formatBin, formatClock, formatRange, isFlag, makeBins, TAGS, type Bin, type BinSize } from './bins';
 import './timeline.css';
 
-const OBJECT = 'object';
-const HOPS = 'hops';
-const FROM = 'from';
-const UNTIL = 'until';
-
 const TAG_WORDS: Record<TimelineTag, string> = { observed: 'Observed', system: 'System', analyst: 'Analyst' };
 const dayFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const longFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
 const utcFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
 
-function write(changes: Record<string, string | null>, push = false) {
-  const params = new URLSearchParams(window.location.search);
-  for (const [k, v] of Object.entries(changes)) {
-    if (v == null) params.delete(k);
-    else params.set(k, v);
-  }
-  const qs = params.toString();
-  navigate(`${window.location.pathname}${qs ? `?${qs}` : ''}`, { replace: !push });
-}
-
 /** A source with only a date lands at midnight UTC; the table says "date only" instead of a made-up time. */
 const dateOnly = (at: string) => /T00:00:00(\.000)?Z$/.test(at);
 
 export function Timeline({ investigation }: { investigation: string }) {
+  const saved = useSearchParam('saved');
+  const object = useSearchParam('object');
+  const hops = useSearchParam('hops');
+  const from = useSearchParam('from');
+  const until = useSearchParam('until');
   const { data: catalog, error } = useCatalog();
-  const subject = useSearchParam(OBJECT);
   if (error) return <EngineDown />;
   if (!catalog) return <Connecting />;
-  if (!parseKey(subject)) return <NoSubject />;
-  return <TimelineScreen key={subject} catalog={catalog} investigation={investigation} subject={subject!} />;
+  if (saved) return <SavedTimeline key={saved} id={saved} catalog={catalog} investigation={investigation} />;
+  if (parseKey(object)) return <OpenFromLink investigation={investigation} kind="timeline" link={timelineLink(object!, hops, from, until)} />;
+  return <SavedHome investigation={investigation} kind="timeline" />;
 }
 
-function NoSubject() {
+/** What a timeline file holds. */
+export interface TimelineDoc {
+  subjects: string[];
+  hops: number;
+  from: string | null;
+  until: string | null;
+}
+
+const clampHops = (v: unknown) => Math.min(3, Math.max(1, Math.round(Number(v)) || 2));
+const isoOrNull = (v: unknown) => (typeof v === 'string' && Number.isFinite(Date.parse(v)) ? v : null);
+
+function timelineDocOf(body: Record<string, unknown> | undefined): TimelineDoc {
+  const subjects = Array.isArray(body?.subjects) ? (body.subjects as unknown[]).filter((k): k is string => typeof k === 'string' && !!parseKey(k)) : [];
+  return { subjects: [...new Set(subjects)], hops: clampHops(body?.hops), from: isoOrNull(body?.from), until: isoOrNull(body?.until) };
+}
+
+/** A link from another view names one object (?object=), with the hops and a zoom if it wants them. */
+function timelineLink(object: string, hops: string | null, from: string | null, until: string | null): FileLink {
+  return { origin: object, body: { subjects: [object], hops: clampHops(hops), from: isoOrNull(from), until: isoOrNull(until) }, name: (title) => title(object) };
+}
+
+function SavedTimeline({ id, catalog, investigation }: { id: string; catalog: Catalog; investigation: string }) {
+  const item = useSavedFile(id, 'timeline', investigation);
+  const autosave = useAutosave(id);
+  useDocumentTitle(item.data?.name ?? null);
+  const onChange = useCallback((d: TimelineDoc) => autosave.save({ ...item.data?.body, ...d }), [autosave.save, item.data?.body]);
+  if (item.error) return <FileGone investigation={investigation} kind="timeline" message={item.error.message} />;
+  if (!item.data) return <FileLoading />;
+  return <TimelineScreen catalog={catalog} investigation={investigation} initial={timelineDocOf(item.data.body)} onChange={onChange} saveState={autosave.state} />;
+}
+
+function NoSubject({ onPick }: { onPick: (f: Found) => void }) {
   const view = findView('timeline');
   const [query, setQuery] = useState('');
   return (
@@ -61,7 +86,7 @@ function NoSubject() {
       <InputGroup autoFocus leftIcon={<Search />} placeholder="Search by name" aria-label="Search by name" value={query} onValueChange={setQuery} className="timeline__search" />
       {query.trim() && (
         <div className="timeline__results">
-          <SearchResults query={query} onPick={(f) => write({ [OBJECT]: f.key, [FROM]: null, [UNTIL]: null }, true)} />
+          <SearchResults query={query} onPick={onPick} />
         </div>
       )}
     </div>
@@ -70,13 +95,36 @@ function NoSubject() {
 
 type SizeChoice = 'auto' | BinSize;
 
-function TimelineScreen({ catalog, investigation, subject }: { catalog: Catalog; investigation: string; subject: string }) {
-  const ref = parseKey(subject)!;
-  const hops = Math.min(3, Math.max(1, Number(useSearchParam(HOPS)) || 2));
-  const fromParam = Date.parse(useSearchParam(FROM) ?? '');
-  const untilParam = Date.parse(useSearchParam(UNTIL) ?? '');
-  const object = useObjectView(ref.type, ref.pk);
-  const timeline = useTimeline(subject, hops);
+interface ScreenProps {
+  catalog: Catalog;
+  investigation: string;
+  initial: TimelineDoc;
+  onChange: (d: TimelineDoc) => void;
+  saveState: SaveState;
+}
+
+function TimelineScreen({ initial, onChange, ...rest }: ScreenProps) {
+  const [doc, setDoc] = useState(initial);
+  const docRef = useRef(doc);
+  const change = useCallback(
+    (patch: Partial<TimelineDoc>) => {
+      const next = { ...docRef.current, ...patch };
+      docRef.current = next;
+      setDoc(next);
+      onChange(next);
+    },
+    [onChange],
+  );
+  if (!doc.subjects.length) return <NoSubject onPick={(f) => change({ subjects: [f.key], from: null, until: null })} />;
+  return <TimelineBody {...rest} doc={doc} change={change} />;
+}
+
+function TimelineBody({ catalog, investigation, doc, change, saveState }: Omit<ScreenProps, 'initial' | 'onChange'> & { doc: TimelineDoc; change: (patch: Partial<TimelineDoc>) => void }) {
+  const { subjects, hops } = doc;
+  const fromParam = Date.parse(doc.from ?? '');
+  const untilParam = Date.parse(doc.until ?? '');
+  const titles = useObjectTitles(subjects);
+  const timeline = useSubjectsTimeline(subjects, hops);
   const [hiddenTags, setHiddenTags] = useState<Set<TimelineTag>>(() => new Set());
   const [hiddenKinds, setHiddenKinds] = useState<Set<string>>(() => new Set());
   const [allKinds, setAllKinds] = useState(false);
@@ -84,8 +132,7 @@ function TimelineScreen({ catalog, investigation, subject }: { catalog: Catalog;
   const [choice, setChoice] = useState<SizeChoice>('auto');
   const [pickedBin, setPickedBin] = useState<number | null>(null);
   const [pickedEvent, setPickedEvent] = useState<string | null>(null);
-  const name = object.data?.title ?? ref.pk;
-  useDocumentTitle(object.data ? `Timeline of ${object.data.title}` : null);
+  const names = subjects.map((k) => titles.data?.find((t) => t.id === k)?.title ?? parseKey(k)?.pk ?? k);
 
   const events = useMemo(() => timeline.data?.events ?? [], [timeline.data]);
   const times = events.map((e) => Date.parse(e.at)).filter(Number.isFinite);
@@ -107,12 +154,10 @@ function TimelineScreen({ catalog, investigation, subject }: { catalog: Catalog;
   const kindCounts = new Map<string, number>();
   for (const e of events) kindCounts.set(e.kind, (kindCounts.get(e.kind) ?? 0) + 1);
   const kinds = [...kindCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  const def = catalog.types[ref.type];
-  const Icon = typeIcon(ref.type);
 
   const zoomTo = (a: number, b: number) => {
     setPickedBin(null);
-    write({ [FROM]: new Date(Math.min(a, b)).toISOString(), [UNTIL]: new Date(Math.max(a, b)).toISOString() });
+    change({ from: new Date(Math.min(a, b)).toISOString(), until: new Date(Math.max(a, b)).toISOString() });
   };
   const toggle = <T,>(set: Set<T>, v: T) => {
     const next = new Set(set);
@@ -124,22 +169,29 @@ function TimelineScreen({ catalog, investigation, subject }: { catalog: Catalog;
   return (
     <div className="timeline">
       <div className="timeline__subject">
-        <Tag className="timeline__chip" size="large" icon={<Icon />} onRemove={() => write({ [OBJECT]: null, [FROM]: null, [UNTIL]: null }, true)}>
-          <strong className={object.data ? '' : Classes.SKELETON}>{name}</strong> <span className={Classes.TEXT_MUTED}>{def?.displayName ?? ref.type}</span>
-        </Tag>
+        {subjects.map((k, i) => {
+          const r = parseKey(k)!;
+          const SubjectIcon = typeIcon(r.type);
+          return (
+            <Tag key={k} className="timeline__chip" size="large" icon={<SubjectIcon />} onRemove={() => (setPickedBin(null), change({ subjects: subjects.filter((s) => s !== k), from: null, until: null }))}>
+              <strong className={titles.data ? '' : Classes.SKELETON}>{names[i]}</strong> <span className={Classes.TEXT_MUTED}>{catalog.types[r.type]?.displayName ?? r.type}</span>
+            </Tag>
+          );
+        })}
         <span className={Classes.TEXT_MUTED}>Hops</span>
         <SegmentedControl
           aria-label="Hops"
           value={String(hops)}
           onValueChange={(v) => {
             setPickedBin(null);
-            write({ [HOPS]: v });
+            change({ hops: Number(v) });
           }}
           options={['1', '2', '3'].map((v) => ({ label: v, value: v }))}
         />
-        <span className={Classes.TEXT_MUTED}>{timeline.data ? `${formatCount(events.length)} events, ${formatCount(timeline.data.objects)} objects reached` : ''}</span>
+        <span className={Classes.TEXT_MUTED}>{timeline.data ? `${formatCount(events.length)} events, ${timeline.data.objects != null ? `${formatCount(timeline.data.objects)} objects reached` : `from ${subjects.length} objects`}` : ''}</span>
         <span className="timeline__spacer" />
-        <SearchBox className="timeline__other" placeholder="Timeline for another object" onPick={(f) => write({ [OBJECT]: f.key, [FROM]: null, [UNTIL]: null }, true)} />
+        <SaveStatus state={saveState} />
+        <SearchBox className="timeline__other" placeholder="Add an object to this timeline" onPick={(f) => !subjects.includes(f.key) && (setPickedBin(null), change({ subjects: [...subjects, f.key] }))} />
       </div>
 
       {timeline.error ? (
@@ -154,7 +206,7 @@ function TimelineScreen({ catalog, investigation, subject }: { catalog: Catalog;
         </div>
       ) : !events.length ? (
         <div className="timeline__state">
-          <NonIdealState title="Nothing dated" description={`Nothing within ${hops === 1 ? '1 hop' : `${hops} hops`} of ${name} carries a date.`} action={hops < 3 ? <Button text={`Try ${hops + 1} hops`} onClick={() => write({ [HOPS]: String(hops + 1) })} /> : undefined} />
+          <NonIdealState title="Nothing dated" description={`Nothing within ${hops === 1 ? '1 hop' : `${hops} hops`} of ${names.join(' or ')} carries a date.`} action={hops < 3 ? <Button text={`Try ${hops + 1} hops`} onClick={() => change({ hops: hops + 1 })} /> : undefined} />
         </div>
       ) : (
         <>
@@ -162,7 +214,7 @@ function TimelineScreen({ catalog, investigation, subject }: { catalog: Catalog;
             <div className="timeline__chart-head">
               <H6 className={`caps-heading ${Classes.TEXT_MUTED}`}>Timeline</H6>
               <span>Showing {formatRange(from, until)}</span>
-              {zoomed && <Button variant="minimal" className="timeline__reset" text="Reset zoom" onClick={() => (setPickedBin(null), write({ [FROM]: null, [UNTIL]: null }))} />}
+              {zoomed && <Button variant="minimal" className="timeline__reset" text="Reset zoom" onClick={() => (setPickedBin(null), change({ from: null, until: null }))} />}
               <span className="timeline__spacer" />
               <Popover
                 minimal
@@ -399,6 +451,7 @@ function EventTable({ events, picked, onPick }: { events: TimelineEvent[]; picke
                 </td>
                 <td className="timeline-row__event">
                   {flag && <WarningSign className="timeline-row__warn" />}
+                  <EventPhoto kind={e.kind} objectIds={e.objectIds} />
                   {e.summary}
                 </td>
                 <td className={Classes.TEXT_MUTED}>{e.kind}</td>

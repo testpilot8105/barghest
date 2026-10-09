@@ -2,8 +2,9 @@
 // Graph (G-Cloud 14 service definition, pages 11 to 13). Full bleed: a toolbar across the canvas, the search floating
 // on it, Gotham's icon tiles and unlabelled links, zoom and a minimap at the bottom right, the bottom tabs (Table, Zoom
 // to the selection, Timeline) with the Timeline docked under the canvas, and the helper strip and panel on the right
-// (Histogram, Selection, Paths). ?focus=<Type>:<pk> opens an object with its neighbours on a ring; ?to= draws up to
-// five shortest paths from the focus; ?nodes= carries what's on the canvas and where, until saved graphs land.
+// (Histogram, Selection, Paths). A graph is a file (files.tsx): ?saved=<id> opens one and every change saves itself;
+// with nothing open the view lists this investigation's graphs (home.tsx). A file holds the focus (opened with its
+// neighbours on a ring), the path target (up to five shortest paths from the focus) and every object with where it sits.
 import { Button, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Cross, HorizontalBarChart, Locate, PathSearch, Properties, Th, Time, ZoomIn, ZoomOut } from '@blueprintjs/icons';
 import { applyNodeChanges, Background, BackgroundVariant, MiniMap, Panel, ReactFlow, ReactFlowProvider, useReactFlow, type NodeChange } from '@xyflow/react';
@@ -13,19 +14,18 @@ import { fetchRows, getObjectView, startExploration, useCatalog, useDataClient, 
 import { EvidenceDrawer } from '../evidence/EvidenceDrawer';
 import { Connecting, EngineDown } from '../explorer/parts';
 import { navigate, useSearchParam, viewHref } from '../shell/route';
-import { useWhatConnects } from './bridge';
-import { decodeNodes, deriveEdges, encodeNodes, graphLinks, gridLayout, ICON_BOX, isGraphType, middleOf, NODE_W, pairOf, placeAround, relationshipsOf, ringLayout, type CanvasNode, type EdgeModel } from './canvas';
+import { useDocumentTitle } from '../shell/title';
+import { useWhatConnects, type ConnectionPath } from './bridge';
+import { decodeNodes, deriveEdges, foldsOf, graphLinks, gridLayout, ICON_BOX, isGraphType, middleOf, NODE_W, nodesToRows, pairOf, placeAround, relationshipsOf, ringLayout, rowsToNodes, type CanvasNode, type EdgeModel } from './canvas';
 import { CanvasTable, DockedTimeline } from './docked';
 import { EDGE_TYPES, GraphActionsContext, NODE_TYPES, searchAroundItems, type GraphActions, type GraphEdgeType, type ObjectNodeType } from './elements';
+import { FileGone, FileLoading, OpenFromLink, SaveStatus, useAutosave, useSavedFile, type FileLink, type SaveState } from './files';
 import { EmptyCanvas, FindPathDialog, HistogramHelper, PathsHelper, SelectionHelper, type Picked } from './helpers';
+import { SavedHome } from './home';
 import { objectKey, parseKey } from './icons';
 import { SearchBox, type Found } from './search';
 import { GraphToolbar, type LabelMode } from './toolbar';
 import './graph.css';
-
-const FOCUS = 'focus';
-const NODES = 'nodes';
-const TO = 'to';
 
 type Helper = 'histogram' | 'selection' | 'paths';
 type Dock = 'timeline' | 'table' | null;
@@ -37,32 +37,71 @@ const HELPERS: Array<{ id: Helper; label: string; Icon: typeof Properties }> = [
 ];
 
 export function Graph({ investigation }: { investigation: string }) {
+  const saved = useSearchParam('saved');
+  const focus = useSearchParam('focus');
+  const nodes = useSearchParam('nodes');
+  const to = useSearchParam('to');
   const { data: catalog, error } = useCatalog();
   if (error) return <EngineDown />;
   if (!catalog) return <Connecting />;
+  if (saved) return <SavedGraph key={saved} id={saved} catalog={catalog} investigation={investigation} />;
+  if (parseKey(focus) || decodeNodes(nodes)?.length) return <OpenFromLink investigation={investigation} kind="graph" link={graphLink(focus, to, nodes)} />;
+  return <SavedHome investigation={investigation} kind="graph" />;
+}
+
+/** What a graph file holds. */
+export interface GraphDoc {
+  focus: string | null;
+  to: string | null;
+  nodes: CanvasNode[];
+}
+
+function graphDocOf(body: Record<string, unknown> | undefined): GraphDoc {
+  const key = (v: unknown) => (typeof v === 'string' && parseKey(v) ? v : null);
+  return { focus: key(body?.focus), to: key(body?.to), nodes: rowsToNodes(body?.nodes) ?? [] };
+}
+
+/** A link from another view: an object (?focus=), a path (?focus= and ?to=) or a set of objects (?nodes=). */
+function graphLink(focus: string | null, to: string | null, nodesParam: string | null): FileLink {
+  const nodes = decodeNodes(nodesParam) ?? [];
+  const f = parseKey(focus) ? focus! : nodes[0].key;
+  const target = parseKey(to) ? to : null;
+  const origin = target ? `${f}>${target}` : nodes.length ? nodes.map((n) => n.key).sort().join(',') : f;
+  return {
+    origin,
+    body: { focus: f, to: target, nodes: nodesToRows(nodes) },
+    name: async (title) => (target ? `${await title(f)} to ${await title(target)}` : nodes.length > 1 ? `${await title(nodes[0].key)} and ${nodes.length - 1} more` : await title(f)),
+  };
+}
+
+function SavedGraph({ id, catalog, investigation }: { id: string; catalog: Catalog; investigation: string }) {
+  const item = useSavedFile(id, 'graph', investigation);
+  const autosave = useAutosave(id);
+  useDocumentTitle(item.data?.name ?? null);
+  const onChange = useCallback((d: GraphDoc) => autosave.save({ ...item.data?.body, focus: d.focus, to: d.to, nodes: nodesToRows(d.nodes) }), [autosave.save, item.data?.body]);
+  if (item.error) return <FileGone investigation={investigation} kind="graph" message={item.error.message} />;
+  if (!item.data) return <FileLoading />;
   return (
     <ReactFlowProvider>
-      <GraphScreen catalog={catalog} investigation={investigation} />
+      <GraphScreen catalog={catalog} investigation={investigation} initial={graphDocOf(item.data.body)} onChange={onChange} saveState={autosave.state} />
     </ReactFlowProvider>
   );
 }
 
-/** The canvas an address opens: the nodes it carries, or the focus alone (it is expanded once its view arrives). */
-function opening(nodesParam: string | null, focus: string | null): CanvasNode[] {
-  const decoded = decodeNodes(nodesParam);
-  if (decoded) return decoded;
-  const f = parseKey(focus);
+/** The canvas a file opens: its objects, or the focus alone (it is expanded once its view arrives). */
+function opening(doc: GraphDoc): CanvasNode[] {
+  if (doc.nodes.length) return doc.nodes;
+  const f = parseKey(doc.focus);
   return f ? [{ key: objectKey(f.type, f.pk), ...f, x: 0, y: 0 }] : [];
 }
 
-function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigation: string }) {
-  const focus = useSearchParam(FOCUS);
-  const nodesParam = useSearchParam(NODES);
-  const to = useSearchParam(TO);
+function GraphScreen({ catalog, investigation, initial, onChange, saveState }: { catalog: Catalog; investigation: string; initial: GraphDoc; onChange: (d: GraphDoc) => void; saveState: SaveState }) {
   const { dc } = useDataClient();
   const rf = useReactFlow<ObjectNodeType, GraphEdgeType>();
 
-  const [nodes, setNodes] = useState<CanvasNode[]>(() => opening(nodesParam, focus));
+  const [focus, setFocus] = useState(initial.focus);
+  const [to, setTo] = useState(initial.to);
+  const [nodes, setNodes] = useState<CanvasNode[]>(() => opening(initial));
   const [views, setViews] = useState(() => new Map<string, ObjectView>());
   const [titles, setTitles] = useState(() => new Map<string, string>());
   const [busy, setBusy] = useState(() => new Set<string>());
@@ -82,40 +121,27 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
   viewsRef.current = views;
   const focusRef = useRef(focus);
   focusRef.current = focus;
+  const toRef = useRef(to);
+  toRef.current = to;
   const loading = useRef(new Set<string>());
   const failed = useRef(new Set<string>());
-  const autoExpand = useRef<string | null>(nodesParam ? null : focus);
+  const autoExpand = useRef<string | null>(initial.nodes.length ? null : initial.focus);
 
-  // The address this screen last wrote. Anything else arriving (Back, Forward, a pasted link) resets the canvas.
-  const seen = useRef(`${focus}|${nodesParam}|${to}`);
-  const write = useCallback((changes: Record<string, string | null>, push = false) => {
-    const params = new URLSearchParams(window.location.search);
-    for (const [k, v] of Object.entries(changes)) {
-      if (v == null) params.delete(k);
-      else params.set(k, v);
-    }
-    seen.current = `${params.get(FOCUS)}|${params.get(NODES)}|${params.get(TO)}`;
-    const qs = params.toString();
-    navigate(`${window.location.pathname}${qs ? `?${qs}` : ''}`, { replace: !push });
-  }, []);
-  useEffect(() => {
-    const now = `${focus}|${nodesParam}|${to}`;
-    if (now === seen.current) return;
-    seen.current = now;
-    setNodes(opening(nodesParam, focus));
-    autoExpand.current = nodesParam ? null : focus;
-    setLit(null);
-    setPicked(null);
-  }, [focus, nodesParam, to]);
-
-  const commit = useCallback(
-    (next: CanvasNode[], extra: Record<string, string | null> = {}) => {
-      nodesRef.current = next;
-      setNodes(next);
-      write({ [NODES]: next.length ? encodeNodes(next) : null, ...extra });
+  // Every change goes to the file: the focus, the path target and the canvas.
+  const save = useCallback(
+    (patch: Partial<GraphDoc>) => {
+      const next: GraphDoc = { focus: focusRef.current, to: toRef.current, nodes: nodesRef.current, ...patch };
+      focusRef.current = next.focus;
+      toRef.current = next.to;
+      nodesRef.current = next.nodes;
+      setFocus(next.focus);
+      setTo(next.to);
+      setNodes(next.nodes);
+      onChange(next);
     },
-    [write],
+    [onChange],
   );
+  const commit = useCallback((next: CanvasNode[], extra: Partial<GraphDoc> = {}) => save({ nodes: next, ...extra }), [save]);
 
   const fitSoon = useCallback(() => {
     setTimeout(() => void rf.fitView({ padding: 0.2, maxZoom: 1 }), 80);
@@ -185,6 +211,30 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
     [dc, catalog, commit, fitSoon],
   );
 
+  // A mention merged into another object folds into it, wherever it came from (a search, a link, an old file): one node
+  // per real thing. Its place on the canvas goes to the canonical object unless that is already there.
+  useEffect(() => {
+    const folds = foldsOf(views);
+    if (!nodesRef.current.some((n) => folds.has(n.key))) return;
+    const fold = (k: string | null) => (k ? (folds.get(k) ?? k) : k);
+    const kept = new Set<string>();
+    const next: CanvasNode[] = [];
+    for (const n of nodesRef.current) {
+      const k = fold(n.key)!;
+      if (kept.has(k)) continue;
+      kept.add(k);
+      next.push(k === n.key ? n : { ...n, key: k, pk: parseKey(k)!.pk });
+    }
+    autoExpand.current = fold(autoExpand.current);
+    setTitles((m) => {
+      const t = new Map(m);
+      for (const [from, to] of folds) t.set(to, views.get(from)!.canonical!.title);
+      return t;
+    });
+    setPicked(null);
+    save({ nodes: next, focus: fold(focusRef.current), to: fold(toRef.current) });
+  }, [views, save]);
+
   // A graph opened on a focus alone expands it once, as soon as its view is in.
   useEffect(() => {
     const k = autoExpand.current;
@@ -196,14 +246,22 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
 
   // ---- Paths ----
   const paths = useWhatConnects(to && focus ? focus : null, to);
+  // The paths a file was saved with are already on its canvas; only a new path target places objects.
+  const placed = useRef(initial.nodes.length && initial.focus && initial.to ? `${initial.focus}>${initial.to}` : null);
   useEffect(() => {
     const data = paths.data;
     if (!data?.found) return;
+    setLit(null);
+    setHelper('paths');
+    if (placed.current === `${data.from}>${data.to}`) return;
+    placed.current = `${data.from}>${data.to}`;
     const current = nodesRef.current;
     const have = new Map(current.map((n) => [n.key, n]));
     setTitles((m) => new Map([...m, ...data.objects.map((o) => [objectKey(o.type, o.pk), o.title] as const)]));
+    const folds = foldsOf(viewsRef.current, data.paths.flatMap((p) => p.steps));
     const added: CanvasNode[] = [];
-    const at = (key: string, spot: { x: number; y: number }) => {
+    const at = (raw: string, spot: { x: number; y: number }) => {
+      const key = folds.get(raw) ?? raw;
       const ref = parseKey(key);
       if (!ref || have.has(key) || added.some((a) => a.key === key)) return;
       added.push({ key, ...ref, ...spot });
@@ -226,16 +284,28 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
       commit([...current, ...added]);
       fitSoon();
     }
-    setLit(null);
-    setHelper('paths');
   }, [paths.data, commit, fitSoon]);
 
   const pathList = useMemo(() => (to && paths.data?.found ? paths.data.paths : []), [to, paths.data]);
   const litPaths = lit == null ? pathList : pathList.slice(lit, lit + 1);
-  const litNodes = useMemo(() => (litPaths.length ? new Set(litPaths.flatMap((p) => p.objects.map((o) => objectKey(o.type, o.pk)))) : null), [litPaths]);
+  // A path can step through a mention to the object it was merged into; on the canvas both are one node.
+  const folds = useMemo(() => foldsOf(views, pathList.flatMap((p) => p.steps)), [views, pathList]);
+  const keysOf = useCallback(
+    (p: ConnectionPath) => p.objects.map((o) => folds.get(objectKey(o.type, o.pk)) ?? objectKey(o.type, o.pk)).filter((k, i, all) => i === 0 || k !== all[i - 1]),
+    [folds],
+  );
+  const litNodes = useMemo(() => (litPaths.length ? new Set(litPaths.flatMap(keysOf)) : null), [litPaths, keysOf]);
   const litPairs = useMemo(
-    () => (litPaths.length ? new Set(litPaths.flatMap((p) => p.objects.slice(1).map((o, i) => pairOf(objectKey(p.objects[i].type, p.objects[i].pk), objectKey(o.type, o.pk))))) : null),
-    [litPaths],
+    () =>
+      litPaths.length
+        ? new Set(
+            litPaths.flatMap((p) => {
+              const keys = keysOf(p);
+              return keys.slice(1).map((k, i) => pairOf(keys[i], k));
+            }),
+          )
+        : null,
+    [litPaths, keysOf],
   );
 
   // ---- What React Flow draws ----
@@ -251,7 +321,7 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
           id: m.key,
           type: 'object',
           position: { x: m.x - NODE_W / 2, y: m.y - ICON_BOX / 2 },
-          data: { type: m.type, pk: m.pk, title: known ?? m.pk, pending: !known && !failed.current.has(m.key), busy: busy.has(m.key), dim: !!litNodes && !litNodes.has(m.key) },
+          data: { type: m.type, pk: m.pk, title: known ?? m.pk, pending: !known && !failed.current.has(m.key), busy: busy.has(m.key), dim: !!litNodes && !litNodes.has(m.key), photoUrl: views.get(m.key)?.photo?.url },
         };
       });
     });
@@ -300,14 +370,14 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
   const go = useCallback((view: string, params: Record<string, string>) => navigate(`${viewHref(investigation, view)}?${new URLSearchParams(params)}`), [investigation]);
   const remove = useCallback(
     (key: string) => {
-      const extra: Record<string, string | null> = key === focusRef.current ? { [FOCUS]: null, [TO]: null } : key === to ? { [TO]: null } : {};
+      const extra: Partial<GraphDoc> = key === focusRef.current ? { focus: null, to: null } : key === toRef.current ? { to: null } : {};
       commit(
         nodesRef.current.filter((n) => n.key !== key),
         extra,
       );
       setPicked((p) => (p?.kind === 'node' && p.key === key ? null : p));
     },
-    [commit, to],
+    [commit],
   );
   const actions = useMemo<GraphActions>(
     () => ({
@@ -322,14 +392,11 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
 
   /** A new graph on one object: it goes in the middle and expands once its view is in. */
   const startAt = (f: Found) => {
-    const seed = [{ key: f.key, type: f.type, pk: f.pk, x: 0, y: 0 }];
-    nodesRef.current = seed;
-    setNodes(seed);
     setTitles((m) => new Map(m).set(f.key, f.title));
     autoExpand.current = f.key;
     setPicked(null);
     setLit(null);
-    write({ [FOCUS]: f.key, [NODES]: null, [TO]: null }, true);
+    save({ focus: f.key, to: null, nodes: [{ key: f.key, type: f.type, pk: f.pk, x: 0, y: 0 }] });
   };
 
   const addObject = (f: Found) => {
@@ -385,6 +452,7 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
           searchAround={searchAroundSelection}
           labels={labels}
           onLabels={setLabels}
+          status={<SaveStatus state={saveState} />}
         />
         <div className="graph__canvas">
           {nodes.length ? (
@@ -473,7 +541,7 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
                 onEvidence={setEvidence}
               />
             ) : (
-              <PathsHelper asked={!!to} paths={paths} lit={lit} onLight={setLit} onClear={() => write({ [TO]: null })} title={title} from={focus} to={to} />
+              <PathsHelper asked={!!to} paths={paths} lit={lit} onLight={setLit} onClear={() => save({ to: null })} title={title} from={focus} to={to} />
             )}
           </div>
         </aside>
@@ -487,7 +555,10 @@ function GraphScreen({ catalog, investigation }: { catalog: Catalog; investigati
         onPick={(target) => {
           const from = pathFrom;
           setPathFrom(null);
-          if (from) write({ [FOCUS]: from, [TO]: target });
+          if (from) {
+            setLit(null);
+            save({ focus: from, to: target });
+          }
         }}
       />
       <EvidenceDrawer

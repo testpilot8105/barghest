@@ -29,6 +29,8 @@ interface ToolbarProps {
   searchAround: ReactElement;
   labels: LabelMode;
   onLabels: (m: LabelMode) => void;
+  /** the open file's save state, at the far end */
+  status?: ReactElement;
 }
 
 export function GraphToolbar(p: ToolbarProps) {
@@ -72,6 +74,12 @@ export function GraphToolbar(p: ToolbarProps) {
           </Menu>
         }
       />
+      {p.status && (
+        <>
+          <span className="graph__toolbar-spacer" />
+          {p.status}
+        </>
+      )}
     </div>
   );
 }
