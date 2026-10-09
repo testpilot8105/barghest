@@ -1,0 +1,5822 @@
+{
+  "interfaceTypes": {},
+  "sharedPropertyTypes": {},
+  "objectTypes": {
+    "Document": {
+      "objectType": {
+        "apiName": "Document",
+        "displayName": "Document",
+        "pluralDisplayName": "Documents",
+        "primaryKey": "documentId",
+        "titleProperty": "title",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "documentId": {
+            "displayName": "Document id",
+            "rid": "ri.Document.documentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "title": {
+            "displayName": "Title",
+            "rid": "ri.Document.title",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "path": {
+            "displayName": "Path",
+            "rid": "ri.Document.path",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "format": {
+            "displayName": "Format",
+            "rid": "ri.Document.format",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "system": {
+            "displayName": "Source system",
+            "rid": "ri.Document.system",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Document.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "importedAt": {
+            "displayName": "Imported at",
+            "rid": "ri.Document.importedAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "status": {
+            "displayName": "Status",
+            "rid": "ri.Document.status",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Document",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Document.passage-document.Passage",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "passages",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage"
+        },
+        {
+          "linkTypeRid": "ri.Document.source-record-document.SourceRecord",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "records",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord"
+        }
+      ]
+    },
+    "Passage": {
+      "objectType": {
+        "apiName": "Passage",
+        "displayName": "Passage",
+        "pluralDisplayName": "Passages",
+        "primaryKey": "passageId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "passageId": {
+            "displayName": "Passage id",
+            "rid": "ri.Passage.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Passage.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "documentId": {
+            "displayName": "Document",
+            "rid": "ri.Passage.documentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "index": {
+            "displayName": "Index",
+            "rid": "ri.Passage.index",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "integer"
+            },
+            "typeClasses": []
+          },
+          "text": {
+            "displayName": "Text",
+            "rid": "ri.Passage.text",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "charStart": {
+            "displayName": "Start offset",
+            "rid": "ri.Passage.charStart",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "integer"
+            },
+            "typeClasses": []
+          },
+          "charEnd": {
+            "displayName": "End offset",
+            "rid": "ri.Passage.charEnd",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "integer"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Passage",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Document.passage-document.Passage",
+          "status": "ACTIVE",
+          "apiName": "document",
+          "displayName": "Document",
+          "objectTypeApiName": "Document",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "documentId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.person-passage.Person",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedPeople",
+          "displayName": "Mentioned person",
+          "objectTypeApiName": "Person"
+        },
+        {
+          "linkTypeRid": "ri.Passage.organization-passage.Organization",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedOrganizations",
+          "displayName": "Mentioned organization",
+          "objectTypeApiName": "Organization"
+        },
+        {
+          "linkTypeRid": "ri.Passage.location-passage.Location",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedLocations",
+          "displayName": "Mentioned location",
+          "objectTypeApiName": "Location"
+        },
+        {
+          "linkTypeRid": "ri.Passage.event-passage.Event",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedEvents",
+          "displayName": "Mentioned event",
+          "objectTypeApiName": "Event"
+        },
+        {
+          "linkTypeRid": "ri.Passage.digital-account-passage.DigitalAccount",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedDigitalAccounts",
+          "displayName": "Mentioned digital account",
+          "objectTypeApiName": "DigitalAccount"
+        },
+        {
+          "linkTypeRid": "ri.Passage.online-group-passage.OnlineGroup",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedOnlineGroups",
+          "displayName": "Mentioned online group",
+          "objectTypeApiName": "OnlineGroup"
+        },
+        {
+          "linkTypeRid": "ri.Passage.incident-passage.Incident",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedIncidents",
+          "displayName": "Mentioned incident",
+          "objectTypeApiName": "Incident"
+        },
+        {
+          "linkTypeRid": "ri.Passage.firearm-passage.Firearm",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedFirearms",
+          "displayName": "Mentioned firearm",
+          "objectTypeApiName": "Firearm"
+        },
+        {
+          "linkTypeRid": "ri.Passage.evidence-item-passage.EvidenceItem",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedEvidenceItems",
+          "displayName": "Mentioned evidence item",
+          "objectTypeApiName": "EvidenceItem"
+        },
+        {
+          "linkTypeRid": "ri.Passage.school-passage.School",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedSchools",
+          "displayName": "Mentioned school",
+          "objectTypeApiName": "School"
+        },
+        {
+          "linkTypeRid": "ri.Passage.lgu-passage.LGU",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedLgus",
+          "displayName": "Mentioned lgu",
+          "objectTypeApiName": "LGU"
+        },
+        {
+          "linkTypeRid": "ri.Passage.barangay-passage.Barangay",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedBarangays",
+          "displayName": "Mentioned barangay",
+          "objectTypeApiName": "Barangay"
+        },
+        {
+          "linkTypeRid": "ri.Passage.hauler-passage.Hauler",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedHaulers",
+          "displayName": "Mentioned hauler",
+          "objectTypeApiName": "Hauler"
+        },
+        {
+          "linkTypeRid": "ri.Passage.contract-passage.Contract",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedContracts",
+          "displayName": "Mentioned contract",
+          "objectTypeApiName": "Contract"
+        },
+        {
+          "linkTypeRid": "ri.Passage.facility-passage.Facility",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedFacilities",
+          "displayName": "Mentioned facility",
+          "objectTypeApiName": "Facility"
+        },
+        {
+          "linkTypeRid": "ri.Passage.vehicle-passage.Vehicle",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedVehicles",
+          "displayName": "Mentioned vehicle",
+          "objectTypeApiName": "Vehicle"
+        },
+        {
+          "linkTypeRid": "ri.Passage.inspection-passage.Inspection",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedInspections",
+          "displayName": "Mentioned inspection",
+          "objectTypeApiName": "Inspection"
+        },
+        {
+          "linkTypeRid": "ri.Passage.complaint-passage.Complaint",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedComplaints",
+          "displayName": "Mentioned complaint",
+          "objectTypeApiName": "Complaint"
+        }
+      ]
+    },
+    "SourceRecord": {
+      "objectType": {
+        "apiName": "SourceRecord",
+        "displayName": "Source record",
+        "pluralDisplayName": "Source records",
+        "primaryKey": "recordId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "recordId": {
+            "displayName": "Record id",
+            "rid": "ri.SourceRecord.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.SourceRecord.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "documentId": {
+            "displayName": "Document",
+            "rid": "ri.SourceRecord.documentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "system": {
+            "displayName": "Source system",
+            "rid": "ri.SourceRecord.system",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "rawJson": {
+            "displayName": "Raw row (JSON)",
+            "rid": "ri.SourceRecord.rawJson",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "observedAt": {
+            "displayName": "Observed at",
+            "rid": "ri.SourceRecord.observedAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.SourceRecord",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Document.source-record-document.SourceRecord",
+          "status": "ACTIVE",
+          "apiName": "document",
+          "displayName": "Document",
+          "objectTypeApiName": "Document",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "documentId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.person-source-record.Person",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedPeople",
+          "displayName": "Recorded person",
+          "objectTypeApiName": "Person"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.organization-source-record.Organization",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedOrganizations",
+          "displayName": "Recorded organization",
+          "objectTypeApiName": "Organization"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.location-source-record.Location",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedLocations",
+          "displayName": "Recorded location",
+          "objectTypeApiName": "Location"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.event-source-record.Event",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedEvents",
+          "displayName": "Recorded event",
+          "objectTypeApiName": "Event"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.digital-account-source-record.DigitalAccount",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedDigitalAccounts",
+          "displayName": "Recorded digital account",
+          "objectTypeApiName": "DigitalAccount"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.online-group-source-record.OnlineGroup",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedOnlineGroups",
+          "displayName": "Recorded online group",
+          "objectTypeApiName": "OnlineGroup"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.incident-source-record.Incident",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedIncidents",
+          "displayName": "Recorded incident",
+          "objectTypeApiName": "Incident"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.firearm-source-record.Firearm",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedFirearms",
+          "displayName": "Recorded firearm",
+          "objectTypeApiName": "Firearm"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.evidence-item-source-record.EvidenceItem",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedEvidenceItems",
+          "displayName": "Recorded evidence item",
+          "objectTypeApiName": "EvidenceItem"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.school-source-record.School",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedSchools",
+          "displayName": "Recorded school",
+          "objectTypeApiName": "School"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.lgu-source-record.LGU",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedLgus",
+          "displayName": "Recorded lgu",
+          "objectTypeApiName": "LGU"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.barangay-source-record.Barangay",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedBarangays",
+          "displayName": "Recorded barangay",
+          "objectTypeApiName": "Barangay"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.hauler-source-record.Hauler",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedHaulers",
+          "displayName": "Recorded hauler",
+          "objectTypeApiName": "Hauler"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.contract-source-record.Contract",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedContracts",
+          "displayName": "Recorded contract",
+          "objectTypeApiName": "Contract"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.facility-source-record.Facility",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedFacilities",
+          "displayName": "Recorded facility",
+          "objectTypeApiName": "Facility"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.vehicle-source-record.Vehicle",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedVehicles",
+          "displayName": "Recorded vehicle",
+          "objectTypeApiName": "Vehicle"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.inspection-source-record.Inspection",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedInspections",
+          "displayName": "Recorded inspection",
+          "objectTypeApiName": "Inspection"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.complaint-source-record.Complaint",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedComplaints",
+          "displayName": "Recorded complaint",
+          "objectTypeApiName": "Complaint"
+        }
+      ]
+    },
+    "Person": {
+      "objectType": {
+        "apiName": "Person",
+        "displayName": "Person",
+        "pluralDisplayName": "People",
+        "primaryKey": "personId",
+        "titleProperty": "fullName",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "personId": {
+            "displayName": "Person id",
+            "rid": "ri.Person.personId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fullName": {
+            "displayName": "Full name",
+            "rid": "ri.Person.fullName",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "aliases": {
+            "displayName": "Aliases",
+            "rid": "ri.Person.aliases",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "array",
+              "subType": {
+                "type": "string"
+              },
+              "reducers": []
+            },
+            "typeClasses": []
+          },
+          "role": {
+            "displayName": "Role",
+            "rid": "ri.Person.role",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "schoolId": {
+            "displayName": "School",
+            "rid": "ri.Person.schoolId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Person.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Person.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Person.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Person.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Person",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Person.digital-account-owner.DigitalAccount",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "digitalAccounts",
+          "displayName": "Digital account",
+          "objectTypeApiName": "DigitalAccount"
+        },
+        {
+          "linkTypeRid": "ri.School.person-school.Person",
+          "status": "ACTIVE",
+          "apiName": "school",
+          "displayName": "School",
+          "objectTypeApiName": "School",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "schoolId"
+        },
+        {
+          "linkTypeRid": "ri.Person.firearm-registered-to.Firearm",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "firearmsRegistered",
+          "displayName": "Registered firearm",
+          "objectTypeApiName": "Firearm"
+        },
+        {
+          "linkTypeRid": "ri.Person.firearm-custodian.Firearm",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "firearmsInCustody",
+          "displayName": "Firearm in custody",
+          "objectTypeApiName": "Firearm"
+        },
+        {
+          "linkTypeRid": "ri.Person.person-canonical.Person",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Person"
+        },
+        {
+          "linkTypeRid": "ri.Person.person-canonical.Person",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Person",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.person-passage.Person",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.person-source-record.Person",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Person.relationship-from-person.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Person.relationship-to-person.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Organization": {
+      "objectType": {
+        "apiName": "Organization",
+        "displayName": "Organization",
+        "pluralDisplayName": "Organizations",
+        "primaryKey": "organizationId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "organizationId": {
+            "displayName": "Organization id",
+            "rid": "ri.Organization.organizationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Organization.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.Organization.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Organization.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Organization.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Organization.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Organization.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Organization",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Organization.firearm-registered-agency.Firearm",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "firearms",
+          "displayName": "Firearm",
+          "objectTypeApiName": "Firearm"
+        },
+        {
+          "linkTypeRid": "ri.Organization.organization-canonical.Organization",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Organization"
+        },
+        {
+          "linkTypeRid": "ri.Organization.organization-canonical.Organization",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Organization",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.organization-passage.Organization",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.organization-source-record.Organization",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Organization.relationship-from-organization.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Organization.relationship-to-organization.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Location": {
+      "objectType": {
+        "apiName": "Location",
+        "displayName": "Location",
+        "pluralDisplayName": "Locations",
+        "primaryKey": "locationId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "locationId": {
+            "displayName": "Location id",
+            "rid": "ri.Location.locationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Location.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.Location.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "lat": {
+            "displayName": "Latitude",
+            "rid": "ri.Location.lat",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "lon": {
+            "displayName": "Longitude",
+            "rid": "ri.Location.lon",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Location.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Location.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Location.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Location.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Location",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Location.event-location.Event",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "events",
+          "displayName": "Event",
+          "objectTypeApiName": "Event"
+        },
+        {
+          "linkTypeRid": "ri.Location.incident-location.Incident",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "incidents",
+          "displayName": "Incident",
+          "objectTypeApiName": "Incident"
+        },
+        {
+          "linkTypeRid": "ri.Location.location-canonical.Location",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Location"
+        },
+        {
+          "linkTypeRid": "ri.Location.location-canonical.Location",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Location",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.location-passage.Location",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.location-source-record.Location",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Location.relationship-from-location.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Location.relationship-to-location.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Event": {
+      "objectType": {
+        "apiName": "Event",
+        "displayName": "Event",
+        "pluralDisplayName": "Events",
+        "primaryKey": "eventId",
+        "titleProperty": "summary",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "eventId": {
+            "displayName": "Event id",
+            "rid": "ri.Event.eventId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "summary": {
+            "displayName": "Summary",
+            "rid": "ri.Event.summary",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.Event.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "occurredAt": {
+            "displayName": "Occurred at",
+            "rid": "ri.Event.occurredAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "startAt": {
+            "displayName": "Start",
+            "rid": "ri.Event.startAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "endAt": {
+            "displayName": "End",
+            "rid": "ri.Event.endAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "locationId": {
+            "displayName": "Location",
+            "rid": "ri.Event.locationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Event.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Event.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Event.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Event.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Event",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Location.event-location.Event",
+          "status": "ACTIVE",
+          "apiName": "location",
+          "displayName": "Location",
+          "objectTypeApiName": "Location",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "locationId"
+        },
+        {
+          "linkTypeRid": "ri.Event.event-canonical.Event",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Event"
+        },
+        {
+          "linkTypeRid": "ri.Event.event-canonical.Event",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Event",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.event-passage.Event",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.event-source-record.Event",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Event.relationship-from-event.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Event.relationship-to-event.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "DigitalAccount": {
+      "objectType": {
+        "apiName": "DigitalAccount",
+        "displayName": "Digital account",
+        "pluralDisplayName": "Digital accounts",
+        "primaryKey": "accountId",
+        "titleProperty": "handle",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "accountId": {
+            "displayName": "Account id",
+            "rid": "ri.DigitalAccount.accountId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "handle": {
+            "displayName": "Handle",
+            "rid": "ri.DigitalAccount.handle",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "platform": {
+            "displayName": "Platform",
+            "rid": "ri.DigitalAccount.platform",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "platformId": {
+            "displayName": "Platform user id",
+            "rid": "ri.DigitalAccount.platformId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "displayName": {
+            "displayName": "Display name",
+            "rid": "ri.DigitalAccount.displayName",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "personId": {
+            "displayName": "Owner",
+            "rid": "ri.DigitalAccount.personId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.DigitalAccount.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.DigitalAccount.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.DigitalAccount.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.DigitalAccount.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.DigitalAccount",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Person.digital-account-owner.DigitalAccount",
+          "status": "ACTIVE",
+          "apiName": "owner",
+          "displayName": "Owner",
+          "objectTypeApiName": "Person",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "personId"
+        },
+        {
+          "linkTypeRid": "ri.DigitalAccount.digital-account-canonical.DigitalAccount",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "DigitalAccount"
+        },
+        {
+          "linkTypeRid": "ri.DigitalAccount.digital-account-canonical.DigitalAccount",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "DigitalAccount",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.digital-account-passage.DigitalAccount",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.digital-account-source-record.DigitalAccount",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.DigitalAccount.relationship-from-digital-account.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.DigitalAccount.relationship-to-digital-account.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "OnlineGroup": {
+      "objectType": {
+        "apiName": "OnlineGroup",
+        "displayName": "Online group",
+        "pluralDisplayName": "Online groups",
+        "primaryKey": "groupId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "groupId": {
+            "displayName": "Group id",
+            "rid": "ri.OnlineGroup.groupId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.OnlineGroup.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "platform": {
+            "displayName": "Platform",
+            "rid": "ri.OnlineGroup.platform",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "platformId": {
+            "displayName": "Platform group id",
+            "rid": "ri.OnlineGroup.platformId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "channels": {
+            "displayName": "Channels",
+            "rid": "ri.OnlineGroup.channels",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "array",
+              "subType": {
+                "type": "string"
+              },
+              "reducers": []
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.OnlineGroup.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.OnlineGroup.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.OnlineGroup.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.OnlineGroup.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.OnlineGroup",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.OnlineGroup.online-group-canonical.OnlineGroup",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "OnlineGroup"
+        },
+        {
+          "linkTypeRid": "ri.OnlineGroup.online-group-canonical.OnlineGroup",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "OnlineGroup",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.online-group-passage.OnlineGroup",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.online-group-source-record.OnlineGroup",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.OnlineGroup.relationship-from-online-group.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.OnlineGroup.relationship-to-online-group.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Incident": {
+      "objectType": {
+        "apiName": "Incident",
+        "displayName": "Incident",
+        "pluralDisplayName": "Incidents",
+        "primaryKey": "incidentId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "incidentId": {
+            "displayName": "Incident id",
+            "rid": "ri.Incident.incidentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Incident.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "summary": {
+            "displayName": "Summary",
+            "rid": "ri.Incident.summary",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "occurredAt": {
+            "displayName": "Occurred at",
+            "rid": "ri.Incident.occurredAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "locationId": {
+            "displayName": "Location",
+            "rid": "ri.Incident.locationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "schoolId": {
+            "displayName": "School",
+            "rid": "ri.Incident.schoolId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Incident.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Incident.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Incident.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Incident.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Incident",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Incident.evidence-item-recovered-at.EvidenceItem",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "evidenceItems",
+          "displayName": "Evidence item",
+          "objectTypeApiName": "EvidenceItem"
+        },
+        {
+          "linkTypeRid": "ri.Location.incident-location.Incident",
+          "status": "ACTIVE",
+          "apiName": "location",
+          "displayName": "Location",
+          "objectTypeApiName": "Location",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "locationId"
+        },
+        {
+          "linkTypeRid": "ri.School.incident-school.Incident",
+          "status": "ACTIVE",
+          "apiName": "school",
+          "displayName": "School",
+          "objectTypeApiName": "School",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "schoolId"
+        },
+        {
+          "linkTypeRid": "ri.Incident.incident-canonical.Incident",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Incident"
+        },
+        {
+          "linkTypeRid": "ri.Incident.incident-canonical.Incident",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Incident",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.incident-passage.Incident",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.incident-source-record.Incident",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Incident.relationship-from-incident.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Incident.relationship-to-incident.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Firearm": {
+      "objectType": {
+        "apiName": "Firearm",
+        "displayName": "Firearm",
+        "pluralDisplayName": "Firearms",
+        "primaryKey": "firearmId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "firearmId": {
+            "displayName": "Firearm id",
+            "rid": "ri.Firearm.firearmId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Firearm.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "make": {
+            "displayName": "Make",
+            "rid": "ri.Firearm.make",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "model": {
+            "displayName": "Model",
+            "rid": "ri.Firearm.model",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "calibre": {
+            "displayName": "Calibre",
+            "rid": "ri.Firearm.calibre",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "serial": {
+            "displayName": "Serial number",
+            "rid": "ri.Firearm.serial",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "feoRegistrationNo": {
+            "displayName": "FEO registration no.",
+            "rid": "ri.Firearm.feoRegistrationNo",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "storage": {
+            "displayName": "Storage",
+            "rid": "ri.Firearm.storage",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "registeredToId": {
+            "displayName": "Registered to (person)",
+            "rid": "ri.Firearm.registeredToId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "registeredAgencyId": {
+            "displayName": "Registered agency",
+            "rid": "ri.Firearm.registeredAgencyId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "custodianId": {
+            "displayName": "Custodian",
+            "rid": "ri.Firearm.custodianId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Firearm.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Firearm.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Firearm.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Firearm.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Firearm",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Person.firearm-registered-to.Firearm",
+          "status": "ACTIVE",
+          "apiName": "registeredTo",
+          "displayName": "Registered to",
+          "objectTypeApiName": "Person",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "registeredToId"
+        },
+        {
+          "linkTypeRid": "ri.Person.firearm-custodian.Firearm",
+          "status": "ACTIVE",
+          "apiName": "custodian",
+          "displayName": "Custodian",
+          "objectTypeApiName": "Person",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "custodianId"
+        },
+        {
+          "linkTypeRid": "ri.Organization.firearm-registered-agency.Firearm",
+          "status": "ACTIVE",
+          "apiName": "registeredAgency",
+          "displayName": "Registered agency",
+          "objectTypeApiName": "Organization",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "registeredAgencyId"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.evidence-item-matched-to.EvidenceItem",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "evidenceItems",
+          "displayName": "Evidence item",
+          "objectTypeApiName": "EvidenceItem"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.firearm-canonical.Firearm",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Firearm"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.firearm-canonical.Firearm",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Firearm",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.firearm-passage.Firearm",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.firearm-source-record.Firearm",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.relationship-from-firearm.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.relationship-to-firearm.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "EvidenceItem": {
+      "objectType": {
+        "apiName": "EvidenceItem",
+        "displayName": "Evidence item",
+        "pluralDisplayName": "Evidence items",
+        "primaryKey": "evidenceId",
+        "titleProperty": "tag",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "evidenceId": {
+            "displayName": "Evidence id",
+            "rid": "ri.EvidenceItem.evidenceId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "tag": {
+            "displayName": "Tag",
+            "rid": "ri.EvidenceItem.tag",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.EvidenceItem.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "custodyStatus": {
+            "displayName": "Custody status",
+            "rid": "ri.EvidenceItem.custodyStatus",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "matchedFirearmId": {
+            "displayName": "Matched firearm",
+            "rid": "ri.EvidenceItem.matchedFirearmId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "incidentId": {
+            "displayName": "Recovered at",
+            "rid": "ri.EvidenceItem.incidentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.EvidenceItem.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.EvidenceItem.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.EvidenceItem.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.EvidenceItem.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.EvidenceItem",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Firearm.evidence-item-matched-to.EvidenceItem",
+          "status": "ACTIVE",
+          "apiName": "matchedTo",
+          "displayName": "Matched to",
+          "objectTypeApiName": "Firearm",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "matchedFirearmId"
+        },
+        {
+          "linkTypeRid": "ri.Incident.evidence-item-recovered-at.EvidenceItem",
+          "status": "ACTIVE",
+          "apiName": "recoveredAt",
+          "displayName": "Recovered at",
+          "objectTypeApiName": "Incident",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "incidentId"
+        },
+        {
+          "linkTypeRid": "ri.EvidenceItem.evidence-item-canonical.EvidenceItem",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "EvidenceItem"
+        },
+        {
+          "linkTypeRid": "ri.EvidenceItem.evidence-item-canonical.EvidenceItem",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "EvidenceItem",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.evidence-item-passage.EvidenceItem",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.evidence-item-source-record.EvidenceItem",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.EvidenceItem.relationship-from-evidence-item.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.EvidenceItem.relationship-to-evidence-item.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "School": {
+      "objectType": {
+        "apiName": "School",
+        "displayName": "School",
+        "pluralDisplayName": "Schools",
+        "primaryKey": "schoolId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "schoolId": {
+            "displayName": "School id",
+            "rid": "ri.School.schoolId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.School.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "depedId": {
+            "displayName": "DepEd school id",
+            "rid": "ri.School.depedId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "division": {
+            "displayName": "Division",
+            "rid": "ri.School.division",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.School.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.School.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.School.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.School.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.School",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.School.person-school.Person",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "people",
+          "displayName": "Person",
+          "objectTypeApiName": "Person"
+        },
+        {
+          "linkTypeRid": "ri.School.incident-school.Incident",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "incidents",
+          "displayName": "Incident",
+          "objectTypeApiName": "Incident"
+        },
+        {
+          "linkTypeRid": "ri.School.school-canonical.School",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "School"
+        },
+        {
+          "linkTypeRid": "ri.School.school-canonical.School",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "School",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.school-passage.School",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.school-source-record.School",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.School.relationship-from-school.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.School.relationship-to-school.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "LGU": {
+      "objectType": {
+        "apiName": "LGU",
+        "displayName": "LGU",
+        "pluralDisplayName": "LGUs",
+        "primaryKey": "lguId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "lguId": {
+            "displayName": "LGU id",
+            "rid": "ri.LGU.lguId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.LGU.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.LGU.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "province": {
+            "displayName": "Province",
+            "rid": "ri.LGU.province",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.LGU.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.LGU.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.LGU.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.LGU.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.LGU",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.LGU.barangay-lgu.Barangay",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "barangays",
+          "displayName": "Barangay",
+          "objectTypeApiName": "Barangay"
+        },
+        {
+          "linkTypeRid": "ri.LGU.facility-lgu.Facility",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "facilities",
+          "displayName": "Facility",
+          "objectTypeApiName": "Facility"
+        },
+        {
+          "linkTypeRid": "ri.LGU.contract-lgu.Contract",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "contracts",
+          "displayName": "Contract",
+          "objectTypeApiName": "Contract"
+        },
+        {
+          "linkTypeRid": "ri.LGU.lgu-canonical.LGU",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "LGU"
+        },
+        {
+          "linkTypeRid": "ri.LGU.lgu-canonical.LGU",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "LGU",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.lgu-passage.LGU",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.lgu-source-record.LGU",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.LGU.relationship-from-lgu.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.LGU.relationship-to-lgu.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Barangay": {
+      "objectType": {
+        "apiName": "Barangay",
+        "displayName": "Barangay",
+        "pluralDisplayName": "Barangays",
+        "primaryKey": "barangayId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "barangayId": {
+            "displayName": "Barangay id",
+            "rid": "ri.Barangay.barangayId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Barangay.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "lguId": {
+            "displayName": "LGU",
+            "rid": "ri.Barangay.lguId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Barangay.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Barangay.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Barangay.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Barangay.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Barangay",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.LGU.barangay-lgu.Barangay",
+          "status": "ACTIVE",
+          "apiName": "lgu",
+          "displayName": "LGU",
+          "objectTypeApiName": "LGU",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "lguId"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.complaint-barangay.Complaint",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "complaints",
+          "displayName": "Complaint",
+          "objectTypeApiName": "Complaint"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.barangay-canonical.Barangay",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Barangay"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.barangay-canonical.Barangay",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Barangay",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.barangay-passage.Barangay",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.barangay-source-record.Barangay",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.relationship-from-barangay.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.relationship-to-barangay.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Hauler": {
+      "objectType": {
+        "apiName": "Hauler",
+        "displayName": "Hauler",
+        "pluralDisplayName": "Haulers",
+        "primaryKey": "haulerId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "haulerId": {
+            "displayName": "Hauler id",
+            "rid": "ri.Hauler.haulerId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Hauler.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "registrationNo": {
+            "displayName": "Registration no.",
+            "rid": "ri.Hauler.registrationNo",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "tin": {
+            "displayName": "TIN",
+            "rid": "ri.Hauler.tin",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Hauler.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Hauler.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Hauler.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Hauler.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Hauler",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Hauler.contract-hauler.Contract",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "contracts",
+          "displayName": "Contract",
+          "objectTypeApiName": "Contract"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.vehicle-hauler.Vehicle",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "vehicles",
+          "displayName": "Vehicle",
+          "objectTypeApiName": "Vehicle"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.inspection-hauler.Inspection",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "inspections",
+          "displayName": "Inspection",
+          "objectTypeApiName": "Inspection"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.hauler-canonical.Hauler",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Hauler"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.hauler-canonical.Hauler",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Hauler",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.hauler-passage.Hauler",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.hauler-source-record.Hauler",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.relationship-from-hauler.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.relationship-to-hauler.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Contract": {
+      "objectType": {
+        "apiName": "Contract",
+        "displayName": "Contract",
+        "pluralDisplayName": "Contracts",
+        "primaryKey": "contractId",
+        "titleProperty": "contractNo",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "contractId": {
+            "displayName": "Contract id",
+            "rid": "ri.Contract.contractId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "contractNo": {
+            "displayName": "Contract no.",
+            "rid": "ri.Contract.contractNo",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "lguId": {
+            "displayName": "LGU",
+            "rid": "ri.Contract.lguId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "haulerId": {
+            "displayName": "Hauler",
+            "rid": "ri.Contract.haulerId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "amount": {
+            "displayName": "Amount",
+            "rid": "ri.Contract.amount",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "startAt": {
+            "displayName": "Start",
+            "rid": "ri.Contract.startAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "endAt": {
+            "displayName": "End",
+            "rid": "ri.Contract.endAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "scope": {
+            "displayName": "Scope",
+            "rid": "ri.Contract.scope",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Contract.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Contract.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Contract.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Contract.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Contract",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.LGU.contract-lgu.Contract",
+          "status": "ACTIVE",
+          "apiName": "lgu",
+          "displayName": "LGU",
+          "objectTypeApiName": "LGU",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "lguId"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.contract-hauler.Contract",
+          "status": "ACTIVE",
+          "apiName": "hauler",
+          "displayName": "Hauler",
+          "objectTypeApiName": "Hauler",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "haulerId"
+        },
+        {
+          "linkTypeRid": "ri.Contract.contract-canonical.Contract",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Contract"
+        },
+        {
+          "linkTypeRid": "ri.Contract.contract-canonical.Contract",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Contract",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.contract-passage.Contract",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.contract-source-record.Contract",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Contract.relationship-from-contract.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Contract.relationship-to-contract.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Facility": {
+      "objectType": {
+        "apiName": "Facility",
+        "displayName": "Facility",
+        "pluralDisplayName": "Facilities",
+        "primaryKey": "facilityId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "facilityId": {
+            "displayName": "Facility id",
+            "rid": "ri.Facility.facilityId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Facility.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.Facility.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "permitNo": {
+            "displayName": "Permit no.",
+            "rid": "ri.Facility.permitNo",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "status": {
+            "displayName": "Status",
+            "rid": "ri.Facility.status",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "lguId": {
+            "displayName": "LGU",
+            "rid": "ri.Facility.lguId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Facility.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Facility.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Facility.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Facility.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Facility",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.LGU.facility-lgu.Facility",
+          "status": "ACTIVE",
+          "apiName": "lgu",
+          "displayName": "LGU",
+          "objectTypeApiName": "LGU",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "lguId"
+        },
+        {
+          "linkTypeRid": "ri.Facility.inspection-facility.Inspection",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "inspections",
+          "displayName": "Inspection",
+          "objectTypeApiName": "Inspection"
+        },
+        {
+          "linkTypeRid": "ri.Facility.facility-canonical.Facility",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Facility"
+        },
+        {
+          "linkTypeRid": "ri.Facility.facility-canonical.Facility",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Facility",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.facility-passage.Facility",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.facility-source-record.Facility",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Facility.relationship-from-facility.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Facility.relationship-to-facility.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Vehicle": {
+      "objectType": {
+        "apiName": "Vehicle",
+        "displayName": "Vehicle",
+        "pluralDisplayName": "Vehicles",
+        "primaryKey": "vehicleId",
+        "titleProperty": "plateNo",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "vehicleId": {
+            "displayName": "Vehicle id",
+            "rid": "ri.Vehicle.vehicleId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "plateNo": {
+            "displayName": "Plate no.",
+            "rid": "ri.Vehicle.plateNo",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "bodyNo": {
+            "displayName": "Body no.",
+            "rid": "ri.Vehicle.bodyNo",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "haulerId": {
+            "displayName": "Hauler",
+            "rid": "ri.Vehicle.haulerId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Vehicle.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Vehicle.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Vehicle.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Vehicle.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Vehicle",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Hauler.vehicle-hauler.Vehicle",
+          "status": "ACTIVE",
+          "apiName": "hauler",
+          "displayName": "Hauler",
+          "objectTypeApiName": "Hauler",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "haulerId"
+        },
+        {
+          "linkTypeRid": "ri.Vehicle.vehicle-canonical.Vehicle",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Vehicle"
+        },
+        {
+          "linkTypeRid": "ri.Vehicle.vehicle-canonical.Vehicle",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Vehicle",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.vehicle-passage.Vehicle",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.vehicle-source-record.Vehicle",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Vehicle.relationship-from-vehicle.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Vehicle.relationship-to-vehicle.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Inspection": {
+      "objectType": {
+        "apiName": "Inspection",
+        "displayName": "Inspection",
+        "pluralDisplayName": "Inspections",
+        "primaryKey": "inspectionId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "inspectionId": {
+            "displayName": "Inspection id",
+            "rid": "ri.Inspection.inspectionId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Inspection.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "agency": {
+            "displayName": "Agency",
+            "rid": "ri.Inspection.agency",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "facilityId": {
+            "displayName": "Facility",
+            "rid": "ri.Inspection.facilityId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "haulerId": {
+            "displayName": "Hauler",
+            "rid": "ri.Inspection.haulerId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "result": {
+            "displayName": "Result",
+            "rid": "ri.Inspection.result",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "inspectedAt": {
+            "displayName": "Inspected at",
+            "rid": "ri.Inspection.inspectedAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Inspection.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Inspection.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Inspection.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Inspection.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Inspection",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Facility.inspection-facility.Inspection",
+          "status": "ACTIVE",
+          "apiName": "facility",
+          "displayName": "Facility",
+          "objectTypeApiName": "Facility",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "facilityId"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.inspection-hauler.Inspection",
+          "status": "ACTIVE",
+          "apiName": "hauler",
+          "displayName": "Hauler",
+          "objectTypeApiName": "Hauler",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "haulerId"
+        },
+        {
+          "linkTypeRid": "ri.Inspection.inspection-canonical.Inspection",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Inspection"
+        },
+        {
+          "linkTypeRid": "ri.Inspection.inspection-canonical.Inspection",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Inspection",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.inspection-passage.Inspection",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.inspection-source-record.Inspection",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Inspection.relationship-from-inspection.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Inspection.relationship-to-inspection.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Complaint": {
+      "objectType": {
+        "apiName": "Complaint",
+        "displayName": "Complaint",
+        "pluralDisplayName": "Complaints",
+        "primaryKey": "complaintId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "complaintId": {
+            "displayName": "Complaint id",
+            "rid": "ri.Complaint.complaintId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Complaint.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "channel": {
+            "displayName": "Channel",
+            "rid": "ri.Complaint.channel",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "barangayId": {
+            "displayName": "Barangay",
+            "rid": "ri.Complaint.barangayId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "category": {
+            "displayName": "Category",
+            "rid": "ri.Complaint.category",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "filedAt": {
+            "displayName": "Filed at",
+            "rid": "ri.Complaint.filedAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Complaint.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Complaint.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Complaint.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Complaint.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Complaint",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Barangay.complaint-barangay.Complaint",
+          "status": "ACTIVE",
+          "apiName": "barangay",
+          "displayName": "Barangay",
+          "objectTypeApiName": "Barangay",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "barangayId"
+        },
+        {
+          "linkTypeRid": "ri.Complaint.complaint-canonical.Complaint",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Complaint"
+        },
+        {
+          "linkTypeRid": "ri.Complaint.complaint-canonical.Complaint",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Complaint",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.complaint-passage.Complaint",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.complaint-source-record.Complaint",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Complaint.relationship-from-complaint.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Complaint.relationship-to-complaint.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
+    "Relationship": {
+      "objectType": {
+        "apiName": "Relationship",
+        "displayName": "Relationship",
+        "pluralDisplayName": "Relationships",
+        "primaryKey": "relationshipId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "relationshipId": {
+            "displayName": "Relationship id",
+            "rid": "ri.Relationship.relationshipId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Relationship.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.Relationship.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromType": {
+            "displayName": "From type",
+            "rid": "ri.Relationship.fromType",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromId": {
+            "displayName": "From id",
+            "rid": "ri.Relationship.fromId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toType": {
+            "displayName": "To type",
+            "rid": "ri.Relationship.toType",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toId": {
+            "displayName": "To id",
+            "rid": "ri.Relationship.toId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "observedAt": {
+            "displayName": "Observed at",
+            "rid": "ri.Relationship.observedAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "confidence": {
+            "displayName": "Confidence",
+            "rid": "ri.Relationship.confidence",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "method": {
+            "displayName": "Method",
+            "rid": "ri.Relationship.method",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "status": {
+            "displayName": "Status",
+            "rid": "ri.Relationship.status",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "reviewNote": {
+            "displayName": "Review note",
+            "rid": "ri.Relationship.reviewNote",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageIds": {
+            "displayName": "Passages",
+            "rid": "ri.Relationship.passageIds",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "array",
+              "subType": {
+                "type": "string"
+              },
+              "reducers": []
+            },
+            "typeClasses": []
+          },
+          "recordIds": {
+            "displayName": "Source records",
+            "rid": "ri.Relationship.recordIds",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "array",
+              "subType": {
+                "type": "string"
+              },
+              "reducers": []
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Relationship.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromPersonId": {
+            "displayName": "From person",
+            "rid": "ri.Relationship.fromPersonId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toPersonId": {
+            "displayName": "To person",
+            "rid": "ri.Relationship.toPersonId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromOrganizationId": {
+            "displayName": "From organization",
+            "rid": "ri.Relationship.fromOrganizationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toOrganizationId": {
+            "displayName": "To organization",
+            "rid": "ri.Relationship.toOrganizationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromLocationId": {
+            "displayName": "From location",
+            "rid": "ri.Relationship.fromLocationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toLocationId": {
+            "displayName": "To location",
+            "rid": "ri.Relationship.toLocationId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromEventId": {
+            "displayName": "From event",
+            "rid": "ri.Relationship.fromEventId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toEventId": {
+            "displayName": "To event",
+            "rid": "ri.Relationship.toEventId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromDigitalAccountId": {
+            "displayName": "From digital account",
+            "rid": "ri.Relationship.fromDigitalAccountId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toDigitalAccountId": {
+            "displayName": "To digital account",
+            "rid": "ri.Relationship.toDigitalAccountId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromOnlineGroupId": {
+            "displayName": "From online group",
+            "rid": "ri.Relationship.fromOnlineGroupId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toOnlineGroupId": {
+            "displayName": "To online group",
+            "rid": "ri.Relationship.toOnlineGroupId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromIncidentId": {
+            "displayName": "From incident",
+            "rid": "ri.Relationship.fromIncidentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toIncidentId": {
+            "displayName": "To incident",
+            "rid": "ri.Relationship.toIncidentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromFirearmId": {
+            "displayName": "From firearm",
+            "rid": "ri.Relationship.fromFirearmId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toFirearmId": {
+            "displayName": "To firearm",
+            "rid": "ri.Relationship.toFirearmId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromEvidenceItemId": {
+            "displayName": "From evidence item",
+            "rid": "ri.Relationship.fromEvidenceItemId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toEvidenceItemId": {
+            "displayName": "To evidence item",
+            "rid": "ri.Relationship.toEvidenceItemId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromSchoolId": {
+            "displayName": "From school",
+            "rid": "ri.Relationship.fromSchoolId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toSchoolId": {
+            "displayName": "To school",
+            "rid": "ri.Relationship.toSchoolId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromLGUId": {
+            "displayName": "From lgu",
+            "rid": "ri.Relationship.fromLGUId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toLGUId": {
+            "displayName": "To lgu",
+            "rid": "ri.Relationship.toLGUId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromBarangayId": {
+            "displayName": "From barangay",
+            "rid": "ri.Relationship.fromBarangayId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toBarangayId": {
+            "displayName": "To barangay",
+            "rid": "ri.Relationship.toBarangayId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromHaulerId": {
+            "displayName": "From hauler",
+            "rid": "ri.Relationship.fromHaulerId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toHaulerId": {
+            "displayName": "To hauler",
+            "rid": "ri.Relationship.toHaulerId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromContractId": {
+            "displayName": "From contract",
+            "rid": "ri.Relationship.fromContractId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toContractId": {
+            "displayName": "To contract",
+            "rid": "ri.Relationship.toContractId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromFacilityId": {
+            "displayName": "From facility",
+            "rid": "ri.Relationship.fromFacilityId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toFacilityId": {
+            "displayName": "To facility",
+            "rid": "ri.Relationship.toFacilityId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromVehicleId": {
+            "displayName": "From vehicle",
+            "rid": "ri.Relationship.fromVehicleId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toVehicleId": {
+            "displayName": "To vehicle",
+            "rid": "ri.Relationship.toVehicleId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromInspectionId": {
+            "displayName": "From inspection",
+            "rid": "ri.Relationship.fromInspectionId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toInspectionId": {
+            "displayName": "To inspection",
+            "rid": "ri.Relationship.toInspectionId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "fromComplaintId": {
+            "displayName": "From complaint",
+            "rid": "ri.Relationship.fromComplaintId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toComplaintId": {
+            "displayName": "To complaint",
+            "rid": "ri.Relationship.toComplaintId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Relationship",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Person.relationship-from-person.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromPerson",
+          "displayName": "From person",
+          "objectTypeApiName": "Person",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromPersonId"
+        },
+        {
+          "linkTypeRid": "ri.Person.relationship-to-person.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toPerson",
+          "displayName": "To person",
+          "objectTypeApiName": "Person",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toPersonId"
+        },
+        {
+          "linkTypeRid": "ri.Organization.relationship-from-organization.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromOrganization",
+          "displayName": "From organization",
+          "objectTypeApiName": "Organization",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromOrganizationId"
+        },
+        {
+          "linkTypeRid": "ri.Organization.relationship-to-organization.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toOrganization",
+          "displayName": "To organization",
+          "objectTypeApiName": "Organization",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toOrganizationId"
+        },
+        {
+          "linkTypeRid": "ri.Location.relationship-from-location.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromLocation",
+          "displayName": "From location",
+          "objectTypeApiName": "Location",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromLocationId"
+        },
+        {
+          "linkTypeRid": "ri.Location.relationship-to-location.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toLocation",
+          "displayName": "To location",
+          "objectTypeApiName": "Location",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toLocationId"
+        },
+        {
+          "linkTypeRid": "ri.Event.relationship-from-event.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromEvent",
+          "displayName": "From event",
+          "objectTypeApiName": "Event",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromEventId"
+        },
+        {
+          "linkTypeRid": "ri.Event.relationship-to-event.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toEvent",
+          "displayName": "To event",
+          "objectTypeApiName": "Event",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toEventId"
+        },
+        {
+          "linkTypeRid": "ri.DigitalAccount.relationship-from-digital-account.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromDigitalAccount",
+          "displayName": "From digital account",
+          "objectTypeApiName": "DigitalAccount",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromDigitalAccountId"
+        },
+        {
+          "linkTypeRid": "ri.DigitalAccount.relationship-to-digital-account.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toDigitalAccount",
+          "displayName": "To digital account",
+          "objectTypeApiName": "DigitalAccount",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toDigitalAccountId"
+        },
+        {
+          "linkTypeRid": "ri.OnlineGroup.relationship-from-online-group.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromOnlineGroup",
+          "displayName": "From online group",
+          "objectTypeApiName": "OnlineGroup",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromOnlineGroupId"
+        },
+        {
+          "linkTypeRid": "ri.OnlineGroup.relationship-to-online-group.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toOnlineGroup",
+          "displayName": "To online group",
+          "objectTypeApiName": "OnlineGroup",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toOnlineGroupId"
+        },
+        {
+          "linkTypeRid": "ri.Incident.relationship-from-incident.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromIncident",
+          "displayName": "From incident",
+          "objectTypeApiName": "Incident",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromIncidentId"
+        },
+        {
+          "linkTypeRid": "ri.Incident.relationship-to-incident.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toIncident",
+          "displayName": "To incident",
+          "objectTypeApiName": "Incident",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toIncidentId"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.relationship-from-firearm.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromFirearm",
+          "displayName": "From firearm",
+          "objectTypeApiName": "Firearm",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromFirearmId"
+        },
+        {
+          "linkTypeRid": "ri.Firearm.relationship-to-firearm.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toFirearm",
+          "displayName": "To firearm",
+          "objectTypeApiName": "Firearm",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toFirearmId"
+        },
+        {
+          "linkTypeRid": "ri.EvidenceItem.relationship-from-evidence-item.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromEvidenceItem",
+          "displayName": "From evidence item",
+          "objectTypeApiName": "EvidenceItem",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromEvidenceItemId"
+        },
+        {
+          "linkTypeRid": "ri.EvidenceItem.relationship-to-evidence-item.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toEvidenceItem",
+          "displayName": "To evidence item",
+          "objectTypeApiName": "EvidenceItem",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toEvidenceItemId"
+        },
+        {
+          "linkTypeRid": "ri.School.relationship-from-school.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromSchool",
+          "displayName": "From school",
+          "objectTypeApiName": "School",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromSchoolId"
+        },
+        {
+          "linkTypeRid": "ri.School.relationship-to-school.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toSchool",
+          "displayName": "To school",
+          "objectTypeApiName": "School",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toSchoolId"
+        },
+        {
+          "linkTypeRid": "ri.LGU.relationship-from-lgu.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromLGU",
+          "displayName": "From lgu",
+          "objectTypeApiName": "LGU",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromLGUId"
+        },
+        {
+          "linkTypeRid": "ri.LGU.relationship-to-lgu.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toLGU",
+          "displayName": "To lgu",
+          "objectTypeApiName": "LGU",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toLGUId"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.relationship-from-barangay.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromBarangay",
+          "displayName": "From barangay",
+          "objectTypeApiName": "Barangay",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromBarangayId"
+        },
+        {
+          "linkTypeRid": "ri.Barangay.relationship-to-barangay.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toBarangay",
+          "displayName": "To barangay",
+          "objectTypeApiName": "Barangay",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toBarangayId"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.relationship-from-hauler.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromHauler",
+          "displayName": "From hauler",
+          "objectTypeApiName": "Hauler",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromHaulerId"
+        },
+        {
+          "linkTypeRid": "ri.Hauler.relationship-to-hauler.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toHauler",
+          "displayName": "To hauler",
+          "objectTypeApiName": "Hauler",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toHaulerId"
+        },
+        {
+          "linkTypeRid": "ri.Contract.relationship-from-contract.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromContract",
+          "displayName": "From contract",
+          "objectTypeApiName": "Contract",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromContractId"
+        },
+        {
+          "linkTypeRid": "ri.Contract.relationship-to-contract.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toContract",
+          "displayName": "To contract",
+          "objectTypeApiName": "Contract",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toContractId"
+        },
+        {
+          "linkTypeRid": "ri.Facility.relationship-from-facility.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromFacility",
+          "displayName": "From facility",
+          "objectTypeApiName": "Facility",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromFacilityId"
+        },
+        {
+          "linkTypeRid": "ri.Facility.relationship-to-facility.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toFacility",
+          "displayName": "To facility",
+          "objectTypeApiName": "Facility",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toFacilityId"
+        },
+        {
+          "linkTypeRid": "ri.Vehicle.relationship-from-vehicle.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromVehicle",
+          "displayName": "From vehicle",
+          "objectTypeApiName": "Vehicle",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromVehicleId"
+        },
+        {
+          "linkTypeRid": "ri.Vehicle.relationship-to-vehicle.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toVehicle",
+          "displayName": "To vehicle",
+          "objectTypeApiName": "Vehicle",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toVehicleId"
+        },
+        {
+          "linkTypeRid": "ri.Inspection.relationship-from-inspection.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromInspection",
+          "displayName": "From inspection",
+          "objectTypeApiName": "Inspection",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromInspectionId"
+        },
+        {
+          "linkTypeRid": "ri.Inspection.relationship-to-inspection.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toInspection",
+          "displayName": "To inspection",
+          "objectTypeApiName": "Inspection",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toInspectionId"
+        },
+        {
+          "linkTypeRid": "ri.Complaint.relationship-from-complaint.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromComplaint",
+          "displayName": "From complaint",
+          "objectTypeApiName": "Complaint",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromComplaintId"
+        },
+        {
+          "linkTypeRid": "ri.Complaint.relationship-to-complaint.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toComplaint",
+          "displayName": "To complaint",
+          "objectTypeApiName": "Complaint",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toComplaintId"
+        }
+      ]
+    },
+    "Resolution": {
+      "objectType": {
+        "apiName": "Resolution",
+        "displayName": "Resolution",
+        "pluralDisplayName": "Resolutions",
+        "primaryKey": "resolutionId",
+        "titleProperty": "label",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "resolutionId": {
+            "displayName": "Resolution id",
+            "rid": "ri.Resolution.resolutionId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "label": {
+            "displayName": "Label",
+            "rid": "ri.Resolution.label",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "candidateIds": {
+            "displayName": "Candidates",
+            "rid": "ri.Resolution.candidateIds",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "array",
+              "subType": {
+                "type": "string"
+              },
+              "reducers": []
+            },
+            "typeClasses": []
+          },
+          "canonicalType": {
+            "displayName": "Canonical type",
+            "rid": "ri.Resolution.canonicalType",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Resolution.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "decision": {
+            "displayName": "Decision",
+            "rid": "ri.Resolution.decision",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "confidence": {
+            "displayName": "Confidence",
+            "rid": "ri.Resolution.confidence",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "decidedBy": {
+            "displayName": "Decided by",
+            "rid": "ri.Resolution.decidedBy",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "method": {
+            "displayName": "Method",
+            "rid": "ri.Resolution.method",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "decidedAt": {
+            "displayName": "Decided at",
+            "rid": "ri.Resolution.decidedAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "reason": {
+            "displayName": "Reason",
+            "rid": "ri.Resolution.reason",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Scenario",
+            "rid": "ri.Resolution.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Resolution",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": []
+    }
+  },
+  "queryTypes": {},
+  "actionTypes": {
+    "create-object-person": {
+      "rid": "ri.action.create-object-person",
+      "apiName": "create-object-person",
+      "displayName": "Create Person",
+      "description": "",
+      "parameters": {
+        "personId": {
+          "displayName": "Person id",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "fullName": {
+          "displayName": "Full name",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "aliases": {
+          "displayName": "Aliases",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "array",
+            "subType": {
+              "type": "string"
+            }
+          },
+          "typeClasses": []
+        },
+        "role": {
+          "displayName": "Role",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "schoolId": {
+          "displayName": "School",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "canonicalId": {
+          "displayName": "Canonical object",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "passageId": {
+          "displayName": "Passage",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "recordId": {
+          "displayName": "Source record",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "scenario": {
+          "displayName": "Scenario",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        }
+      },
+      "operations": [
+        {
+          "type": "createObject",
+          "objectTypeApiName": "Person"
+        }
+      ],
+      "status": "ACTIVE"
+    },
+    "create-object-resolution": {
+      "rid": "ri.action.create-object-resolution",
+      "apiName": "create-object-resolution",
+      "displayName": "Create Resolution",
+      "description": "",
+      "parameters": {
+        "resolutionId": {
+          "displayName": "Resolution id",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "label": {
+          "displayName": "Label",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "candidateIds": {
+          "displayName": "Candidates",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "array",
+            "subType": {
+              "type": "string"
+            }
+          },
+          "typeClasses": []
+        },
+        "canonicalType": {
+          "displayName": "Canonical type",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "canonicalId": {
+          "displayName": "Canonical object",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "decision": {
+          "displayName": "Decision",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "confidence": {
+          "displayName": "Confidence",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "double"
+          },
+          "typeClasses": []
+        },
+        "decidedBy": {
+          "displayName": "Decided by",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "method": {
+          "displayName": "Method",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "decidedAt": {
+          "displayName": "Decided at",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "timestamp"
+          },
+          "typeClasses": []
+        },
+        "reason": {
+          "displayName": "Reason",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "scenario": {
+          "displayName": "Scenario",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        }
+      },
+      "operations": [
+        {
+          "type": "createObject",
+          "objectTypeApiName": "Resolution"
+        }
+      ],
+      "status": "ACTIVE"
+    },
+    "modify-object-relationship": {
+      "rid": "ri.action.modify-object-relationship",
+      "apiName": "modify-object-relationship",
+      "displayName": "Modify Relationship",
+      "description": "",
+      "parameters": {
+        "objectToModifyParameter": {
+          "displayName": "Modify object",
+          "description": "",
+          "required": true,
+          "dataType": {
+            "type": "object",
+            "objectTypeApiName": "Relationship",
+            "objectApiName": "Relationship"
+          },
+          "typeClasses": []
+        },
+        "status": {
+          "displayName": "Status",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "reviewNote": {
+          "displayName": "Review note",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        }
+      },
+      "operations": [
+        {
+          "type": "modifyObject",
+          "objectTypeApiName": "Relationship"
+        }
+      ],
+      "status": "ACTIVE"
+    }
+  },
+  "actionTypesFullMetadata": {},
+  "ontology": {
+    "apiName": "ontology",
+    "rid": "ri.00000",
+    "displayName": "ontology",
+    "description": ""
+  },
+  "valueTypes": {}
+}
