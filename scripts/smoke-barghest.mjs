@@ -1,13 +1,16 @@
 // BARGHEST smoke: serve dist/ and prove the shell, not describe it. At 1440 x 900 and again at 1920 x 1080: bp6-dark
 // on body; the owner's palette (Graphite: chrome dark gray 1, main dark gray 2; each rail icon in its own colour, kept
-// when open, on one grey highlight for every view); D-DIN loaded and used on labels, Source
-// Sans 3 on running text; nothing under 14px; the owner's Figma version (the dog and BARGHEST in D-DIN then search
+// when open, on one grey highlight for every view); D-DIN loaded and used only on big or all-caps text, Source Sans 3
+// on everything else; nothing under 14px; the owner's Figma version (the dog and BARGHEST in D-DIN then search
 // across the app bar, the toggle on top of the rail, 4px between rail icons); rail labels not repainted link-blue;
 // the rail at its collapsed width with a tooltip, then expanded; the URL drives the view (click, back); the document
 // never scrolls; zero console errors. Then the Object Explorer on the running engine's data: types with their counts, a
 // type started, a value filter added and removed, Back and Forward, Search Around to digital accounts and their
-// platforms (demo step 3), View results into Browser's list and back, a broken link; all-caps headings in D-DIN Bold.
-// Screenshots to dist-shots/. Exit 1 on any failure. Needs the engine on 8787 (BARGHEST_OLLAMA=off pnpm dev:engine).
+// platforms (demo step 3), View results into Browser's list and back (the profile is smoke-profile's), a broken link; all-caps headings in D-DIN Bold.
+// Then Data Sources (the strip naming the model's state, the files or the empty state, the model log) and Files (the
+// investigations by name, never an id; the files or the empty state; the Investigation menu and New investigation
+// dialog, opened and closed, nothing created). Screenshots to dist-shots/. Exit 1 on any failure. Needs the engine on
+// 8787 (BARGHEST_OLLAMA=off pnpm dev:engine), or on BARGHEST_ENGINE_PORT.
 // Run: pnpm --filter @atlas/barghest smoke   --geometry prints the measured boxes as well.
 import { chromium } from 'playwright';
 import { createServer, request } from 'node:http';
@@ -25,13 +28,20 @@ if (!existsSync(join(dist, 'index.html'))) {
 }
 
 // The engine, reached the way Vite's proxy reaches it: /barghest/ and /api/ go to 8787, everything else is dist/.
-const ENGINE = { host: '127.0.0.1', port: 8787 };
+const ENGINE = { host: '127.0.0.1', port: Number(process.env.BARGHEST_ENGINE_PORT ?? 8787) };
 const health = await fetch(`http://${ENGINE.host}:${ENGINE.port}/barghest/health`).then((r) => r.json()).catch(() => null);
 if (!health?.ok) {
-  console.error('smoke: the engine is not answering on 8787; start it with BARGHEST_OLLAMA=off pnpm dev:engine');
+  console.error(`smoke: the engine is not answering on ${ENGINE.port}; start it with BARGHEST_OLLAMA=off pnpm dev:engine`);
   process.exit(1);
 }
 const seeded = health.ontology.objects;
+// The investigations: a bare / opens the first one the engine lists, and screens name it, never its id.
+const listed = await fetch(`http://${ENGINE.host}:${ENGINE.port}/barghest/investigations`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+if (!listed?.investigations?.length) {
+  console.error(`smoke: the engine on ${ENGINE.port} lists no investigations; it may predate them, so restart it`);
+  process.exit(1);
+}
+const FIRST = listed.investigations[0];
 
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ico': 'image/x-icon', '.png': 'image/png' };
 const server = createServer((req, res) => {
@@ -61,6 +71,7 @@ const DARK_GRAY_1 = 'rgb(28, 33, 39)';
 const DARK_GRAY_2 = 'rgb(37, 42, 49)';
 // The owner's icon colours, "Spectrum, vivid", in rail order.
 const VIEW_FILLS = {
+  Files: [245, 73, 139], // rose-4
   'Data Sources': [235, 104, 71], // vermilion-4
   'Object Explorer': [240, 183, 38], // gold-4
   Browser: [182, 217, 76], // lime-4
@@ -102,6 +113,75 @@ function rowsAt(page, rows, text) {
     const r = (n) => Math.round(n ?? -1);
     return `text ${r(t?.x)},${r(t?.y)} row ${r(a?.getBoundingClientRect().height)} next ${r(b?.getBoundingClientRect().y)}`;
   }, [rows, text]);
+}
+
+// Files and Data Sources on the engine's data, read-only: nothing is imported until delete exists (pass 2).
+async function intakeFlow(page, tag, fail) {
+  const capsOk = () =>
+    page.evaluate((LABEL_FACE) => {
+      const heads = [...document.querySelectorAll('.app-shell__main .caps-heading, .intake-table th')];
+      return heads.length > 0 && heads.every((h) => { const s = getComputedStyle(h); return s.fontFamily.replace(/["']/g, '').startsWith(LABEL_FACE) && s.fontWeight === '700' && s.textTransform === 'uppercase'; });
+    }, LABEL_FACE);
+  const noScroll = () => page.evaluate(() => { const d = document.scrollingElement; return d.scrollHeight <= innerHeight && d.scrollWidth <= innerWidth; });
+  const small = () =>
+    page.evaluate(() => [...document.querySelectorAll('.app-shell__main *')]
+      .filter((el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim()) && parseFloat(getComputedStyle(el).fontSize) < 14)
+      .map((el) => `${el.className || el.tagName} ${getComputedStyle(el).fontSize}`));
+  const files = listed.investigations[0].documents;
+
+  await page.goto(origin + `/${FIRST.id}/sources`, { waitUntil: 'load' });
+  await page.locator('.sources__strip').waitFor({ timeout: 10000 }).catch(() => fail('Data Sources: no strip'));
+  await page.locator('.intake-table, .bp6-non-ideal-state').first().waitFor({ timeout: 10000 }).catch(() => fail('Data Sources: no list and no empty state'));
+  const ds = await page.evaluate(() => ({
+    strip: document.querySelector('.sources__strip')?.innerText ?? '',
+    title: document.querySelector('.menubar__title')?.textContent ?? '',
+    rows: document.querySelectorAll('.sources__body .intake-table:not(.log-table) tbody tr').length,
+    empty: document.querySelector('.sources__body .bp6-non-ideal-state')?.innerText ?? '',
+    log: document.querySelector('.sources__log')?.innerText ?? '',
+  }));
+  if (!/MODEL/.test(ds.strip) || !/\b(Off|Idle|Reading)\b/.test(ds.strip)) fail(`Data Sources strip says nothing about the model: "${ds.strip}"`);
+  if (ds.title !== FIRST.name) fail(`Data Sources menu bar names "${ds.title}", want "${FIRST.name}"`);
+  if (files ? ds.rows !== files : !ds.empty.includes('Drop files here or use Import files.')) fail(`Data Sources list: ${ds.rows} rows for ${files} files, empty state "${ds.empty}"`);
+  if (!/MODEL LOG/i.test(ds.log)) fail('Data Sources: no model log');
+  if (!(await capsOk())) fail('Data Sources: an all-caps heading is not D-DIN Bold');
+  if (!(await noScroll())) fail('Data Sources: the document scrolls');
+  const dsSmall = await small();
+  if (dsSmall.length) fail(`Data Sources text under 14px: ${dsSmall.slice(0, 4).join('; ')}`);
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: join(shots, `sources-${tag}.png`) });
+
+  await page.goto(origin + `/${FIRST.id}/files`, { waitUntil: 'load' });
+  await page.locator('.files__tree').waitFor({ timeout: 10000 }).catch(() => fail('Files: no investigation list'));
+  await page.locator('.files .intake-table, .files .bp6-non-ideal-state').first().waitFor({ timeout: 10000 }).catch(() => fail('Files: no list and no empty state'));
+  const fl = await page.evaluate(() => ({
+    tree: [...document.querySelectorAll('.files__tree .bp6-tree-node-label')].map((n) => n.textContent),
+    rows: document.querySelectorAll('.files .intake-table tbody tr').length,
+    title: document.querySelector('.menubar__title')?.textContent ?? '',
+  }));
+  const names = listed.investigations.map((i) => i.name);
+  if (fl.tree.join('|') !== names.join('|')) fail(`Files lists "${fl.tree.join(', ')}", want the names "${names.join(', ')}"`);
+  if (fl.tree.some((t) => listed.investigations.some((i) => i.id === t && i.id !== i.name))) fail('Files shows an investigation id');
+  if (files && fl.rows !== files) fail(`Files list: ${fl.rows} rows for ${files} files`);
+  if (fl.title !== FIRST.name) fail(`Files menu bar names "${fl.title}", want "${FIRST.name}"`);
+  if (!(await capsOk())) fail('Files: an all-caps heading is not D-DIN Bold');
+  if (!(await noScroll())) fail('Files: the document scrolls');
+  const flSmall = await small();
+  if (flSmall.length) fail(`Files text under 14px: ${flSmall.slice(0, 4).join('; ')}`);
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: join(shots, `files-${tag}.png`) });
+
+  // The Investigation menu lists names; New investigation opens its dialog and closes without creating anything.
+  await page.getByRole('button', { name: 'Investigation', exact: true }).click();
+  const menu = await page.locator('.investigation-menu').innerText({ timeout: 3000 }).catch(() => '');
+  if (!names.every((n) => menu.includes(n)) || !menu.includes('New investigation')) fail(`Investigation menu reads "${menu}"`);
+  await page.getByRole('menuitem', { name: 'New investigation…' }).click();
+  await page.locator('.new-investigation').waitFor({ timeout: 3000 }).catch(() => fail('New investigation dialog did not open'));
+  const dialog = await page.locator('.new-investigation').innerText().catch(() => '');
+  if (!/Name/.test(dialog) || /Start from|Solid waste|Haulers|What to look for/.test(dialog)) fail(`New investigation dialog reads "${dialog.slice(0, 160)}", want a name and nothing else`);
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: join(shots, `files-${tag}-new-investigation.png`) });
+  await page.getByRole('button', { name: 'Cancel' }).click();
+  await page.locator('.new-investigation').waitFor({ state: 'detached', timeout: 3000 }).catch(() => fail('New investigation dialog did not close'));
 }
 
 async function exploreFlow(page, tag, fail, width) {
@@ -228,7 +308,7 @@ async function exploreFlow(page, tag, fail, width) {
   // View results: Browser lists the set; Back to exploration returns to it.
   await page.getByRole('link', { name: 'View results' }).click();
   await page.locator('.result-item').first().waitFor({ timeout: 10000 }).catch(() => fail('View results listed nothing'));
-  if (new URL(page.url()).pathname !== '/a/browser') fail(`View results landed on ${page.url()}`);
+  if (new URL(page.url()).pathname !== `/${FIRST.id}/browser`) fail(`View results landed on ${page.url()}`);
   const items = await page.locator('.result-item').count();
   const title = (await page.locator('.result-list__title').innerText()).replace(/\s+/g, ' ');
   if (items !== Math.min(linked, 50) || !title.includes(`Showing ${items} of ${linked}`)) fail(`Browser lists ${items}, title "${title}", want ${linked}`);
@@ -238,32 +318,16 @@ async function exploreFlow(page, tag, fail, width) {
   if (!backFace.startsWith(LABEL_FACE) || !backFace.endsWith('|700|uppercase')) fail(`Back to exploration set in ${backFace}, want ${LABEL_FACE} Bold in capitals`);
   await page.screenshot({ path: join(shots, `browser-${tag}.png`) });
 
-  // A click on a result opens it beside the list, outlined in the list, named in the address bar.
-  const first = page.locator('.result-item__open').first();
-  const name = (await first.locator('strong').innerText()).trim();
-  const resultsAt = await rowsAt(page, '.result-item__open', 'strong');
-  await first.click();
-  await page.locator('.profile__head h4').waitFor({ timeout: 5000 }).catch(() => fail('a click on a result opened nothing'));
-  const opened = (await page.locator('.profile__head h4').innerText().catch(() => '')).trim();
-  if (opened !== name) fail(`profile reads "${opened}", want "${name}"`);
-  const named = (await page.locator('.menubar__title').innerText()).trim();
-  if (named !== name) fail(`menu bar reads "${named}" with ${name} open`);
-  if (!new URL(page.url()).searchParams.get('object')) fail(`the open object is not in the address: ${page.url()}`);
-  if ((await first.getAttribute('aria-pressed')) !== 'true') fail('the open result is not marked');
-  const resultsNow = await rowsAt(page, '.result-item__open', 'strong');
-  if (resultsNow !== resultsAt) fail(`opening a result moved the list: ${resultsAt} became ${resultsNow}`);
-  if (!(await page.locator('.profile__props dt').count())) fail('the profile lists no properties');
-  const smallB = await smallText(page);
-  if (smallB.length) fail(`browser text under 14px: ${smallB.slice(0, 5).join('; ')}`);
-  await page.screenshot({ path: join(shots, `browser-${tag}-open.png`) });
+  // Opening a result is the profile's, Builder 2's since the parallel builders (09.10.2026), and proven by its own
+  // smoke (scripts/smoke-profile.mjs). This smoke keeps the list and the way back.
   await page.getByRole('link', { name: 'Back to exploration' }).click();
   await expect(linked, 'Back to exploration');
   if (decode(page.url())?.steps?.[0]?.pivot !== 'digitalAccounts') fail(`Back to exploration lost the set: ${page.url()}`);
 
   // A link that won't decode says so.
-  await page.goto(origin + '/a/explorer?exploration=broken', { waitUntil: 'load' });
+  await page.goto(origin + `/${FIRST.id}/explorer?exploration=broken`, { waitUntil: 'load' });
   await page.getByText('This exploration link is broken').waitFor({ timeout: 5000 }).catch(() => fail('a broken link did not say so'));
-  await page.goto(origin + '/a/explorer', { waitUntil: 'load' });
+  await page.goto(origin + `/${FIRST.id}/explorer`, { waitUntil: 'load' });
   await page.locator('.bar-row').first().waitFor({ timeout: 10000 });
 
   // Links before a type lists every type's links; one click searches around from that type.
@@ -274,7 +338,7 @@ async function exploreFlow(page, tag, fail, width) {
   await owner.click();
   await expect(owners, 'Search Around from the Links tab');
   await nameIs('Digital accounts › People', 'Search Around from the Links tab');
-  await page.goto(origin + '/a/explorer', { waitUntil: 'load' });
+  await page.goto(origin + `/${FIRST.id}/explorer`, { waitUntil: 'load' });
   await page.locator('.bar-row').first().waitFor({ timeout: 10000 });
 }
 
@@ -289,7 +353,7 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   await page.locator('.app-shell').waitFor({ timeout: 10000 });
   await page.locator('.bar-row').first().waitFor({ timeout: 15000 }).catch(() => fail('the Object Explorer listed no types'));
   await page.evaluate(() => document.fonts.ready);
-  if (new URL(page.url()).pathname !== '/a/explorer') fail(`bare / did not settle on /a/explorer: ${page.url()}`);
+  if (new URL(page.url()).pathname !== `/${FIRST.id}/explorer`) fail(`bare / did not settle on /${FIRST.id}/explorer: ${page.url()}`);
 
   const probe = await page.evaluate(({ LABEL_FACE, BODY_FACE }) => {
     const $ = (s) => document.querySelector(s);
@@ -361,7 +425,9 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   if (probe.railPaint.filter((r) => r.open).length !== 1) fail('want exactly one open view in the rail');
   if (!probe.faces.some((f) => f.startsWith(LABEL_FACE + ' '))) fail(`${LABEL_FACE} not among loaded faces: ${probe.faces.join(', ')}`);
   if (!probe.faces.some((f) => f.startsWith(BODY_FACE))) fail(`${BODY_FACE} not among loaded faces: ${probe.faces.join(', ')}`);
-  for (const k of ['menu', 'title', 'heading']) if (!probe.family[k].startsWith(LABEL_FACE)) fail(`${k} set in "${probe.family[k]}", want ${LABEL_FACE}`);
+  // D-DIN only on big or all-caps text (owner, 09.10.2026); menus and the menu bar title are Source Sans 3.
+  if (!probe.family.heading.startsWith(LABEL_FACE)) fail(`heading set in "${probe.family.heading}", want ${LABEL_FACE}`);
+  for (const k of ['menu', 'title']) if (!probe.family[k].startsWith(BODY_FACE)) fail(`${k} set in "${probe.family[k]}", want ${BODY_FACE}`);
   if (!probe.family.search.startsWith(BODY_FACE)) fail(`search input set in "${probe.family.search}", want ${BODY_FACE}`);
   if (probe.small.length) fail(`text under 14px: ${probe.small.slice(0, 5).join('; ')}`);
   if (probe.docScroll.h > 0 || probe.docScroll.w > 0) fail(`document scrolls ${JSON.stringify(probe.docScroll)}`);
@@ -371,13 +437,16 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
 
   // Tooltip on the collapsed rail, shot after its fade.
   await page.locator('.rail__views .rail__entry').first().hover();
-  const tip = page.locator('.bp6-tooltip', { hasText: 'Data Sources' });
+  const tip = page.locator('.bp6-tooltip', { hasText: 'Files' });
   try { await tip.waitFor({ state: 'visible', timeout: 3000 }); } catch { fail('no tooltip on the collapsed rail'); }
   await page.waitForTimeout(250);
   await page.screenshot({ path: join(shots, `shell-${tag}-tooltip.png`) });
   await page.mouse.move(width / 2, height / 2);
 
   await exploreFlow(page, tag, fail, width);
+  await intakeFlow(page, tag, fail);
+  await page.goto(origin + `/${FIRST.id}/explorer`, { waitUntil: 'load' });
+  await page.locator('.bar-row').first().waitFor({ timeout: 15000 }).catch(() => fail('Object Explorer did not come back after Files'));
 
   // Expanded rail: labels show in D-DIN and are not link-blue.
   await page.getByRole('button', { name: 'Expand' }).click();
@@ -397,15 +466,15 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   // Icons and labels open as one: no icon moves, labels hidden collapsed and shown expanded.
   if (probe.railIcons.some((x) => x !== 10) || expanded.icons.some((x) => x !== 10)) fail(`rail icons moved: collapsed ${probe.railIcons.join(',')} expanded ${expanded.icons.join(',')}, want 10 throughout`);
   if (probe.railLabelOpacity.some((o) => o !== '0') || expanded.opacity.some((o) => o !== '1')) fail(`rail label opacity collapsed ${probe.railLabelOpacity.join(',')} expanded ${expanded.opacity.join(',')}`);
-  if (expanded.text !== 'Data Sources') fail(`expanded rail first label "${expanded.text}"`);
+  if (expanded.text !== 'Files') fail(`expanded rail first label "${expanded.text}"`);
   if (LINK_BLUE.includes(expanded.color)) fail(`rail label repainted link-blue ${expanded.color}`);
-  if (!expanded.family?.startsWith(LABEL_FACE)) fail(`rail label set in "${expanded.family}"`);
+  if (!expanded.family?.startsWith(BODY_FACE)) fail(`rail label set in "${expanded.family}", want ${BODY_FACE}`);
   await page.screenshot({ path: join(shots, `shell-${tag}-expanded.png`) });
 
   // The URL drives the view: a rail click moves it, back returns.
   await page.getByRole('link', { name: 'Graph' }).click();
   await page.locator('.menubar__title', { hasText: 'New graph' }).waitFor({ timeout: 3000 }).catch(() => fail('Graph click did not open Graph'));
-  if (new URL(page.url()).pathname !== '/a/graph') fail(`Graph click landed on ${page.url()}`);
+  if (new URL(page.url()).pathname !== `/${FIRST.id}/graph`) fail(`Graph click landed on ${page.url()}`);
   // Selecting a view changes nothing about its colours: the highlight is the same grey for every view, and the icon
   // keeps its own colour.
   await page.mouse.move(width / 2, height / 2);
@@ -427,5 +496,5 @@ await browser.close();
 server.close();
 
 const ok = failures.length === 0;
-console.log(ok ? `barghest: OK (shell, Object Explorer, Browser list and profile at 1440x900 and 1920x1080, 0 errors) ${Date.now() - t0}ms  dist-shots/*.png` : `barghest: FAIL\n${failures.join('\n')}`);
+console.log(ok ? `barghest: OK (shell, Object Explorer, Browser list, Data Sources, Files at 1440x900 and 1920x1080, 0 errors) ${Date.now() - t0}ms  dist-shots/*.png` : `barghest: FAIL\n${failures.join('\n')}`);
 process.exit(ok ? 0 : 1);

@@ -1,16 +1,19 @@
 // The address bar is the source of truth for where the analyst is: /:investigation/:view, plus the open exploration
-// as ?exploration= and, in Browser, the open object as ?object=. Back, forward, refresh and a pasted link all land on
-// the same screen. A few lines over the History API; no router package.
+// as ?exploration=, in Browser the open object as ?object=, in Files the open folder and file as ?folder= and ?document=.
+// Back, forward, refresh and a pasted link all land on the same screen. A few lines over the History API; no router.
 import { useSyncExternalStore } from 'react';
 import { DEFAULT_VIEW } from './nav';
 
-export const DEFAULT_INVESTIGATION = 'a';
 
 /** The query parameter that carries the encoded exploration (src/data's encodeExploration). */
 export const EXPLORATION_PARAM = 'exploration';
 
 /** The query parameter that carries the object open in Browser, by its key. */
 export const OBJECT_PARAM = 'object';
+
+/** Files: the open folder and the open file, by their ids. */
+export const FOLDER_PARAM = 'folder';
+export const DOCUMENT_PARAM = 'document';
 
 const CHANGE = 'barghest:navigate';
 
@@ -41,13 +44,14 @@ export function navigate(to: string, { replace = false }: { replace?: boolean } 
 }
 
 export interface Route {
-  investigation: string;
+  /** The investigation's id from the engine, or null on a bare `/`: the shell then opens the first one it lists. */
+  investigation: string | null;
   view: string;
 }
 
 export function parseRoute(path: string): Route {
   const [investigation, view] = path.split('/').filter(Boolean);
-  return { investigation: investigation ?? DEFAULT_INVESTIGATION, view: view ?? DEFAULT_VIEW };
+  return { investigation: investigation ?? null, view: view ?? DEFAULT_VIEW };
 }
 
 /** A view's address, with an encoded exploration when the view should open one. */
@@ -56,9 +60,11 @@ export function viewHref(investigation: string, view: string, exploration?: stri
   return exploration ? `${path}?${new URLSearchParams({ [EXPLORATION_PARAM]: exploration })}` : path;
 }
 
-/** A bare `/` or `/:investigation` becomes the full path once, in place, so history never holds the short form. */
+/** `/:investigation` becomes the full path once, in place, so history never holds the short form. A bare `/` waits
+ * for the engine's list of investigations; the shell settles it. */
 export function settleRoute(): void {
   const { investigation, view } = parseRoute(window.location.pathname);
+  if (!investigation) return;
   const full = viewHref(investigation, view);
   if (window.location.pathname !== full) window.history.replaceState(null, '', full + window.location.search);
 }

@@ -55,6 +55,12 @@
   --bh-profile-label-w: 180px;
   --bh-list-search-w: 240px;
 
+  /* Files and Data Sources, from the owner's approved mockups (09.10.2026). */
+  --bh-sources-log-w: 440px;
+  --bh-files-side-w: 260px;
+  --bh-status-w: 240px;
+  --bh-register-w: 220px;
+
   /* Paints: Graphite, the owner's pick of three options (09.10.2026), all Blueprint palette. The chrome is dark gray
      1, the main screen one step up, its panel another. Each view's icon wears its own colour (src/shell/nav.ts,
      "Spectrum, vivid"); the open view's highlight stays Blueprint's own grey, the same for every view. */
@@ -90,21 +96,19 @@ textarea {
   font-family: inherit;
 }
 
-/* D-DIN on everything that labels: headings, buttons, menu items, tabs, form labels. Running text and table data
-   stay Source Sans 3. */
+/* D-DIN only where text is big or set in capitals (owner, 09.10.2026): the large headings (h1 to h4, 18px and up),
+   the all-caps headings below and the wordmark. Everything else is Source Sans 3: buttons, tabs, menus, form labels,
+   the menu bar title, small headings, running text and table data. */
 h1,
 h2,
 h3,
-h4,
-h5,
-h6,
-.bp6-heading,
-.bp6-button,
-.bp6-menu-item,
-.bp6-tab,
-.bp6-label,
-.menubar__title {
+h4 {
   font-family: var(--bh-face-label);
+}
+
+/* A dialog's title is small, so it stays in the body face whatever heading tag Blueprint gives it. */
+.bp6-dialog-header .bp6-heading {
+  font-family: var(--bp-typography-family-default);
 }
 
 /* Anything set in capitals is a D-DIN Bold heading (owner, 09.10.2026: "if it's gonna be an all caps thing use D-DIN
@@ -349,7 +353,7 @@ h6,
   justify-content: space-between;
 }
 
-/* Tab labels are D-DIN; their counts are figures, so they stay in the body face. */
+/* A tab's count beside its label. */
 .explorer__tab-count {
   margin-left: 6px;
   font-family: var(--bp-typography-family-default);
@@ -719,3 +723,308 @@ h6,
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+/* ---- Files and Data Sources: cards of tables, a strip across the top of Data Sources, the investigations down the
+   left of Files. Both views take dropped files anywhere on them. ---- */
+
+.intake-card.view-panel {
+  display: flex;
+  flex-direction: column;
+  place-items: normal;
+  min-width: 0;
+  min-height: 0;
+}
+
+.intake-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--bh-panel-line);
+}
+
+.intake-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.intake-card__title h4,
+.intake-card__title h6 {
+  margin: 0;
+}
+
+.intake-card__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.intake-card__problem {
+  margin: 12px 16px 0;
+}
+
+.intake-card__empty {
+  margin: 16px;
+}
+
+.intake-card__scroll > .bp6-non-ideal-state {
+  height: 100%;
+}
+
+/* Tables: capitals are D-DIN Bold headings (owner rule); figures line up. Blueprint sets its th at 600 in a rule
+   that outranks a bare class, hence the doubled class. */
+.intake-table.bp6-html-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.intake-table.bp6-html-table th {
+  font-family: var(--bh-face-label);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bp-palette-gray-4);
+}
+
+.intake-table.bp6-html-table td {
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.intake-table th:first-child,
+.intake-table td:first-child {
+  padding-left: 16px;
+}
+
+.intake-table .intake-num {
+  width: 96px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.intake-table__status {
+  width: var(--bh-status-w);
+}
+
+.intake-table__register {
+  width: var(--bh-register-w);
+}
+
+.intake-table__menu .bp6-popover-target {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.intake-table .intake-table__menu {
+  width: 44px;
+  padding-block: 0;
+  text-align: right;
+}
+
+.intake-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* A name cut to fit; the tooltip carries the whole of it. */
+.intake-fit {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.intake-fit__text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status: quiet when all is well; colour only for Reading, Done with gaps and Failed (owner, 09.10.2026). */
+.intake-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.intake-status--reading .bp6-progress-bar {
+  flex: none;
+  width: 120px;
+}
+
+.intake-status--gaps {
+  color: var(--bp-palette-orange-5);
+}
+
+.intake-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+}
+
+.intake-menu {
+  min-width: 200px;
+}
+
+/* While files are dragged over a view, the view says it will take them. */
+.intake-dropping {
+  outline: 2px dashed var(--bp-palette-blue-4);
+  outline-offset: -6px;
+}
+
+/* Data Sources: the strip, then the files and the model log side by side. */
+.sources {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sources__strip {
+  flex: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  margin: var(--bh-main-gutter) var(--bh-main-gutter) 0;
+}
+
+.sources__model {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.sources__now {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.sources__line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sources__line strong {
+  font-weight: 600;
+  color: var(--bh-text);
+}
+
+.sources__line--off {
+  color: var(--bp-palette-orange-5);
+}
+
+.sources__clock {
+  color: var(--bp-palette-gray-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.sources__progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sources__body {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--bh-sources-log-w);
+  min-height: 0;
+}
+
+.sources__body > .view-panel + .view-panel {
+  margin-left: 0;
+}
+
+.log-table .log-table__file {
+  width: auto;
+}
+
+.log-table th:nth-child(1) {
+  width: 84px;
+}
+
+.log-table th:nth-child(3) {
+  width: 92px;
+}
+
+.log-table th:nth-child(4) {
+  width: 76px;
+}
+
+.log-table th:nth-child(5) {
+  width: 104px;
+}
+
+.log-table th:nth-child(6) {
+  width: 32px;
+}
+
+.log-table__failed td {
+  color: var(--bp-palette-red-5);
+}
+
+/* Files: the investigations down the left, the open one's files beside them. */
+.files {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: var(--bh-files-side-w) minmax(0, 1fr);
+  min-height: 0;
+}
+
+.files__side.dock {
+  border-left: 0;
+  border-right: 1px solid var(--bh-chrome-line);
+}
+
+.files__side-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px 4px 16px;
+}
+
+.files__side-head h6 {
+  margin: 0;
+}
+
+.files__tree.bp6-tree {
+  min-height: 0;
+  overflow-y: auto;
+  background: transparent;
+}
+
+.files__tree .bp6-tree-node-content {
+  height: 36px;
+  font-size: 14px;
+}
+
+.files__crumbs.bp6-breadcrumbs {
+  height: auto;
+}
+
+.investigation-menu {
+  width: 240px;
+}
+

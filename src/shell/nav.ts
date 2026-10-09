@@ -1,9 +1,10 @@
 // Every view the shell knows, in rail order: one place for the slug in the URL, the label, the icon and the view's own
 // colour. The rail and the menu bar title both read from here, so a view looks the same in both. Colours are the
 // owner's pick (09.10.2026), "Spectrum, vivid": Blueprint's -4 shades stepping through the hues down the rail. None
-// is a core intent colour, which already means success, warning or danger.
+// is a core intent colour, which already means success, warning or danger. Files sits on top in rose, the hue before
+// vermilion on Blueprint's wheel, so the run carries on unbroken (owner, 09.10.2026).
 import type { ComponentType } from 'react';
-import { Chat, Database, Graph, IdNumber, SearchTemplate, TimelineEvents, type SVGIconProps } from '@blueprintjs/icons';
+import { Chat, Database, FolderOpen, Graph, IdNumber, SearchTemplate, TimelineEvents, type SVGIconProps } from '@blueprintjs/icons';
 
 export interface ViewDef {
   slug: string;
@@ -16,6 +17,7 @@ export interface ViewDef {
 }
 
 export const VIEWS: readonly ViewDef[] = [
+  { slug: 'files', label: 'Files', Icon: FolderOpen, color: 'rose-4', untitled: 'All files' },
   { slug: 'sources', label: 'Data Sources', Icon: Database, color: 'vermilion-4', untitled: 'All documents' },
   { slug: 'explorer', label: 'Object Explorer', Icon: SearchTemplate, color: 'gold-4', untitled: 'All objects' },
   { slug: 'browser', label: 'Browser', Icon: IdNumber, color: 'lime-4', untitled: 'No object open' },
