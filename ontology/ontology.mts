@@ -1,5 +1,5 @@
 // The BARGHEST ontology as code, compiled by @osdk/maker (pnpm ontology:build). The core that extraction targets,
-// the school-incident pack (Scenario A) and the waste-management pack (Scenario B). Every type has one primary key,
+// the school-incident pack, the solid-waste pack and the Thing catch-all. Every type has one primary key,
 // a title property, a display name and a plural; every property has a display name, because the Object Explorer
 // builds its pickers from these. Relationships are objects (faux links carry no properties); provenance is a link
 // you can walk, not an id list. Names freeze when P1 is committed; a rename goes in docs/engine-api.md.
@@ -23,12 +23,13 @@ const kebab = (s: string) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCas
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 // Shared by every entity type (not by Document, Passage, SourceRecord, Relationship, Resolution): where the object
-// came from and what it resolved to. A canonical object has an empty canonicalId.
+// came from and what it resolved to. A canonical object has an empty canonicalId. `scenario` keeps its internal
+// name and holds the investigation id; its display name is "Investigation".
 const provenance: Props = {
   canonicalId: str('Canonical object'),
   passageId: str('Passage'),
   recordId: str('Source record'),
-  scenario: str('Scenario'),
+  scenario: str('Investigation'),
 };
 
 function entity(def: Omit<ObjectTypeDefinition, 'properties'> & { properties: Props }): ObjectTypeDefinition {
@@ -49,7 +50,7 @@ const Document = defineObject({
     path: str('Path'),
     format: str('Format'),
     system: str('Source system'),
-    scenario: str('Scenario'),
+    scenario: str('Investigation'),
     importedAt: when('Imported at'),
     status: str('Status'),
   },
@@ -148,7 +149,7 @@ const Event = entity({
   },
 });
 
-// ---- Scenario A: school incident
+// ---- The school-incident pack
 
 const DigitalAccount = entity({
   apiName: 'DigitalAccount',
@@ -248,7 +249,7 @@ const School = entity({
   },
 });
 
-// ---- Scenario B: solid waste across three LGUs
+// ---- The solid-waste pack: solid waste across three LGUs
 
 const LGU = entity({
   apiName: 'LGU',
@@ -372,6 +373,22 @@ const Complaint = entity({
   },
 });
 
+// ---- The catch-all. Only the `others` block produces these: one object per thing the model names that fits no
+// other type, with the model's own label for what it is ("ship", "bank account"). The two demo packs never do.
+
+const Thing = entity({
+  apiName: 'Thing',
+  displayName: 'Other thing',
+  pluralDisplayName: 'Other things',
+  primaryKeyPropertyApiName: 'thingId',
+  titlePropertyApiName: 'name',
+  properties: {
+    thingId: str('Thing id'),
+    name: str('Name'),
+    kind: str('Kind'),
+  },
+});
+
 // ---- The entity types: what a Relationship can connect, what resolution can merge. Order is display order.
 
 const ENTITIES: Array<[ObjectTypeDefinition, string]> = [
@@ -393,6 +410,7 @@ const ENTITIES: Array<[ObjectTypeDefinition, string]> = [
   [Vehicle, 'vehicles'],
   [Inspection, 'inspections'],
   [Complaint, 'complaints'],
+  [Thing, 'things'],
 ];
 
 // ---- Relationship: an edge with evidence. One optional foreign key per entity type at each end, so a plain pivot
@@ -408,6 +426,8 @@ const relationshipProps: Props = {
   relationshipId: str('Relationship id'),
   label: str('Label'),
   kind: str('Kind'),
+  // The passage's own words for a related_to link ("paid", "met with"); empty for every other kind.
+  kindLabel: str('Kind, as written'),
   fromType: str('From type'),
   fromId: str('From id'),
   toType: str('To type'),
@@ -419,7 +439,7 @@ const relationshipProps: Props = {
   reviewNote: str('Review note'),
   passageIds: strs('Passages'),
   recordIds: strs('Source records'),
-  scenario: str('Scenario'),
+  scenario: str('Investigation'),
   ...relationshipEnds,
 };
 
@@ -450,7 +470,7 @@ const Resolution = defineObject({
     method: str('Method'),
     decidedAt: when('Decided at'),
     reason: str('Reason'),
-    scenario: str('Scenario'),
+    scenario: str('Investigation'),
   },
 });
 

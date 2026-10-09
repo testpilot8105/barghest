@@ -1,6 +1,6 @@
 All synthetic. Every LGU, barangay, company, person, plate and number in this pack is invented.
 
-# BARGHEST Scenario B: solid waste across three LGUs
+# BARGHEST: solid waste across three LGUs
 
 Eleven files shaped like the Philippine registers they imitate, for a local model to read one passage at a time. The province of Salimbayan, its three LGUs, the barangays, the haulers, the officials, the contract, permit, ticket and plate numbers are all made up. Real agencies (DENR, EMB, COA, PhilGEPS, the 8888 hotline) and RA 9003 are named because the register is the point. A COA Audit Observation Memorandum asks management to comment and is not a finding of fraud; an EMB Notice of Violation is a notice, and nobody here is accused of a crime.
 

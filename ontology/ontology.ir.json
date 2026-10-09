@@ -172,7 +172,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -1127,7 +1127,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -1428,7 +1428,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -1773,7 +1773,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -2182,7 +2182,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -2581,7 +2581,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -2952,7 +2952,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -3339,7 +3339,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -3884,7 +3884,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -4299,7 +4299,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -4634,7 +4634,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -4961,7 +4961,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -5258,7 +5258,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -5581,7 +5581,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -6016,7 +6016,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -6419,7 +6419,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -6754,7 +6754,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -7167,7 +7167,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -7562,7 +7562,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -7631,6 +7631,299 @@
                   "filedAt": {
                     "type": "column",
                     "column": "filedAt"
+                  },
+                  "canonicalId": {
+                    "type": "column",
+                    "column": "canonicalId"
+                  },
+                  "passageId": {
+                    "type": "column",
+                    "column": "passageId"
+                  },
+                  "recordId": {
+                    "type": "column",
+                    "column": "recordId"
+                  },
+                  "scenario": {
+                    "type": "column",
+                    "column": "scenario"
+                  }
+                }
+              }
+            },
+            "editsConfiguration": {
+              "onlyAllowPrivilegedEdits": false
+            },
+            "redacted": false
+          }
+        ],
+        "entityMetadata": {
+          "arePatchesEnabled": false,
+          "aliases": []
+        },
+        "propertySecurityGroupPackagingVersion": {
+          "type": "v2",
+          "v2": {}
+        }
+      },
+      "Thing": {
+        "objectType": {
+          "displayMetadata": {
+            "displayName": "Other thing",
+            "icon": {
+              "type": "blueprint",
+              "blueprint": {
+                "locator": "cube",
+                "color": "#2D72D2"
+              }
+            },
+            "pluralDisplayName": "Other things",
+            "visibility": "NORMAL"
+          },
+          "primaryKeys": [
+            "thingId"
+          ],
+          "propertyTypes": {
+            "thingId": {
+              "apiName": "thingId",
+              "displayMetadata": {
+                "displayName": "Thing id",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "name": {
+              "apiName": "name",
+              "displayMetadata": {
+                "displayName": "Name",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "kind": {
+              "apiName": "kind",
+              "displayMetadata": {
+                "displayName": "Kind",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "canonicalId": {
+              "apiName": "canonicalId",
+              "displayMetadata": {
+                "displayName": "Canonical object",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "passageId": {
+              "apiName": "passageId",
+              "displayMetadata": {
+                "displayName": "Passage",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "recordId": {
+              "apiName": "recordId",
+              "displayMetadata": {
+                "displayName": "Source record",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "scenario": {
+              "apiName": "scenario",
+              "displayMetadata": {
+                "displayName": "Investigation",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            }
+          },
+          "titlePropertyTypeRid": "name",
+          "apiName": "Thing",
+          "status": {
+            "type": "active",
+            "active": {}
+          },
+          "redacted": false,
+          "implementsInterfaces2": [],
+          "allImplementsInterfaces": {}
+        },
+        "datasources": [
+          {
+            "datasourceName": "Thing",
+            "datasource": {
+              "type": "datasetV2",
+              "datasetV2": {
+                "datasetRid": "Thing",
+                "propertyMapping": {
+                  "thingId": {
+                    "type": "column",
+                    "column": "thingId"
+                  },
+                  "name": {
+                    "type": "column",
+                    "column": "name"
+                  },
+                  "kind": {
+                    "type": "column",
+                    "column": "kind"
                   },
                   "canonicalId": {
                     "type": "column",
@@ -7748,6 +8041,36 @@
               "apiName": "kind",
               "displayMetadata": {
                 "displayName": "Kind",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "kindLabel": {
+              "apiName": "kindLabel",
+              "displayMetadata": {
+                "displayName": "Kind, as written",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -8111,7 +8434,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -9217,6 +9540,66 @@
                 "type": "active",
                 "active": {}
               }
+            },
+            "fromThingId": {
+              "apiName": "fromThingId",
+              "displayMetadata": {
+                "displayName": "From other thing",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
+            },
+            "toThingId": {
+              "apiName": "toThingId",
+              "displayMetadata": {
+                "displayName": "To other thing",
+                "visibility": "NORMAL"
+              },
+              "indexedForSearch": true,
+              "type": {
+                "type": "string",
+                "string": {
+                  "isLongText": false,
+                  "supportsEfficientLeadingWildcard": false,
+                  "supportsExactMatching": true
+                }
+              },
+              "typeClasses": [
+                {
+                  "kind": "render_hint",
+                  "name": "SELECTABLE"
+                },
+                {
+                  "kind": "render_hint",
+                  "name": "SORTABLE"
+                }
+              ],
+              "status": {
+                "type": "active",
+                "active": {}
+              }
             }
           },
           "titlePropertyTypeRid": "label",
@@ -9248,6 +9631,10 @@
                   "kind": {
                     "type": "column",
                     "column": "kind"
+                  },
+                  "kindLabel": {
+                    "type": "column",
+                    "column": "kindLabel"
                   },
                   "fromType": {
                     "type": "column",
@@ -9440,6 +9827,14 @@
                   "toComplaintId": {
                     "type": "column",
                     "column": "toComplaintId"
+                  },
+                  "fromThingId": {
+                    "type": "column",
+                    "column": "fromThingId"
+                  },
+                  "toThingId": {
+                    "type": "column",
+                    "column": "toThingId"
                   }
                 }
               }
@@ -9808,7 +10203,7 @@
             "scenario": {
               "apiName": "scenario",
               "displayMetadata": {
-                "displayName": "Scenario",
+                "displayName": "Investigation",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -15863,6 +16258,276 @@
         "entityMetadata": {
           "arePatchesEnabled": false
         }
+      },
+      "thing-canonical": {
+        "linkType": {
+          "definition": {
+            "type": "oneToMany",
+            "oneToMany": {
+              "cardinalityHint": "ONE_TO_MANY",
+              "manyToOneLinkMetadata": {
+                "apiName": "canonical",
+                "displayMetadata": {
+                  "displayName": "Canonical object",
+                  "pluralDisplayName": "Canonicals",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "objectTypeRidManySide": "Thing",
+              "objectTypeRidOneSide": "Thing",
+              "oneToManyLinkMetadata": {
+                "apiName": "candidates",
+                "displayMetadata": {
+                  "displayName": "Candidate",
+                  "pluralDisplayName": "Candidates",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "oneSidePrimaryKeyToManySidePropertyMapping": [
+                {
+                  "from": {
+                    "apiName": "thingId",
+                    "object": "Thing"
+                  },
+                  "to": {
+                    "apiName": "canonicalId",
+                    "object": "Thing"
+                  }
+                }
+              ]
+            }
+          },
+          "id": "thing-canonical",
+          "status": {
+            "type": "active",
+            "active": {}
+          },
+          "redacted": false
+        },
+        "datasources": [],
+        "entityMetadata": {
+          "arePatchesEnabled": false
+        }
+      },
+      "thing-passage": {
+        "linkType": {
+          "definition": {
+            "type": "oneToMany",
+            "oneToMany": {
+              "cardinalityHint": "ONE_TO_MANY",
+              "manyToOneLinkMetadata": {
+                "apiName": "passage",
+                "displayMetadata": {
+                  "displayName": "Passage",
+                  "pluralDisplayName": "Passages",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "objectTypeRidManySide": "Thing",
+              "objectTypeRidOneSide": "Passage",
+              "oneToManyLinkMetadata": {
+                "apiName": "mentionedThings",
+                "displayMetadata": {
+                  "displayName": "Mentioned other thing",
+                  "pluralDisplayName": "Mentioned other things",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "oneSidePrimaryKeyToManySidePropertyMapping": [
+                {
+                  "from": {
+                    "apiName": "passageId",
+                    "object": "Passage"
+                  },
+                  "to": {
+                    "apiName": "passageId",
+                    "object": "Thing"
+                  }
+                }
+              ]
+            }
+          },
+          "id": "thing-passage",
+          "status": {
+            "type": "active",
+            "active": {}
+          },
+          "redacted": false
+        },
+        "datasources": [],
+        "entityMetadata": {
+          "arePatchesEnabled": false
+        }
+      },
+      "thing-source-record": {
+        "linkType": {
+          "definition": {
+            "type": "oneToMany",
+            "oneToMany": {
+              "cardinalityHint": "ONE_TO_MANY",
+              "manyToOneLinkMetadata": {
+                "apiName": "sourceRecord",
+                "displayMetadata": {
+                  "displayName": "Source record",
+                  "pluralDisplayName": "SourceRecords",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "objectTypeRidManySide": "Thing",
+              "objectTypeRidOneSide": "SourceRecord",
+              "oneToManyLinkMetadata": {
+                "apiName": "recordedThings",
+                "displayMetadata": {
+                  "displayName": "Recorded other thing",
+                  "pluralDisplayName": "Recorded other things",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "oneSidePrimaryKeyToManySidePropertyMapping": [
+                {
+                  "from": {
+                    "apiName": "recordId",
+                    "object": "SourceRecord"
+                  },
+                  "to": {
+                    "apiName": "recordId",
+                    "object": "Thing"
+                  }
+                }
+              ]
+            }
+          },
+          "id": "thing-source-record",
+          "status": {
+            "type": "active",
+            "active": {}
+          },
+          "redacted": false
+        },
+        "datasources": [],
+        "entityMetadata": {
+          "arePatchesEnabled": false
+        }
+      },
+      "relationship-from-thing": {
+        "linkType": {
+          "definition": {
+            "type": "oneToMany",
+            "oneToMany": {
+              "cardinalityHint": "ONE_TO_MANY",
+              "manyToOneLinkMetadata": {
+                "apiName": "fromThing",
+                "displayMetadata": {
+                  "displayName": "From other thing",
+                  "pluralDisplayName": "FromThings",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "objectTypeRidManySide": "Relationship",
+              "objectTypeRidOneSide": "Thing",
+              "oneToManyLinkMetadata": {
+                "apiName": "relationshipsFrom",
+                "displayMetadata": {
+                  "displayName": "Relationship from",
+                  "pluralDisplayName": "Relationships from",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "oneSidePrimaryKeyToManySidePropertyMapping": [
+                {
+                  "from": {
+                    "apiName": "thingId",
+                    "object": "Thing"
+                  },
+                  "to": {
+                    "apiName": "fromThingId",
+                    "object": "Relationship"
+                  }
+                }
+              ]
+            }
+          },
+          "id": "relationship-from-thing",
+          "status": {
+            "type": "active",
+            "active": {}
+          },
+          "redacted": false
+        },
+        "datasources": [],
+        "entityMetadata": {
+          "arePatchesEnabled": false
+        }
+      },
+      "relationship-to-thing": {
+        "linkType": {
+          "definition": {
+            "type": "oneToMany",
+            "oneToMany": {
+              "cardinalityHint": "ONE_TO_MANY",
+              "manyToOneLinkMetadata": {
+                "apiName": "toThing",
+                "displayMetadata": {
+                  "displayName": "To other thing",
+                  "pluralDisplayName": "ToThings",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "objectTypeRidManySide": "Relationship",
+              "objectTypeRidOneSide": "Thing",
+              "oneToManyLinkMetadata": {
+                "apiName": "relationshipsTo",
+                "displayMetadata": {
+                  "displayName": "Relationship to",
+                  "pluralDisplayName": "Relationships to",
+                  "visibility": "NORMAL",
+                  "groupDisplayName": ""
+                },
+                "typeClasses": []
+              },
+              "oneSidePrimaryKeyToManySidePropertyMapping": [
+                {
+                  "from": {
+                    "apiName": "thingId",
+                    "object": "Thing"
+                  },
+                  "to": {
+                    "apiName": "toThingId",
+                    "object": "Relationship"
+                  }
+                }
+              ]
+            }
+          },
+          "id": "relationship-to-thing",
+          "status": {
+            "type": "active",
+            "active": {}
+          },
+          "redacted": false
+        },
+        "datasources": [],
+        "entityMetadata": {
+          "arePatchesEnabled": false
+        }
       }
     },
     "actionTypes": {
@@ -16335,7 +17000,7 @@
                   "string": {}
                 },
                 "displayMetadata": {
-                  "displayName": "Scenario",
+                  "displayName": "Investigation",
                   "description": "",
                   "typeClasses": []
                 }
@@ -16961,7 +17626,7 @@
                   "string": {}
                 },
                 "displayMetadata": {
-                  "displayName": "Scenario",
+                  "displayName": "Investigation",
                   "description": "",
                   "typeClasses": []
                 }

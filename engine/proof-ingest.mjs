@@ -87,10 +87,10 @@ async function makePdf() {
   return path;
 }
 
-async function importFile(path, scenario = 'a', system = 'proof') {
+async function importFile(path, investigation = 'school-incident', system = 'proof') {
   const form = new FormData();
   form.append('file', new Blob([readFileSync(path)]), path.split('/').pop());
-  form.append('scenario', scenario);
+  form.append('investigation', investigation);
   form.append('system', system);
   const r = await fetch(`${BASE}/barghest/import`, { method: 'POST', body: form });
   const body = await r.json();
@@ -150,7 +150,7 @@ try {
   const log = await fetch(`${BASE}/barghest/inference-log?after=0`).then((r) => r.json());
   check('inference log is empty: no model ran', Array.isArray(log) && log.length === 0, `${log.length} rows`);
 
-  const bad = await fetch(`${BASE}/barghest/import`, { method: 'POST', body: (() => { const f = new FormData(); f.append('file', new Blob(['x']), 'x.exe'); f.append('scenario', 'a'); return f; })() });
+  const bad = await fetch(`${BASE}/barghest/import`, { method: 'POST', body: (() => { const f = new FormData(); f.append('file', new Blob(['x']), 'x.exe'); f.append('investigation', 'school-incident'); return f; })() });
   check('an unsupported file type is refused with 400', bad.status === 400);
 } catch (e) {
   check('no exception', false, e?.message ?? String(e));

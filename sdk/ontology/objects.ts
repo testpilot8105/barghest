@@ -20,4 +20,5 @@ export { Relationship } from './objects/Relationship.js';
 export { Resolution } from './objects/Resolution.js';
 export { School } from './objects/School.js';
 export { SourceRecord } from './objects/SourceRecord.js';
+export { Thing } from './objects/Thing.js';
 export { Vehicle } from './objects/Vehicle.js';

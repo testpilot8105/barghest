@@ -19,6 +19,7 @@ import type { Facility } from './Facility.js';
 import type { Vehicle } from './Vehicle.js';
 import type { Inspection } from './Inspection.js';
 import type { Complaint } from './Complaint.js';
+import type { Thing } from './Thing.js';
 import type {
   PropertyKeys as $PropertyKeys,
   ObjectTypeDefinition as $ObjectTypeDefinition,
@@ -53,9 +54,11 @@ export namespace Relationship {
     | 'fromOrganizationId'
     | 'fromPersonId'
     | 'fromSchoolId'
+    | 'fromThingId'
     | 'fromType'
     | 'fromVehicleId'
     | 'kind'
+    | 'kindLabel'
     | 'label'
     | 'method'
     | 'observedAt'
@@ -83,6 +86,7 @@ export namespace Relationship {
     | 'toOrganizationId'
     | 'toPersonId'
     | 'toSchoolId'
+    | 'toThingId'
     | 'toType'
     | 'toVehicleId';
 
@@ -104,6 +108,7 @@ export namespace Relationship {
     readonly fromOrganization: $SingleLinkAccessor<Organization>;
     readonly fromPerson: $SingleLinkAccessor<Person>;
     readonly fromSchool: $SingleLinkAccessor<School>;
+    readonly fromThing: $SingleLinkAccessor<Thing>;
     readonly fromVehicle: $SingleLinkAccessor<Vehicle>;
     readonly toBarangay: $SingleLinkAccessor<Barangay>;
     readonly toComplaint: $SingleLinkAccessor<Complaint>;
@@ -122,6 +127,7 @@ export namespace Relationship {
     readonly toOrganization: $SingleLinkAccessor<Organization>;
     readonly toPerson: $SingleLinkAccessor<Person>;
     readonly toSchool: $SingleLinkAccessor<School>;
+    readonly toThing: $SingleLinkAccessor<Thing>;
     readonly toVehicle: $SingleLinkAccessor<Vehicle>;
   }
 
@@ -243,6 +249,12 @@ export namespace Relationship {
     /**
      *   property status: active
      *
+     *   display name: 'From other thing'
+     */
+    readonly fromThingId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
      *   display name: 'From type'
      */
     readonly fromType: $PropType['string'] | undefined;
@@ -258,6 +270,12 @@ export namespace Relationship {
      *   display name: 'Kind'
      */
     readonly kind: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Kind, as written'
+     */
+    readonly kindLabel: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -303,7 +321,7 @@ export namespace Relationship {
     /**
      *   property status: active
      *
-     *   display name: 'Scenario'
+     *   display name: 'Investigation'
      */
     readonly scenario: $PropType['string'] | undefined;
     /**
@@ -423,6 +441,12 @@ export namespace Relationship {
     /**
      *   property status: active
      *
+     *   display name: 'To other thing'
+     */
+    readonly toThingId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
      *   display name: 'To type'
      */
     readonly toType: $PropType['string'] | undefined;
@@ -489,6 +513,7 @@ export interface Relationship extends $ObjectTypeDefinition {
       fromOrganization: $ObjectMetadata.Link<Organization, false>;
       fromPerson: $ObjectMetadata.Link<Person, false>;
       fromSchool: $ObjectMetadata.Link<School, false>;
+      fromThing: $ObjectMetadata.Link<Thing, false>;
       fromVehicle: $ObjectMetadata.Link<Vehicle, false>;
       toBarangay: $ObjectMetadata.Link<Barangay, false>;
       toComplaint: $ObjectMetadata.Link<Complaint, false>;
@@ -507,6 +532,7 @@ export interface Relationship extends $ObjectTypeDefinition {
       toOrganization: $ObjectMetadata.Link<Organization, false>;
       toPerson: $ObjectMetadata.Link<Person, false>;
       toSchool: $ObjectMetadata.Link<School, false>;
+      toThing: $ObjectMetadata.Link<Thing, false>;
       toVehicle: $ObjectMetadata.Link<Vehicle, false>;
     };
     pluralDisplayName: 'Relationships';
@@ -630,6 +656,12 @@ export interface Relationship extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
+       *   display name: 'From other thing'
+       */
+      fromThingId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
        *   display name: 'From type'
        */
       fromType: $PropertyDef<'string', 'nullable', 'single'>;
@@ -645,6 +677,12 @@ export interface Relationship extends $ObjectTypeDefinition {
        *   display name: 'Kind'
        */
       kind: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Kind, as written'
+       */
+      kindLabel: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *
@@ -690,7 +728,7 @@ export interface Relationship extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'Scenario'
+       *   display name: 'Investigation'
        */
       scenario: $PropertyDef<'string', 'nullable', 'single'>;
       /**
@@ -807,6 +845,12 @@ export interface Relationship extends $ObjectTypeDefinition {
        *   display name: 'To school'
        */
       toSchoolId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'To other thing'
+       */
+      toThingId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

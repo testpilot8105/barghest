@@ -20,6 +20,7 @@ import type { Facility } from './Facility.js';
 import type { Vehicle } from './Vehicle.js';
 import type { Inspection } from './Inspection.js';
 import type { Complaint } from './Complaint.js';
+import type { Thing } from './Thing.js';
 import type {
   PropertyKeys as $PropertyKeys,
   ObjectTypeDefinition as $ObjectTypeDefinition,
@@ -55,6 +56,7 @@ export namespace SourceRecord {
     readonly recordedOrganizations: Organization.ObjectSet;
     readonly recordedPeople: Person.ObjectSet;
     readonly recordedSchools: School.ObjectSet;
+    readonly recordedThings: Thing.ObjectSet;
     readonly recordedVehicles: Vehicle.ObjectSet;
   }
 
@@ -153,6 +155,7 @@ export interface SourceRecord extends $ObjectTypeDefinition {
       recordedOrganizations: $ObjectMetadata.Link<Organization, true>;
       recordedPeople: $ObjectMetadata.Link<Person, true>;
       recordedSchools: $ObjectMetadata.Link<School, true>;
+      recordedThings: $ObjectMetadata.Link<Thing, true>;
       recordedVehicles: $ObjectMetadata.Link<Vehicle, true>;
     };
     pluralDisplayName: 'Source records';

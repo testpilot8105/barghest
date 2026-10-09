@@ -11,8 +11,8 @@ import { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround
 import { extractAgain, fetchInferenceLog, getHealth, importFile, mergeInferenceRows } from '../src/data/intake.ts';
 import { decodeExploration, encodeExploration, startExploration, withStep } from '../src/data/exploration.ts';
 
-// The investigation id the engine accepts today. Step 2 of the file-manager work retires it for `school-incident`.
-const DEMO_INVESTIGATION = 'a';
+// The demo investigation the engine creates at its first start; the seed's objects carry it.
+const DEMO_INVESTIGATION = 'school-incident';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REAL = process.argv.includes('--real');
@@ -263,7 +263,7 @@ async function realProof() {
   const hv = jrm ? await getObjectView(dc, 'Hauler', jrm.pk) : null;
   check('the hauler resolves to one Hauler with three candidates', !!hv && hv.candidates.length === 3, hv ? `${hv.title}: ${hv.candidates.length} candidates` : 'no canonical JRM hauler');
 
-  const answers = join(root, 'data', 'scenario-a', 'ANSWERS.md');
+  const answers = join(root, 'data', 'school-incident', 'ANSWERS.md');
   check('ANSWERS.md is present to check the planted links against', existsSync(answers), answers.replace(root + '/', ''));
 }
 

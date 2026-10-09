@@ -5,7 +5,7 @@ export { connect, EngineError, type DataClient } from './client.ts';
 export { buildCatalog, linkOf, propertyOf } from './catalog.ts';
 export { currentType, decodeExploration, encodeExploration, startExploration, typeAt, withStep } from './exploration.ts';
 export { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround, toRefs, toWhere } from './reads.ts';
-export { extractAgain, fetchInferenceLog, getHealth, importFile, mergeInferenceRows } from './intake.ts';
+export { createInvestigation, extractAgain, fetchInferenceLog, getHealth, getInvestigations, importFile, mergeInferenceRows } from './intake.ts';
 export {
   BarghestDataProvider,
   useAsync,
@@ -16,11 +16,13 @@ export {
   useHealth,
   useHistogram,
   useInferenceLog,
+  useInvestigations,
   useObjectView,
   usePoll,
   useRows,
   useSearchAll,
   useSearchAround,
   type AsyncState,
+  type InvestigationsState,
   type RowsState,
 } from './hooks.tsx';

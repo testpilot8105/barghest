@@ -47,14 +47,14 @@ const haulers = [
 ];
 const passages = [...people, ...haulers].map(([, name, ps]) => toServerObject(meta, 'Passage', { passageId: ps, label: ps, documentId: 'D-proof', index: 0, text: `...${name}...`, charStart: 0, charEnd: 10 }));
 const objs = [
-  toServerObject(meta, 'Document', { documentId: 'D-proof', title: 'proof fixture', format: 'txt', system: 'proof', scenario: 'a', importedAt: new Date().toISOString(), status: 'imported' }),
+  toServerObject(meta, 'Document', { documentId: 'D-proof', title: 'proof fixture', format: 'txt', system: 'proof', scenario: 'school-incident', importedAt: new Date().toISOString(), status: 'imported' }),
   ...passages,
-  ...people.map(([pk, name, ps]) => toServerObject(meta, 'Person', { personId: pk, fullName: name, aliases: [], role: 'mention', passageId: ps, scenario: 'a' })),
-  ...haulers.map(([pk, name, ps]) => toServerObject(meta, 'Hauler', { haulerId: pk, name, passageId: ps, scenario: 'b' })),
-  toServerObject(meta, 'Firearm', { firearmId: 'M-F1', label: 'Glock 17 BHPZ417', serial: 'BHPZ417', passageId: 'PS-3', scenario: 'a' }),
+  ...people.map(([pk, name, ps]) => toServerObject(meta, 'Person', { personId: pk, fullName: name, aliases: [], role: 'mention', passageId: ps, scenario: 'school-incident' })),
+  ...haulers.map(([pk, name, ps]) => toServerObject(meta, 'Hauler', { haulerId: pk, name, passageId: ps, scenario: 'solid-waste' })),
+  toServerObject(meta, 'Firearm', { firearmId: 'M-F1', label: 'Glock 17 BHPZ417', serial: 'BHPZ417', passageId: 'PS-3', scenario: 'school-incident' }),
   toServerObject(meta, 'Relationship', {
     relationshipId: 'M-R1', label: 'J. Dela Peña took Glock 17', kind: 'took', fromType: 'Person', fromId: 'M-P3', toType: 'Firearm', toId: 'M-F1',
-    fromPersonId: 'M-P3', toFirearmId: 'M-F1', confidence: 0.9, method: 'extracted', status: 'proposed', passageIds: ['PS-3'], recordIds: [], scenario: 'a',
+    fromPersonId: 'M-P3', toFirearmId: 'M-F1', confidence: 0.9, method: 'extracted', status: 'proposed', passageIds: ['PS-3'], recordIds: [], scenario: 'school-incident',
   }),
 ];
 engine.put(objs);
@@ -70,7 +70,7 @@ try {
   check('"J. Dela Peña" vs "Joaquin Dela Peña" lands in the model band (0.5 to 0.9)', !!initials && initials.score >= 0.5 && initials.score < 0.9, initials ? `${initials.score}: ${initials.reasons.join('; ')}` : 'no pair');
 
   // Model off
-  const r1 = await resolveScenario({ engine, meta, store, scenario: 'a', decide: null, types: ['Person', 'Firearm'] });
+  const r1 = await resolveScenario({ engine, meta, store, scenario: 'school-incident', decide: null, types: ['Person', 'Firearm'] });
   const people1 = [...data.getObjectsOfType('Person')];
   const canon1 = people1.filter((p) => !p.canonicalId && !p.passageId);
   const joaquin1 = canon1.find((p) => /joaquin/i.test(p.fullName));
@@ -85,7 +85,7 @@ try {
     const same = isJoaquin(p.a.fullName) && isJoaquin(p.b.fullName);
     return { same, confidence: same ? 0.92 : 0.95, reason: `stand-in: ${p.a.fullName} and ${p.b.fullName} are ${same ? 'one person' : 'different people'}` };
   });
-  const r2 = await resolveScenario({ engine, meta, store, scenario: 'a', decide, types: ['Person', 'Firearm'] });
+  const r2 = await resolveScenario({ engine, meta, store, scenario: 'school-incident', decide, types: ['Person', 'Firearm'] });
   const people2 = [...data.getObjectsOfType('Person')];
   const canon2 = people2.filter((p) => !p.canonicalId && !p.passageId);
   const joaquin = canon2.find((p) => /joaquin/i.test(p.fullName));
@@ -109,7 +109,7 @@ try {
   check('faux walks Person -> candidates to all seven mentions', cands.length === 7, `${cands.length}`);
 
   // Haulers
-  const rh = await resolveScenario({ engine, meta, store, scenario: 'b', decide: null, types: ['Hauler'] });
+  const rh = await resolveScenario({ engine, meta, store, scenario: 'solid-waste', decide: null, types: ['Hauler'] });
   const hs = [...data.getObjectsOfType('Hauler')];
   const jrm = hs.find((h) => !h.canonicalId && !h.passageId && /jrm/i.test(h.name));
   const jrmMembers = hs.filter((h) => h.canonicalId === jrm?.__primaryKey);
@@ -122,9 +122,9 @@ try {
 
   // Accounts to people: a full name in the display name is a rule call, "Joaquin DP" goes to the model
   engine.put([
-    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A1', platform: 'Facebook Messenger', handle: 'Joaquin DP', displayName: 'Joaquin DP', passageId: 'PS-1', scenario: 'a' }),
-    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A2', platform: 'Facebook Messenger', handle: 'marco.villarin', displayName: 'Marco Villarin', passageId: 'PS-8', scenario: 'a' }),
-    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A3', platform: 'Discord', handle: 'Vesper_Krael', displayName: 'Vesper_Krael', passageId: 'PS-1', scenario: 'a' }),
+    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A1', platform: 'Facebook Messenger', handle: 'Joaquin DP', displayName: 'Joaquin DP', passageId: 'PS-1', scenario: 'school-incident' }),
+    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A2', platform: 'Facebook Messenger', handle: 'marco.villarin', displayName: 'Marco Villarin', passageId: 'PS-8', scenario: 'school-incident' }),
+    toServerObject(meta, 'DigitalAccount', { accountId: 'M-A3', platform: 'Discord', handle: 'Vesper_Krael', displayName: 'Vesper_Krael', passageId: 'PS-1', scenario: 'school-incident' }),
   ]);
   // The stand-in answers both kinds of question: person pairs as before, owner pairs by the display name.
   const ownerDecide = async (band) =>
@@ -133,7 +133,7 @@ try {
         ? { same: /joaquin/i.test(p.a.displayName ?? '') && /joaquin/i.test(p.b.fullName), confidence: 0.9, reason: `stand-in: ${p.question}` }
         : { same: isJoaquin(p.a.fullName) && isJoaquin(p.b.fullName), confidence: 0.92, reason: 'stand-in' },
     );
-  const ro = await resolveScenario({ engine, meta, store, scenario: 'a', decide: ownerDecide, types: ['Person', 'DigitalAccount'] });
+  const ro = await resolveScenario({ engine, meta, store, scenario: 'school-incident', decide: ownerDecide, types: ['Person', 'DigitalAccount'] });
   const a1 = data.getObject('DigitalAccount', 'M-A1');
   const a2 = data.getObject('DigitalAccount', 'M-A2');
   const a3 = data.getObject('DigitalAccount', 'M-A3');
@@ -146,7 +146,7 @@ try {
   check('faux walks Person -> digitalAccounts to the newly owned account', viaOwner.some((a) => a.__primaryKey === 'M-A1'), `${viaOwner.length} accounts`);
 
   // Idempotent
-  const r3 = await resolveScenario({ engine, meta, store, scenario: 'a', decide, types: ['Person', 'Firearm'] });
+  const r3 = await resolveScenario({ engine, meta, store, scenario: 'school-incident', decide, types: ['Person', 'Firearm'] });
   const canon3 = [...data.getObjectsOfType('Person')].filter((p) => !p.canonicalId && !p.passageId);
   check('a re-run yields the same canonical id and no duplicates', canon3.length === canon2.length && canon3.some((p) => p.__primaryKey === joaquin.__primaryKey), `${canon3.length} canonical, ${r3.written} written`);
 } catch (e) {

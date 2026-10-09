@@ -20,6 +20,7 @@ import type { Facility } from './Facility.js';
 import type { Vehicle } from './Vehicle.js';
 import type { Inspection } from './Inspection.js';
 import type { Complaint } from './Complaint.js';
+import type { Thing } from './Thing.js';
 import type {
   PropertyKeys as $PropertyKeys,
   ObjectTypeDefinition as $ObjectTypeDefinition,
@@ -55,6 +56,7 @@ export namespace Passage {
     readonly mentionedOrganizations: Organization.ObjectSet;
     readonly mentionedPeople: Person.ObjectSet;
     readonly mentionedSchools: School.ObjectSet;
+    readonly mentionedThings: Thing.ObjectSet;
     readonly mentionedVehicles: Vehicle.ObjectSet;
   }
 
@@ -159,6 +161,7 @@ export interface Passage extends $ObjectTypeDefinition {
       mentionedOrganizations: $ObjectMetadata.Link<Organization, true>;
       mentionedPeople: $ObjectMetadata.Link<Person, true>;
       mentionedSchools: $ObjectMetadata.Link<School, true>;
+      mentionedThings: $ObjectMetadata.Link<Thing, true>;
       mentionedVehicles: $ObjectMetadata.Link<Vehicle, true>;
     };
     pluralDisplayName: 'Passages';

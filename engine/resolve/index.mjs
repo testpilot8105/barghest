@@ -10,7 +10,7 @@ import { AUTO, candidatePairs, TYPE_RULES } from './pairs.mjs';
 
 const ID_PREFIX = {
   Person: 'P', Organization: 'O', Location: 'L', Event: 'E', DigitalAccount: 'A', OnlineGroup: 'G', Incident: 'I', Firearm: 'F',
-  EvidenceItem: 'EV', School: 'S', LGU: 'LGU', Barangay: 'B', Hauler: 'H', Contract: 'C', Facility: 'FA', Vehicle: 'V', Inspection: 'IN', Complaint: 'CO',
+  EvidenceItem: 'EV', School: 'S', LGU: 'LGU', Barangay: 'B', Hauler: 'H', Contract: 'C', Facility: 'FA', Vehicle: 'V', Inspection: 'IN', Complaint: 'CO', Thing: 'T',
 };
 
 const ENTITY_TYPES = Object.keys(TYPE_RULES);

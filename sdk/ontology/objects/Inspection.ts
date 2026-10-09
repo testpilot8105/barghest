@@ -108,7 +108,7 @@ export namespace Inspection {
     /**
      *   property status: active
      *
-     *   display name: 'Scenario'
+     *   display name: 'Investigation'
      */
     readonly scenario: $PropType['string'] | undefined;
   }
@@ -227,7 +227,7 @@ export interface Inspection extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'Scenario'
+       *   display name: 'Investigation'
        */
       scenario: $PropertyDef<'string', 'nullable', 'single'>;
     };

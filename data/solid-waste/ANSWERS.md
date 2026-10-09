@@ -1,4 +1,4 @@
-# Scenario B answers: the planted links
+# Solid waste answers: the planted links
 
 All synthetic. Every LGU, barangay, company, person, plate and number in this pack is invented. This is the answer sheet for the solid-waste pack. The checks read it; the engine never does. `key.json` holds the same facts for a machine.
 

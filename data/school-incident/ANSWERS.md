@@ -1,4 +1,4 @@
-# Scenario A answers: the planted links
+# School incident answers: the planted links
 
 All synthetic. Every person, school, unit, number and alias in this pack is invented. This is the answer sheet for the school-incident pack. The checks read it; the engine never does. `key.json` holds the same facts for a machine.
 

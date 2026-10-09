@@ -9,8 +9,10 @@ questions. Local AI interprets the text; the ontology organises what it found; t
 
 Built for the AppBuildersPH Hackathon 2026 (theme: local AI). Target user: an investigator or analyst in a Philippine
 public office who holds records that cannot leave the building and works where the connection cannot be trusted. Two
-demo scenarios, both synthetic: a school incident investigation (Scenario A) and solid waste contracts across three
-LGUs (Scenario B). Every name, account, number and report in the data is invented.
+demo investigations, both synthetic: a school incident (`school-incident`) and solid waste contracts across three
+LGUs (`solid-waste`). Never letters: investigations are store records with a fixed id and a name the analyst can
+change, and an analyst creates new ones from blocks of things to look for. Every name, account, number and report in
+the data is invented.
 
 Started with `assembly new site barghest` from the line's site starter on 09.10.2026. The app lifts out of this line
 as a copy into its own public repository before the deadline, so nothing here depends on a workspace package.
@@ -55,7 +57,8 @@ way. Extraction costs about 60 seconds per passage on this Mac, so document pack
 | `src/data/` | The Object Explorer data layer: plain functions and React hooks over the ontology. The only path the screens import; nothing from `@osdk` reaches them | plumbing |
 | `docs/engine-api.md` | The contract between the engine and the screens, with a changelog at the foot | plumbing |
 | `src/` outside `src/data/`, `public/`, `index.html`, `scripts/smoke-barghest.mjs` | The screens, in Gotham's shapes: Object Explorer, Entity Profile, Evidence Explorer, Graph, Timeline, Assistant | shell |
-| `data/scenario-a/`, `data/scenario-b/` | The synthetic document packs, with `ANSWERS.md` listing the planted links | case files |
+| `data/school-incident/`, `data/solid-waste/` | The synthetic document packs, with `ANSWERS.md` listing the planted links | case files |
+| `engine/extract/snapshots/` | The two demo templates' extraction schema and prompt, byte for byte; `proof:investigations` fails if they drift | plumbing |
 | `data/barghest.sqlite` | The store: objects, passages, embeddings, audit log, inference log. Ignored by git; delete it to re-import from empty | runtime |
 
 Every control is a Blueprint component imported straight from `@blueprintjs/*`; icons from `@blueprintjs/icons`

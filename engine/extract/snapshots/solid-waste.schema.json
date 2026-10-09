@@ -1,0 +1,413 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "persons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "organizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "agency",
+              "company",
+              "school",
+              "network",
+              "hauler",
+              "lgu",
+              "barangay",
+              "ideology",
+              "hospital",
+              "other"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string"
+          },
+          "where": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "lgus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "barangays": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "lgu": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "haulers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "registrationNo": {
+            "type": "string"
+          },
+          "tin": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "contractNo": {
+            "type": "string"
+          },
+          "lgu": {
+            "type": "string"
+          },
+          "hauler": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "startAt": {
+            "type": "string"
+          },
+          "endAt": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "contractNo"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "facilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "permitNo": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "lgu": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "vehicles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "plateNo": {
+            "type": "string"
+          },
+          "bodyNo": {
+            "type": "string"
+          },
+          "hauler": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "plateNo"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "inspections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "agency": {
+            "type": "string"
+          },
+          "facility": {
+            "type": "string"
+          },
+          "hauler": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "complaints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "barangay": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fromName": {
+            "type": "string"
+          },
+          "fromType": {
+            "type": "string",
+            "enum": [
+              "Person",
+              "Organization",
+              "Location",
+              "Event",
+              "LGU",
+              "Barangay",
+              "Hauler",
+              "Contract",
+              "Facility",
+              "Vehicle",
+              "Inspection",
+              "Complaint"
+            ]
+          },
+          "toName": {
+            "type": "string"
+          },
+          "toType": {
+            "type": "string",
+            "enum": [
+              "Person",
+              "Organization",
+              "Location",
+              "Event",
+              "LGU",
+              "Barangay",
+              "Hauler",
+              "Contract",
+              "Facility",
+              "Vehicle",
+              "Inspection",
+              "Complaint"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "took",
+              "owns",
+              "registered_to",
+              "custodian_of",
+              "recovered_at",
+              "matched_to",
+              "member_of",
+              "groomed_by",
+              "messaged",
+              "co_planned",
+              "posted",
+              "attends",
+              "teaches_at",
+              "guardian_of",
+              "relative_of",
+              "investigated",
+              "treated_at",
+              "located_at",
+              "part_of",
+              "contracted_by",
+              "serves",
+              "operates",
+              "inspected",
+              "filed_against",
+              "awarded_to",
+              "logged_at",
+              "mentions"
+            ]
+          },
+          "when": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "fromName",
+          "fromType",
+          "toName",
+          "toType",
+          "kind",
+          "confidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "persons",
+    "organizations",
+    "locations",
+    "events",
+    "lgus",
+    "barangays",
+    "haulers",
+    "contracts",
+    "facilities",
+    "vehicles",
+    "inspections",
+    "complaints",
+    "relationships"
+  ],
+  "additionalProperties": false
+}

@@ -88,12 +88,31 @@ The Files and Data Sources views call the engine only through these. Every call 
 | `getHealth(dc)` | `useHealth(intervalMs = 2000)` | `GET health` | the health body of section 3 |
 | | `useExtracting()` | `health.extracting` | the document ids the model is reading now, polled |
 
-- `investigation` travels as the form field `scenario` (the Document property keeps that internal name). Today the
-  engine accepts only the two demo ids; step 2 of the file-manager work makes it accept any investigation it holds.
+- `investigation` is an id from `GET investigations` (section 2.6); the engine refuses one it does not hold. It
+  travels as the form field `investigation` (`scenario`, the Document property's internal name, is still read as an
+  alias).
 - `folderId` is sent as a form field and ignored until folders land (step 6).
 - The file list is the exploration reads on `Document`: `startExploration('Document')` with a filter step
   `scenario eq <investigation>`, and the histogram on `Document.system` groups the files by register. Both run on
   faux 0.57 and are checked in `proof:explorer`.
+
+### 2.6 Investigations (real, 09.10.2026)
+
+An investigation is a record in the store, not an ontology object: `{ id, name, template, blocks, documents,
+createdAt }`. Its `id` is fixed for life (a URL-safe slug of the first name plus a short hash) and is what the
+address bar, every object's `scenario` property and every route carry; its `name` is a label that step 7 lets the
+analyst change. The two demo investigations exist from the first engine start: `school-incident` ("School
+incident") and `solid-waste` ("Solid waste"). Screens show the name, never the id.
+
+| Function | Hook | Underneath | Returns |
+|---|---|---|---|
+| `getInvestigations(dc)` | `useInvestigations()`, with `reload()` | `GET investigations` | `{ investigations, templates, blocks }`: every investigation with its document count, the three templates (`school-incident`, `solid-waste`, `general`) with their blocks, and the block list `[{ id, label, types }]` for the "What to look for" checkboxes |
+| `createInvestigation(dc, { name, template?, blocks? })` | | `POST investigations` | the new investigation. `blocks` win over `template`; neither means `general`. An empty name or an unknown block is refused with 400 |
+
+What an investigation looks for is its `blocks`, each one kind of thing the model lists (`persons`, `firearms`,
+`haulers`, `others` and so on, section 3). The two demo investigations carry exactly their template's blocks and
+produce exactly the extraction schema and prompt they did before (checked byte for byte against
+`engine/extract/snapshots/` in `proof:investigations`).
 
 ## 3. Endpoints under `/barghest/`
 
@@ -102,16 +121,21 @@ The Files and Data Sources views call the engine only through these. Every call 
 | `GET health` | `{ ok, engine, ontology: { rid, types, objects }, ollama, models }` (`ollama` is `null` until P5 checks it) | real (Ollama part at P5) |
 | `GET catalog` | `{ ontology, ownership }`: the engine's `ontology.json` and `ontology/ownership.ts`; `src/data/` shapes it into 2.1 | real |
 | `GET audit?objectId=Type:pk` | action history for one object: `[{ id, at, action, actor, outcome, params, edits, objectIds }]` | real |
-| `POST import` | multipart: `file`, `scenario` (`a` or `b`), optional `system` in; `{ documentId, format, passages, records, pages, chars }` out. The file becomes a Document, its Passages (about 300 tokens each, with character offsets) and one SourceRecord per table row. Same file again: same Document, no duplicate. Accepts pdf, csv, txt, md, json; anything else is 400 | real (extraction after it runs at P5) |
+| `GET investigations` | `{ investigations: [{ id, name, template, blocks, documents, createdAt }], templates: [{ id, name, blocks }], blocks: [{ id, label, types }] }`. The blocks, in the order schemas and prompts list them: `persons` People (Person), `organizations` Organisations (Organization), `locations` Places (Location), `events` Events (Event), `incidents` Incidents (Incident), `accounts` Online accounts (DigitalAccount), `groups` Online groups (OnlineGroup), `firearms` Firearms (Firearm), `evidence` Evidence items (EvidenceItem), `schools` Schools (School), `lgus` LGUs (LGU), `barangays` Barangays (Barangay), `haulers` Haulers (Hauler), `contracts` Contracts (Contract), `facilities` Facilities (Facility), `vehicles` Vehicles (Vehicle), `inspections` Inspections (Inspection), `complaints` Complaints (Complaint), `others` Other things (Thing) | real |
+| `POST investigations` | JSON `{ name, template?, blocks? }` in; the new investigation out. The id is a URL-safe slug of the name plus a short hash and never changes. Writes an audit row (`createInvestigation`, `objectIds: ["Investigation:<id>"]`). 400 on an empty name, an unknown template or an unknown block | real |
+| `POST import` | multipart: `file`, `investigation` (an id from `GET investigations`; `scenario` is read as an alias), optional `system`, optional `folderId` (ignored until step 6), `extract=no` to store without reading; `{ documentId, format, passages, records, pages, chars, extraction }` out. The file becomes a Document, its Passages (about 300 tokens each, with character offsets) and one SourceRecord per table row. Same file again: same Document, no duplicate. Accepts pdf, csv, txt, md, json; anything else is 400; an unknown investigation is 400 | real |
 | `GET inference-log?after=` | rows of `{ id, at, model, purpose, documentId, passageId, promptHash, latencyMs, promptTokens, outputTokens, ok }` | real (rows appear once the model runs, P5) |
-| `POST resolve?scenario=` | runs entity resolution over the scenario's mentions: `{ scenario, summary: { <Type>: { mentions, pairs, autoPairs, modelPairs, reviewPairs, clusters, canonical } }, repointedRelationships, written }` | real (rule half); the 0.5 to 0.9 band goes to the model at P6 |
+| `POST extract?documentId=` | re-runs extraction on one document with its investigation's blocks, in the background; `{ documentId, extraction }`. 503 with the model off | real |
+| `POST resolve?investigation=` | runs entity resolution over the investigation's mentions: `{ scenario, summary: { <Type>: { mentions, pairs, autoPairs, modelPairs, reviewPairs, clusters, canonical } }, owners, repointedRelationships, written }` (`scenario` in the reply is the investigation id; `?scenario=` is read as an alias) | real (rule half); the 0.5 to 0.9 band goes to the model at P6 |
 | `GET what-connects?from=&to=` | `{ found, hops, paths: [{ hops, objects, relationships, steps }], objects, relationships, passages }`: up to five of the shortest paths (the shortest plus two hops at most), so "same school" and "took the firearm recovered at the scene" both come back. `objects` are `{ type, pk, title }`; `relationships` carry kind, confidence, status, method, from, to and `passageIds`; `passages` are the union of their evidence. Documents, passages, records and resolutions are never nodes | real |
 | `GET timeline?objectId=&hops=2` | `{ objectId, hops, objects, events }`; events of `{ id, at, kind, summary, tag, confidence, status, objectIds, passageIds }` in time order. A Relationship between two objects is one hop. `tag`: `observed` (a dated relationship, incident, event, complaint, inspection), `system` (a relationship with method `system`, such as the deletion gap, or an engine action), `analyst` (an analyst action from the audit log) | real |
-| `POST ask` | JSON `{ question, scenario? }` in; `{ question, answer, objects: [{ type, pk, title, detail }], relationships, citations: [{ passageId, quote, verbatim }], refused, retrieval: { terms, semantic, passages }, model, latencyMs }` out. Retrieval is deterministic (objects by id or title, the path between the two best matches, passages by embedding and by keyword); one model call answers from that material only; citations are checked against it; nothing found means `refused: true` and "no supporting records" without a model call. With the model off it still returns what it found, refused | real (retrieval and refusal); the answer itself needs the model |
-| `GET search?q=&scenario=&k=` | `{ terms, semantic, passages: [{ pk, documentId, label, text, score, how }] }`, `how` is `semantic` or `keyword` | real (keyword); semantic once embeddings exist |
-| `POST embed?scenario=` | embeds every passage without an embedding (`nomic-embed-text`), `{ embedded, total }` | needs the model |
+| `POST ask` | JSON `{ question, investigation? }` in; `{ question, answer, objects: [{ type, pk, title, detail }], relationships, citations: [{ passageId, quote, verbatim }], refused, retrieval: { terms, semantic, passages }, model, latencyMs }` out. Retrieval is deterministic (objects by id or title, the path between the two best matches, passages by embedding and by keyword); one model call answers from that material only; citations are checked against it; nothing found means `refused: true` and "no supporting records" without a model call. With the model off it still returns what it found, refused | real (retrieval and refusal); the answer itself needs the model |
+| `GET search?q=&investigation=&k=` | `{ terms, semantic, passages: [{ pk, documentId, label, text, score, how }] }`, `how` is `semantic` or `keyword` | real (keyword); semantic once embeddings exist |
+| `POST embed?investigation=` | embeds every passage without an embedding (`nomic-embed-text`), `{ embedded, total }` | needs the model |
 
-`from`, `to` and `objectId` are `"<Type>:<pk>"`.
+`from`, `to` and `objectId` are `"<Type>:<pk>"`. Wherever a route takes `investigation`, it is an id from
+`GET investigations`; `scenario` is still read as an alias of the same thing. `ask`, `search` and `embed` take it
+optionally and cover every investigation without it.
 
 ## 4. Design notes
 
@@ -134,12 +158,17 @@ The object types, each with its key and title: Document (documentId, title), Pas
 Event (eventId, summary), DigitalAccount (accountId, handle), OnlineGroup (groupId, name), Incident (incidentId,
 label), Firearm (firearmId, label), EvidenceItem (evidenceId, tag), School (schoolId, name), LGU (lguId, name),
 Barangay (barangayId, name), Hauler (haulerId, name), Contract (contractId, contractNo), Facility (facilityId, name),
-Vehicle (vehicleId, plateNo), Inspection (inspectionId, label), Complaint (complaintId, label), Relationship
-(relationshipId, label), Resolution (resolutionId, label).
+Vehicle (vehicleId, plateNo), Inspection (inspectionId, label), Complaint (complaintId, label), Thing (thingId,
+name; display name "Other thing", added 09.10.2026 for the `others` block: `kind` is the model's own label for what
+it is), Relationship (relationshipId, label), Resolution (resolutionId, label).
 
 Every entity type (all but Document, Passage, SourceRecord, Relationship, Resolution) carries `canonicalId`,
 `passageId`, `recordId`, `scenario`, and the links `canonical`, `candidates`, `passage`, `sourceRecord`,
-`relationshipsFrom`, `relationshipsTo`. Relationship carries `from<Type>Id` / `to<Type>Id` per entity type with the
+`relationshipsFrom`, `relationshipsTo`. `scenario` keeps its internal name but its display name is "Investigation"
+and its value is the investigation id (`school-incident`, `solid-waste`, or a created one), on every entity, on
+Document, Relationship and Resolution. Relationship carries `kindLabel` ("Kind, as written": the passage's own
+words for a `related_to` link, such as "paid" or "met with"; empty for every other kind) and `from<Type>Id` /
+`to<Type>Id` per entity type with the
 links `from<Type>` / `to<Type>`; the catalog marks those keys `hidden`. The one-hop links: Person.digitalAccounts /
 DigitalAccount.owner, Person.school / School.people, Person.firearmsRegistered / Firearm.registeredTo,
 Person.firearmsInCustody / Firearm.custodian, Organization.firearms / Firearm.registeredAgency,
@@ -204,3 +233,12 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   `health` as `importFile`, `extractAgain`, `fetchInferenceLog` / `useInferenceLog`, `getHealth` / `useHealth` and
   `useExtracting`. A refused engine call throws `EngineError` with `status`. The Document filter by `scenario` and
   the histogram on `Document.system` are confirmed on faux and checked in `proof:explorer`. No route changed.
+- 09.10.2026, file manager step 2: investigations. The letters are retired: the two demo investigations are
+  `school-incident` and `solid-waste` (the shell's default investigation becomes the first one `GET investigations`
+  lists). An investigation is a store record (section 2.6) built from blocks; `GET` and `POST investigations` are
+  real; `import`, `extract`, `resolve`, `embed`, `search` and `ask` take `investigation` (`scenario` still read) and
+  refuse an id the engine does not hold. Extraction schemas and prompts are built from the investigation's blocks;
+  the two demo templates produce byte-identical output to before (snapshots in `engine/extract/snapshots/`). New
+  names (section 5): the `Thing` type ("Other thing") for the `others` block, `Relationship.kindLabel` for the
+  `related_to` kind, and the display name "Investigation" on every `scenario` property. The pack folders are
+  `data/school-incident/` and `data/solid-waste/`.

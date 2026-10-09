@@ -30,7 +30,7 @@ function recordLabel(filename, row, i) {
  * @param {{ put(objs: object[]): void }} args.engine
  * @param {object} args.meta ontology.json
  * @param {{ audit(entry: object): void }} args.store
- * @param {string} args.scenario 'a' | 'b'
+ * @param {string} args.scenario the investigation id (the property keeps its internal name)
  * @param {string} args.filename
  * @param {Uint8Array | Buffer} args.buffer
  * @param {string} [args.system] which register the file pretends to come from
@@ -46,7 +46,8 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
     toServerObject(meta, 'Document', {
       documentId,
       title: filename,
-      path: `data/scenario-${scenario}/sources/${filename}`,
+      // Where a pack file ships from; an uploaded file gets a stored copy here once step 3 lands.
+      path: `data/${scenario}/sources/${filename}`,
       format,
       system,
       scenario,

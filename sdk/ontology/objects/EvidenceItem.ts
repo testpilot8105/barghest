@@ -95,7 +95,7 @@ export namespace EvidenceItem {
     /**
      *   property status: active
      *
-     *   display name: 'Scenario'
+     *   display name: 'Investigation'
      */
     readonly scenario: $PropType['string'] | undefined;
     /**
@@ -208,7 +208,7 @@ export interface EvidenceItem extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'Scenario'
+       *   display name: 'Investigation'
        */
       scenario: $PropertyDef<'string', 'nullable', 'single'>;
       /**

@@ -2,14 +2,13 @@
 // the engine's health. Plain functions over the engine's own routes; the hooks in hooks.tsx poll these. Every one
 // takes the connection first so the proofs run them under Node over HTTP.
 import { engineGet, enginePost, type DataClient } from './client.ts';
-import type { ExtractResult, Health, ImportRequest, ImportResult, InferenceRow } from './types.ts';
+import type { CreateInvestigationRequest, ExtractResult, Health, ImportRequest, ImportResult, InferenceRow, Investigation, InvestigationsResult } from './types.ts';
 
 /** Store a file in an investigation; the model starts reading it unless `extract` is false or the model is off. */
 export async function importFile(dc: DataClient, req: ImportRequest): Promise<ImportResult> {
   const form = new FormData();
   form.append('file', req.file, req.file.name);
-  // The engine's form field keeps the Document property's internal name.
-  form.set('scenario', req.investigation);
+  form.set('investigation', req.investigation);
   if (req.system) form.set('system', req.system);
   if (req.folderId) form.set('folderId', req.folderId);
   if (req.extract === false) form.set('extract', 'no');
@@ -41,4 +40,14 @@ export function mergeInferenceRows(held: InferenceRow[], incoming: InferenceRow[
 
 export function getHealth(dc: DataClient): Promise<Health> {
   return engineGet<Health>(dc, '/barghest/health');
+}
+
+/** Every investigation with its document count, plus the templates and the block list for "What to look for". */
+export function getInvestigations(dc: DataClient): Promise<InvestigationsResult> {
+  return engineGet<InvestigationsResult>(dc, '/barghest/investigations');
+}
+
+/** Create an investigation. Its id comes back fixed for life; the shell puts it in the address bar. */
+export function createInvestigation(dc: DataClient, req: CreateInvestigationRequest): Promise<Investigation> {
+  return enginePost<Investigation>(dc, '/barghest/investigations', {}, { ...req });
 }

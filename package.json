@@ -18,6 +18,7 @@
     "seed:dev": "node engine/dev-seed.mjs",
     "proof:p1": "node engine/proof-p1.mjs",
     "proof:explorer": "node engine/proof-explorer.mjs",
+    "proof:investigations": "node engine/proof-investigations.mjs",
     "proof:ingest": "node engine/proof-ingest.mjs",
     "proof:resolve": "node engine/proof-resolve.mjs",
     "proof:graph": "node engine/proof-graph.mjs",

@@ -1,4 +1,4 @@
-// Dev seed (pnpm seed:dev): the Scenario A cast, written straight into the store so the shell and the proofs have
+// Dev seed (pnpm seed:dev): the school-incident cast, written straight into the store so the shell and the proofs have
 // data before extraction works. Never runs at boot; restart the engine after seeding. Deleted at P10. Every name,
 // account, number and report here is fictional.
 import { readFileSync } from 'node:fs';
@@ -11,9 +11,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DB = resolve(root, process.env.BARGHEST_DB ?? 'data/barghest.sqlite');
 const meta = JSON.parse(readFileSync(join(root, 'ontology', 'ontology.json'), 'utf8'));
 
-const A = 'a';
+const INVESTIGATION = 'school-incident';
 const rows = [];
-const add = (type, props) => rows.push(toServerObject(meta, type, { scenario: A, ...props }));
+const add = (type, props) => rows.push(toServerObject(meta, type, { scenario: INVESTIGATION, ...props }));
 
 // School and place
 add('School', { schoolId: 'S-001', name: 'San Isidro National High School', depedId: '303912', division: 'San Mateo' });
@@ -70,7 +70,7 @@ add('EvidenceItem', { evidenceId: 'E-002', tag: 'E-002', kind: 'firearm, Armscor
 
 // One document, two passages, the second one the message the "took" relationship rests on
 add('Document', {
-  documentId: 'D-001', title: 'Messenger thread, extract from DFER-R14-2026-0188', path: 'data/scenario-a/sources/messenger-thread.txt',
+  documentId: 'D-001', title: 'Messenger thread, extract from DFER-R14-2026-0188', path: 'data/school-incident/sources/messenger-thread.txt',
   format: 'txt', system: 'PNP-ACG Cyber Forensics', importedAt: '2026-10-09T00:00:00Z', status: 'imported',
 });
 add('Passage', {

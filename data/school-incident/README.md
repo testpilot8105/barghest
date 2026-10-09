@@ -1,6 +1,6 @@
 All synthetic. Every person, school, unit, number and alias in this pack is invented.
 
-# BARGHEST Scenario A: the school incident
+# BARGHEST: the school incident
 
 Fourteen files shaped like the Philippine registers they imitate, for a local model to read one passage at a time. The school, city, province, units, officers, accounts, serial numbers and report numbers are all made up. Real agencies (PNP, DepEd, CICC) are named because the register is the point. No real case is reconstructed. The school's name is also the name of several real schools; the province, city and barangay around it are fictional.
 

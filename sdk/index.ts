@@ -25,6 +25,7 @@ export {
   Resolution,
   School,
   SourceRecord,
+  Thing,
   Vehicle,
 } from './ontology/objects.js';
 export * as $Objects from './ontology/objects.js';

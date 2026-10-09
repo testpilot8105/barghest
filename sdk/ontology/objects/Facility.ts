@@ -95,7 +95,7 @@ export namespace Facility {
     /**
      *   property status: active
      *
-     *   display name: 'Scenario'
+     *   display name: 'Investigation'
      */
     readonly scenario: $PropType['string'] | undefined;
     /**
@@ -208,7 +208,7 @@ export interface Facility extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'Scenario'
+       *   display name: 'Investigation'
        */
       scenario: $PropertyDef<'string', 'nullable', 'single'>;
       /**

@@ -20,6 +20,7 @@ import { extractDocument } from './extract/index.mjs';
 import { createLlm, MODELS } from './llm.mjs';
 import { timeline, whatConnects } from './queries/graph.mjs';
 import { ask, embedAll, searchPassages } from './ask/index.mjs';
+import { createInvestigation, ensureDemoInvestigations, listInvestigations } from './investigations.mjs';
 import { ownership } from '../ontology/ownership.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -32,16 +33,32 @@ const store = openStore(DB);
 const engine = createEngine({ meta, store, baseUrl: BASE_URL, actionImpls: createActionImpls(meta) });
 const loaded = engine.load();
 const llm = createLlm({ store });
+// The two demo investigations exist from the first start; anything else is created through POST investigations.
+const demoInvestigations = ensureDemoInvestigations(store);
+
+const bad = (message) => Object.assign(new Error(message), { status: 400 });
+
+/** The investigation a route names, or 400. Routes never take an id the store does not hold. */
+function requireInvestigation(id) {
+  if (!id) throw bad('investigation is required');
+  const inv = store.investigation(id);
+  if (!inv) throw bad(`unknown investigation: ${id}`);
+  return inv;
+}
+
+/** `investigation` from a query string, with `scenario` (the property's internal name) read as an alias. */
+const investigationParam = (url) => url.searchParams.get('investigation') ?? url.searchParams.get('scenario');
 
 // Extraction runs in the background after an import (a document pack can take minutes on a 4B model); the
 // Document's status says where it is: imported, extracting, extracted, extracted with gaps, extraction failed.
 const jobs = new Map();
-function startExtraction(documentId, scenario) {
+function startExtraction(documentId, investigation) {
   if (jobs.has(documentId)) return 'running';
   const doc = engine.data.getObject('Document', documentId);
   if (!doc) throw Object.assign(new Error(`document not found: ${documentId}`), { status: 404 });
+  const inv = requireInvestigation(investigation);
   engine.put([{ ...doc, status: 'extracting' }]);
-  const job = extractDocument({ engine, meta, store, llm, documentId, scenario })
+  const job = extractDocument({ engine, meta, store, llm, documentId, investigation: inv.id, blocks: inv.blocks })
     .then((summary) => {
       console.log(`extract ${documentId}: ${summary.passages} passages, ${summary.calls} calls, ${summary.mentions} mentions, ${summary.relationships} relationships, ${summary.failed} failed, ${summary.latencyMs} ms`);
       return summary;
@@ -61,8 +78,6 @@ function json(res, status, body) {
   res.writeHead(status, { 'content-type': 'application/json' });
   res.end(JSON.stringify(body));
 }
-
-const bad = (message) => Object.assign(new Error(message), { status: 400 });
 
 /** The multipart body of a request, through the WHATWG Request the bridge below also uses. */
 async function formDataOf(req) {
@@ -106,36 +121,39 @@ const routes = {
     return store.auditFor(objectId);
   },
   'GET /barghest/inference-log': (url) => store.inferenceLog(Number(url.searchParams.get('after') ?? 0)),
+  // Investigations: store records, outside the ontology (engine-api.md 2.6).
+  'GET /barghest/investigations': () => listInvestigations(store, engine.data),
+  'POST /barghest/investigations': async (url, req) => createInvestigation(store, await jsonBodyOf(req)),
   'POST /barghest/import': async (url, req) => {
     const form = await formDataOf(req);
     const file = form.get('file');
-    const scenario = String(form.get('scenario') ?? '');
+    const investigation = requireInvestigation(String(form.get('investigation') ?? form.get('scenario') ?? ''));
     const system = String(form.get('system') ?? '');
     if (!file || typeof file === 'string') throw bad('a file field is required (multipart)');
-    if (scenario !== 'a' && scenario !== 'b') throw bad('scenario must be a or b');
     const ext = (file.name ?? '').split('.').pop().toLowerCase();
     if (!FORMATS.includes(ext) && ext !== 'md') throw bad(`unsupported file type .${ext}; one of ${FORMATS.join(', ')}`);
     const buffer = Buffer.from(await file.arrayBuffer());
-    const result = await ingestFile({ engine, meta, store, scenario, filename: file.name, buffer, system });
-    const extraction = llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, scenario) : 'off';
+    const result = await ingestFile({ engine, meta, store, scenario: investigation.id, filename: file.name, buffer, system });
+    const extraction = llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, investigation.id) : 'off';
     return { ...result, extraction };
   },
-  // (Re)run extraction on one imported document, in the background. Poll the Document's status or the inference log.
+  // (Re)run extraction on one imported document, in the background, with its investigation's blocks. Poll the
+  // Document's status or the inference log.
   'POST /barghest/extract': async (url) => {
     const documentId = url.searchParams.get('documentId');
-    const scenario = url.searchParams.get('scenario') ?? engine.data.getObject('Document', documentId ?? '')?.scenario ?? '';
     if (!documentId) throw bad('documentId is required');
-    if (scenario !== 'a' && scenario !== 'b') throw bad('scenario must be a or b');
+    const doc = engine.data.getObject('Document', documentId);
+    if (!doc) throw Object.assign(new Error(`document not found: ${documentId}`), { status: 404 });
+    const investigation = requireInvestigation(investigationParam(url) ?? doc.scenario);
     if (!llm.allowed()) throw Object.assign(new Error('the local model is off'), { status: 503 });
-    return { documentId, extraction: startExtraction(documentId, scenario) };
+    return { documentId, extraction: startExtraction(documentId, investigation.id) };
   },
-  // Resolution over everything extracted so far in one scenario. The 0.5 to 0.9 band goes to the local model when
-  // it is on; otherwise those pairs are written as Resolutions at "review".
+  // Resolution over everything extracted so far in one investigation. The 0.5 to 0.9 band goes to the local model
+  // when it is on; otherwise those pairs are written as Resolutions at "review".
   'POST /barghest/resolve': async (url) => {
-    const scenario = url.searchParams.get('scenario') ?? '';
-    if (scenario !== 'a' && scenario !== 'b') throw bad('scenario must be a or b');
+    const investigation = requireInvestigation(investigationParam(url));
     const decide = llm.allowed() && url.searchParams.get('model') !== 'off' ? createDecide(llm) : null;
-    return resolveScenario({ engine, meta, store, scenario, decide });
+    return resolveScenario({ engine, meta, store, scenario: investigation.id, decide });
   },
   'GET /barghest/what-connects': (url) => {
     const from = url.searchParams.get('from');
@@ -149,21 +167,24 @@ const routes = {
     const hops = Math.max(0, Math.min(4, Number(url.searchParams.get('hops') ?? 2)));
     return timeline(engine.data, meta, store, objectId, { hops });
   },
-  // Embeddings for every passage that has none yet (the model must be on).
+  // Embeddings for every passage that has none yet (the model must be on). Without an investigation: all of them.
   'POST /barghest/embed': async (url) => {
     if (!llm.allowed()) throw Object.assign(new Error('the local model is off'), { status: 503 });
-    return embedAll({ engine, store, llm, scenario: url.searchParams.get('scenario') });
+    const investigation = investigationParam(url);
+    return embedAll({ engine, store, llm, scenario: investigation ? requireInvestigation(investigation).id : null });
   },
   // Passages for a question: by embedding when available, by keyword always.
   'GET /barghest/search': (url) => {
     const q = url.searchParams.get('q');
     if (!q) throw bad('q is required');
-    return searchPassages({ engine, store, llm, question: q, scenario: url.searchParams.get('scenario'), k: Number(url.searchParams.get('k') ?? 8) });
+    const investigation = investigationParam(url);
+    return searchPassages({ engine, store, llm, question: q, scenario: investigation ? requireInvestigation(investigation).id : null, k: Number(url.searchParams.get('k') ?? 8) });
   },
-  // Ask: { question, scenario? } in; { answer, objects, relationships, citations, refused, retrieval } out.
+  // Ask: { question, investigation? } in; { answer, objects, relationships, citations, refused, retrieval } out.
   'POST /barghest/ask': async (url, req) => {
     const body = await jsonBodyOf(req);
-    return ask({ engine, meta, store, llm, question: body.question, scenario: body.scenario ?? url.searchParams.get('scenario') ?? null });
+    const investigation = body.investigation ?? body.scenario ?? investigationParam(url) ?? null;
+    return ask({ engine, meta, store, llm, question: body.question, scenario: investigation ? requireInvestigation(investigation).id : null });
   },
 };
 
@@ -214,7 +235,7 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`barghest engine: ${BASE_URL}  ontology ${Object.keys(meta.objectTypes).length} types, ${loaded} objects from ${DB}`);
+  console.log(`barghest engine: ${BASE_URL}  ontology ${Object.keys(meta.objectTypes).length} types, ${loaded} objects from ${DB}, ${store.investigations().length} investigations${demoInvestigations ? ` (${demoInvestigations} demo created)` : ''}`);
 });
 
 for (const signal of ['SIGINT', 'SIGTERM']) {

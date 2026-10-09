@@ -23,6 +23,8 @@ export const TYPE_RULES = {
   Vehicle: { name: 'plateNo', tokens: (s) => [identifierKey(s)], ids: ['bodyNo'], context: [] },
   Inspection: { name: 'label', tokens: nameTokens, ids: [], context: [] },
   Complaint: { name: 'label', tokens: nameTokens, ids: [], context: [] },
+  // The `others` catch-all: the same normalised name and the same kind, nothing looser.
+  Thing: { name: 'name', tokens: nameTokens, ids: [], context: ['kind'], sameContext: true },
 };
 
 export const AUTO = 0.9;

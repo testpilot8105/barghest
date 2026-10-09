@@ -1,0 +1,375 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "persons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "organizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "agency",
+              "company",
+              "school",
+              "network",
+              "hauler",
+              "lgu",
+              "barangay",
+              "ideology",
+              "hospital",
+              "other"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string"
+          },
+          "where": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "incidents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string"
+          },
+          "where": {
+            "type": "string"
+          },
+          "school": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "accounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "platformId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "platform",
+          "handle"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "platformId": {
+            "type": "string"
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "firearms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "make": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "calibre": {
+            "type": "string"
+          },
+          "serial": {
+            "type": "string"
+          },
+          "registrationNo": {
+            "type": "string"
+          },
+          "storage": {
+            "type": "string"
+          },
+          "registeredTo": {
+            "type": "string"
+          },
+          "registeredAgency": {
+            "type": "string"
+          },
+          "custodian": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "custodyStatus": {
+            "type": "string"
+          },
+          "matchedSerial": {
+            "type": "string"
+          },
+          "recoveredAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tag"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "schools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "depedId": {
+            "type": "string"
+          },
+          "division": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fromName": {
+            "type": "string"
+          },
+          "fromType": {
+            "type": "string",
+            "enum": [
+              "Person",
+              "Organization",
+              "Location",
+              "Event",
+              "Incident",
+              "DigitalAccount",
+              "OnlineGroup",
+              "Firearm",
+              "EvidenceItem",
+              "School"
+            ]
+          },
+          "toName": {
+            "type": "string"
+          },
+          "toType": {
+            "type": "string",
+            "enum": [
+              "Person",
+              "Organization",
+              "Location",
+              "Event",
+              "Incident",
+              "DigitalAccount",
+              "OnlineGroup",
+              "Firearm",
+              "EvidenceItem",
+              "School"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "took",
+              "owns",
+              "registered_to",
+              "custodian_of",
+              "recovered_at",
+              "matched_to",
+              "member_of",
+              "groomed_by",
+              "messaged",
+              "co_planned",
+              "posted",
+              "attends",
+              "teaches_at",
+              "guardian_of",
+              "relative_of",
+              "investigated",
+              "treated_at",
+              "located_at",
+              "part_of",
+              "contracted_by",
+              "serves",
+              "operates",
+              "inspected",
+              "filed_against",
+              "awarded_to",
+              "logged_at",
+              "mentions"
+            ]
+          },
+          "when": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "fromName",
+          "fromType",
+          "toName",
+          "toType",
+          "kind",
+          "confidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "persons",
+    "organizations",
+    "locations",
+    "events",
+    "incidents",
+    "accounts",
+    "groups",
+    "firearms",
+    "evidence",
+    "schools",
+    "relationships"
+  ],
+  "additionalProperties": false
+}

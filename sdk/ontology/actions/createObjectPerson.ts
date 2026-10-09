@@ -54,7 +54,7 @@ export namespace createObjectPerson {
       type: 'string';
     };
     scenario: {
-      displayName: 'Scenario';
+      displayName: 'Investigation';
       multiplicity: false;
       nullable: true;
       type: 'string';

@@ -77,7 +77,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Document.scenario",
             "status": {
               "type": "active"
@@ -398,6 +398,14 @@
           "apiName": "mentionedComplaints",
           "displayName": "Mentioned complaint",
           "objectTypeApiName": "Complaint"
+        },
+        {
+          "linkTypeRid": "ri.Passage.thing-passage.Thing",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "mentionedThings",
+          "displayName": "Mentioned other thing",
+          "objectTypeApiName": "Thing"
         }
       ]
     },
@@ -648,6 +656,14 @@
           "apiName": "recordedComplaints",
           "displayName": "Recorded complaint",
           "objectTypeApiName": "Complaint"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.thing-source-record.Thing",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "recordedThings",
+          "displayName": "Recorded other thing",
+          "objectTypeApiName": "Thing"
         }
       ]
     },
@@ -766,7 +782,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Person.scenario",
             "status": {
               "type": "active"
@@ -959,7 +975,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Organization.scenario",
             "status": {
               "type": "active"
@@ -1151,7 +1167,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Location.scenario",
             "status": {
               "type": "active"
@@ -1375,7 +1391,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Event.scenario",
             "status": {
               "type": "active"
@@ -1580,7 +1596,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.DigitalAccount.scenario",
             "status": {
               "type": "active"
@@ -1777,7 +1793,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.OnlineGroup.scenario",
             "status": {
               "type": "active"
@@ -1973,7 +1989,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Incident.scenario",
             "status": {
               "type": "active"
@@ -2255,7 +2271,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Firearm.scenario",
             "status": {
               "type": "active"
@@ -2486,7 +2502,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.EvidenceItem.scenario",
             "status": {
               "type": "active"
@@ -2676,7 +2692,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.School.scenario",
             "status": {
               "type": "active"
@@ -2864,7 +2880,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.LGU.scenario",
             "status": {
               "type": "active"
@@ -3048,7 +3064,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Barangay.scenario",
             "status": {
               "type": "active"
@@ -3237,7 +3253,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Hauler.scenario",
             "status": {
               "type": "active"
@@ -3481,7 +3497,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Contract.scenario",
             "status": {
               "type": "active"
@@ -3695,7 +3711,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Facility.scenario",
             "status": {
               "type": "active"
@@ -3884,7 +3900,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Vehicle.scenario",
             "status": {
               "type": "active"
@@ -4101,7 +4117,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Inspection.scenario",
             "status": {
               "type": "active"
@@ -4315,7 +4331,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Complaint.scenario",
             "status": {
               "type": "active"
@@ -4397,6 +4413,166 @@
         }
       ]
     },
+    "Thing": {
+      "objectType": {
+        "apiName": "Thing",
+        "displayName": "Other thing",
+        "pluralDisplayName": "Other things",
+        "primaryKey": "thingId",
+        "titleProperty": "name",
+        "icon": {
+          "type": "blueprint",
+          "color": "#2D72D2",
+          "name": "cube"
+        },
+        "status": "ACTIVE",
+        "properties": {
+          "thingId": {
+            "displayName": "Thing id",
+            "rid": "ri.Thing.thingId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Thing.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kind": {
+            "displayName": "Kind",
+            "rid": "ri.Thing.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "canonicalId": {
+            "displayName": "Canonical object",
+            "rid": "ri.Thing.canonicalId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "passageId": {
+            "displayName": "Passage",
+            "rid": "ri.Thing.passageId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "recordId": {
+            "displayName": "Source record",
+            "rid": "ri.Thing.recordId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "scenario": {
+            "displayName": "Investigation",
+            "rid": "ri.Thing.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          }
+        },
+        "rid": "ri.Thing",
+        "aliases": [],
+        "datasources": []
+      },
+      "implementsInterfaces": [],
+      "implementsInterfaces2": {},
+      "sharedPropertyTypeMapping": {},
+      "linkTypes": [
+        {
+          "linkTypeRid": "ri.Thing.thing-canonical.Thing",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "candidates",
+          "displayName": "Candidate",
+          "objectTypeApiName": "Thing"
+        },
+        {
+          "linkTypeRid": "ri.Thing.thing-canonical.Thing",
+          "status": "ACTIVE",
+          "apiName": "canonical",
+          "displayName": "Canonical object",
+          "objectTypeApiName": "Thing",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "canonicalId"
+        },
+        {
+          "linkTypeRid": "ri.Passage.thing-passage.Thing",
+          "status": "ACTIVE",
+          "apiName": "passage",
+          "displayName": "Passage",
+          "objectTypeApiName": "Passage",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "passageId"
+        },
+        {
+          "linkTypeRid": "ri.SourceRecord.thing-source-record.Thing",
+          "status": "ACTIVE",
+          "apiName": "sourceRecord",
+          "displayName": "Source record",
+          "objectTypeApiName": "SourceRecord",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "recordId"
+        },
+        {
+          "linkTypeRid": "ri.Thing.relationship-from-thing.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Thing.relationship-to-thing.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
+        }
+      ]
+    },
     "Relationship": {
       "objectType": {
         "apiName": "Relationship",
@@ -4438,6 +4614,18 @@
           "kind": {
             "displayName": "Kind",
             "rid": "ri.Relationship.kind",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "kindLabel": {
+            "displayName": "Kind, as written",
+            "rid": "ri.Relationship.kindLabel",
             "status": {
               "type": "active"
             },
@@ -4588,7 +4776,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Relationship.scenario",
             "status": {
               "type": "active"
@@ -5030,6 +5218,30 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "fromThingId": {
+            "displayName": "From other thing",
+            "rid": "ri.Relationship.fromThingId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toThingId": {
+            "displayName": "To other thing",
+            "rid": "ri.Relationship.toThingId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Relationship",
@@ -5363,6 +5575,24 @@
           "objectTypeApiName": "Complaint",
           "cardinality": "ONE",
           "foreignKeyPropertyApiName": "toComplaintId"
+        },
+        {
+          "linkTypeRid": "ri.Thing.relationship-from-thing.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromThing",
+          "displayName": "From other thing",
+          "objectTypeApiName": "Thing",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromThingId"
+        },
+        {
+          "linkTypeRid": "ri.Thing.relationship-to-thing.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toThing",
+          "displayName": "To other thing",
+          "objectTypeApiName": "Thing",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toThingId"
         }
       ]
     },
@@ -5517,7 +5747,7 @@
             "typeClasses": []
           },
           "scenario": {
-            "displayName": "Scenario",
+            "displayName": "Investigation",
             "rid": "ri.Resolution.scenario",
             "status": {
               "type": "active"
@@ -5623,7 +5853,7 @@
           "typeClasses": []
         },
         "scenario": {
-          "displayName": "Scenario",
+          "displayName": "Investigation",
           "description": "",
           "required": false,
           "dataType": {
@@ -5749,7 +5979,7 @@
           "typeClasses": []
         },
         "scenario": {
-          "displayName": "Scenario",
+          "displayName": "Investigation",
           "description": "",
           "required": false,
           "dataType": {

@@ -83,7 +83,7 @@ export namespace Hauler {
     /**
      *   property status: active
      *
-     *   display name: 'Scenario'
+     *   display name: 'Investigation'
      */
     readonly scenario: $PropType['string'] | undefined;
     /**
@@ -185,7 +185,7 @@ export interface Hauler extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'Scenario'
+       *   display name: 'Investigation'
        */
       scenario: $PropertyDef<'string', 'nullable', 'single'>;
       /**

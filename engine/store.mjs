@@ -42,6 +42,13 @@ CREATE TABLE IF NOT EXISTS passage_embedding (
   dim INTEGER NOT NULL,
   vector BLOB NOT NULL
 );
+CREATE TABLE IF NOT EXISTS investigations (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  template TEXT,
+  blocks TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
 `;
 
 export function openStore(path) {
@@ -81,6 +88,12 @@ export function openStore(path) {
     'INSERT INTO passage_embedding (passage_id, model, dim, vector) VALUES (?, ?, ?, ?) ON CONFLICT(passage_id) DO UPDATE SET model = excluded.model, dim = excluded.dim, vector = excluded.vector',
   );
   const embeddingsAll = db.prepare('SELECT passage_id, model, dim, vector FROM passage_embedding');
+  const investigationUpsert = db.prepare(
+    'INSERT INTO investigations (id, name, template, blocks, created_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name = excluded.name, template = excluded.template, blocks = excluded.blocks',
+  );
+  const investigationGet = db.prepare('SELECT id, name, template, blocks, created_at FROM investigations WHERE id = ?');
+  const investigationsAll = db.prepare('SELECT id, name, template, blocks, created_at FROM investigations ORDER BY created_at, id');
+  const investigationRow = (row) => (row ? { id: row.id, name: row.name, template: row.template, blocks: JSON.parse(row.blocks), createdAt: row.created_at } : null);
 
   return {
     path,
@@ -153,6 +166,16 @@ export function openStore(path) {
         model: row.model,
         vector: new Float32Array(row.vector.buffer, row.vector.byteOffset, row.dim),
       }));
+    },
+    /** Investigations live here, outside the ontology: { id, name, template, blocks, createdAt }. */
+    putInvestigation({ id, name, template = null, blocks, createdAt }) {
+      investigationUpsert.run(id, name, template, JSON.stringify(blocks), createdAt ?? new Date().toISOString());
+    },
+    investigation(id) {
+      return investigationRow(investigationGet.get(String(id)));
+    },
+    investigations() {
+      return investigationsAll.all().map(investigationRow);
     },
     close() {
       db.close();

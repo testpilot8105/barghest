@@ -1,5 +1,5 @@
-// Extraction: every passage of a document goes through the local model on its own, with the scenario's JSON
-// schema; the reply is validated with zod (invalid output is logged and retried once), and what survives is
+// Extraction: every passage of a document goes through the local model on its own, with the JSON schema built from
+// its investigation's blocks; the reply is validated with zod (invalid output is logged and retried once), and what survives is
 // written as candidate objects (one per mention, linked to the passage) and Relationships (with passageIds).
 // Deterministic code does the rest: ids, foreign keys, the audit row. Nothing here merges anything: that is
 // resolution's job.
@@ -11,7 +11,7 @@ import { jsonSchemaOf, schemaFor } from './schemas.mjs';
 
 const PREFIX = {
   Person: 'P', Organization: 'O', Location: 'L', Event: 'E', Incident: 'I', DigitalAccount: 'A', OnlineGroup: 'G', Firearm: 'F', EvidenceItem: 'EV', School: 'S',
-  LGU: 'LGU', Barangay: 'B', Hauler: 'H', Contract: 'C', Facility: 'FA', Vehicle: 'V', Inspection: 'IN', Complaint: 'CO',
+  LGU: 'LGU', Barangay: 'B', Hauler: 'H', Contract: 'C', Facility: 'FA', Vehicle: 'V', Inspection: 'IN', Complaint: 'CO', Thing: 'T',
 };
 
 const id = (type, passageId, name) => `${PREFIX[type] ?? type}-${createHash('sha1').update(`${passageId}|${type}|${String(name).trim().toLowerCase()}`).digest('hex').slice(0, 8)}`;
@@ -52,6 +52,8 @@ export function toObjects(meta, { scenario, passageId, data }) {
   for (const g of data.groups ?? []) add('OnlineGroup', g.name, { platform: g.platform, platformId: g.platformId, channels: g.channels ?? [] });
   for (const l of data.lgus ?? []) add('LGU', l.name, { kind: l.kind, province: l.province });
   for (const h of data.haulers ?? []) add('Hauler', h.name, { registrationNo: h.registrationNo, tin: h.tin });
+  // The catch-all of the `others` block: one Thing per item, with the model's own label as its kind.
+  for (const t of data.others ?? []) add('Thing', t.name, { kind: t.kind });
 
   for (const e of data.events ?? []) {
     const locationId = e.where ? ensure('Location', e.where) : undefined;
@@ -93,11 +95,14 @@ export function toObjects(meta, { scenario, passageId, data }) {
     if (relationships.some((x) => x.__primaryKey === pk)) continue;
     const fromTitle = objects.find((o) => o.__primaryKey === fromId)?.__title ?? r.fromName;
     const toTitle = objects.find((o) => o.__primaryKey === toId)?.__title ?? r.toName;
+    // A related_to link keeps the passage's own words ("paid", "met with") beside the kind, and shows them.
+    const kindLabel = r.kind === 'related_to' && r.label ? String(r.label).trim() : '';
     relationships.push(
       toServerObject(meta, 'Relationship', {
         relationshipId: pk,
-        label: `${fromTitle} ${r.kind} ${toTitle}`,
+        label: `${fromTitle} ${kindLabel || r.kind} ${toTitle}`,
         kind: r.kind,
+        kindLabel: kindLabel || undefined,
         fromType: r.fromType,
         fromId,
         toType: r.toType,
@@ -117,19 +122,24 @@ export function toObjects(meta, { scenario, passageId, data }) {
   return { objects: [...objects, ...relationships], mentions: objects.length, relationships: relationships.length };
 }
 
-/** Extract one document, passage by passage. */
-export async function extractDocument({ engine, meta, store, llm, documentId, scenario, onPassage = null }) {
+/**
+ * Extract one document, passage by passage, looking for what its investigation's blocks name.
+ * @param {string} args.investigation the investigation id, written to every object's `scenario`
+ * @param {string[]} args.blocks the investigation's blocks
+ */
+export async function extractDocument({ engine, meta, store, llm, documentId, investigation, blocks, onPassage = null }) {
   const data = engine.data;
   const document = data.getObject('Document', documentId);
   if (!document) throw Object.assign(new Error(`document not found: ${documentId}`), { status: 404 });
   const passages = [...data.getObjectsOfType('Passage')].filter((p) => p.documentId === documentId).sort((a, b) => a.index - b.index);
-  const schema = schemaFor(scenario);
+  const schema = schemaFor(blocks);
   const format = jsonSchemaOf(schema);
+  const scenario = investigation;
 
   const summary = { documentId, passages: passages.length, calls: 0, mentions: 0, relationships: 0, failed: 0, latencyMs: 0 };
   for (const passage of passages) {
     const passageId = String(passage.__primaryKey);
-    let prompt = extractionPrompt({ scenario, passage, document });
+    let prompt = extractionPrompt({ blocks, passage, document });
     let parsed = null;
     for (let attempt = 0; attempt < 2 && !parsed; attempt++) {
       const r = await llm.chatJson({ system: SYSTEM_EXTRACT, prompt, schema: format, purpose: attempt ? 'extract-retry' : 'extract', documentId, passageId });
@@ -160,7 +170,7 @@ export async function extractDocument({ engine, meta, store, llm, documentId, sc
     action: 'extract',
     actor: 'engine+local-model',
     outcome: summary.failed ? `applied, ${summary.failed} passage(s) failed twice` : 'applied',
-    params: { documentId, scenario, model: llm.models.chat },
+    params: { documentId, investigation, blocks, model: llm.models.chat },
     edits: [],
     objectIds: [`Document:${documentId}`],
   });

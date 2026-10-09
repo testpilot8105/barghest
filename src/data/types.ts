@@ -228,6 +228,43 @@ export interface OllamaHealth {
   error?: string;
 }
 
+/** One kind of thing the model can be asked to list, and the ontology type it lands as. */
+export interface InvestigationBlock {
+  id: string;
+  label: string;
+  types: string[];
+}
+
+export interface InvestigationTemplate {
+  id: string;
+  name: string;
+  blocks: string[];
+}
+
+/** A store record, not an ontology object. The id never changes; the name is a label on it. */
+export interface Investigation {
+  id: string;
+  name: string;
+  template: string | null;
+  blocks: string[];
+  documents: number;
+  createdAt: string;
+}
+
+export interface InvestigationsResult {
+  investigations: Investigation[];
+  templates: InvestigationTemplate[];
+  blocks: InvestigationBlock[];
+}
+
+export interface CreateInvestigationRequest {
+  name: string;
+  /** One of the template ids; `general` when neither this nor `blocks` is given. */
+  template?: string;
+  /** Block ids; when given they win over the template. */
+  blocks?: string[];
+}
+
 export interface Health {
   ok: boolean;
   engine: string;

@@ -105,7 +105,7 @@ M-0190 13 Sep 2026 22:15 Joaquin DP to Marco V.: nasa bag ko na si glock
 async function importFile(name) {
   const form = new FormData();
   form.append('file', new Blob([readFileSync(join(fixtures, name))]), name);
-  form.append('scenario', 'a');
+  form.append('investigation', 'school-incident');
   form.append('system', name.startsWith('spot') ? 'PNP Spot Report' : name.startsWith('irf') ? 'PNP CIRAS e-Blotter' : 'PNP-ACG Cyber Forensics');
   const r = await post('/barghest/import', form);
   if (r.status !== 200) throw new Error(`import ${name}: ${r.status} ${JSON.stringify(r.body)}`);
@@ -164,7 +164,7 @@ try {
 
   // Resolution with the model deciding the unsure pairs
   sample('before resolve');
-  const res = await post('/barghest/resolve?scenario=a');
+  const res = await post('/barghest/resolve?investigation=school-incident');
   sample('after resolve');
   const ps = res.body.summary?.Person ?? {};
   check('resolve ran with the model on the 0.5 to 0.9 band', res.status === 200 && (ps.modelPairs ?? 0) + (ps.autoPairs ?? 0) >= 1 && (ps.reviewPairs ?? 0) === 0, JSON.stringify(ps));
@@ -180,20 +180,20 @@ try {
   check('the account-to-person pass ran over the extracted accounts', !!res.body.owners, `${accounts.rows.length} accounts, ${owned.length} owned: ${owned.map((r) => `${r.title} -> ${r.properties.personId}`).join(' | ') || 'none'}; ${JSON.stringify(res.body.owners)}`);
 
   // Embeddings and semantic search
-  const emb = await post('/barghest/embed?scenario=a');
+  const emb = await post('/barghest/embed?investigation=school-incident');
   sample('after embed');
   check('passages were embedded', emb.status === 200 && emb.body.embedded >= 3, JSON.stringify(emb.body));
-  const s = await get(`/barghest/search?q=${encodeURIComponent('message saying he got the gun from the locker')}&scenario=a`);
+  const s = await get(`/barghest/search?q=${encodeURIComponent('message saying he got the gun from the locker')}&investigation=school-incident`);
   check('semantic search finds the "nakuha ko na" message', s.semantic >= 1 && s.passages.some((p) => p.text.includes('nakuha ko na')), `${s.passages.length} passages, ${s.semantic} semantic`);
 
   // Ask
   sample('before ask');
-  const a = await post('/barghest/ask', { question: 'What connects Joaquin Dela Peña to the shooting at San Isidro National High School?', scenario: 'a' }, true);
+  const a = await post('/barghest/ask', { question: 'What connects Joaquin Dela Peña to the shooting at San Isidro National High School?', investigation: 'school-incident' }, true);
   sample('after ask');
   check('the question is answered with citations', a.status === 200 && a.body.refused === false && a.body.citations.length >= 1, `${a.body.citations?.length} citations, ${a.body.latencyMs} ms`);
   console.log(`    answer: ${a.body.answer}`);
   for (const c of a.body.citations ?? []) console.log(`    [${c.passageId}] ${c.verbatim ? 'verbatim' : 'passage'}: ${c.quote.slice(0, 100)}`);
-  const n = await post('/barghest/ask', { question: 'Who is the mayor of Davao City?', scenario: 'a' }, true);
+  const n = await post('/barghest/ask', { question: 'Who is the mayor of Davao City?', investigation: 'school-incident' }, true);
   check('a question with no evidence is refused', n.body.refused === true && /no supporting records/.test(n.body.answer), n.body.answer);
 
   const logAll = await get('/barghest/inference-log?after=0');

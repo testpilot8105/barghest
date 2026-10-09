@@ -78,7 +78,7 @@ export namespace createObjectResolution {
       type: 'string';
     };
     scenario: {
-      displayName: 'Scenario';
+      displayName: 'Investigation';
       multiplicity: false;
       nullable: true;
       type: 'string';
