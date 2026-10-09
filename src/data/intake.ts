@@ -15,9 +15,14 @@ export async function importFile(dc: DataClient, req: ImportRequest): Promise<Im
   return enginePost<ImportResult>(dc, '/barghest/import', {}, form);
 }
 
-/** Run the model over one imported document again. Fails with status 503 while the model is off. */
+/** Run the model over one imported document again. Fails with status 503 while the model is off, 400 on a no-text file. */
 export function extractAgain(dc: DataClient, documentId: string): Promise<ExtractResult> {
   return enginePost<ExtractResult>(dc, '/barghest/extract', { documentId });
+}
+
+/** The URL of the stored original, for an "Open original" link in a new tab; a PDF renders in the browser. */
+export function fileUrl(dc: DataClient, documentId: string): string {
+  return `${dc.baseUrl}/barghest/file?documentId=${encodeURIComponent(documentId)}`;
 }
 
 /** The model log rows with an id above `after`, oldest first. The engine returns at most 500 per call. */

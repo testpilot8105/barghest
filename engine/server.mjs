@@ -5,8 +5,8 @@
 import { createServer } from 'node:http';
 import { EventEmitter } from 'node:events';
 import { Readable } from 'node:stream';
-import { readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { createReadStream, readFileSync, statSync } from 'node:fs';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { msw } from '@osdk/faux';
 import { openStore } from './store.mjs';
@@ -26,7 +26,17 @@ import { ownership } from '../ontology/ownership.ts';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = Number(process.env.BARGHEST_ENGINE_PORT ?? 8787);
 const DB = resolve(root, process.env.BARGHEST_DB ?? 'data/barghest.sqlite');
+// Every imported file is kept here as the stored original (gitignored). The proofs point it at a throwaway folder.
+const FILES = resolve(root, process.env.BARGHEST_FILES ?? 'data/files');
 const BASE_URL = `http://localhost:${PORT}`;
+
+const CONTENT_TYPES = {
+  pdf: 'application/pdf',
+  csv: 'text/csv; charset=utf-8',
+  txt: 'text/plain; charset=utf-8',
+  md: 'text/markdown; charset=utf-8',
+  json: 'application/json; charset=utf-8',
+};
 
 const meta = JSON.parse(readFileSync(join(root, 'ontology', 'ontology.json'), 'utf8'));
 const store = openStore(DB);
@@ -133,8 +143,9 @@ const routes = {
     const ext = (file.name ?? '').split('.').pop().toLowerCase();
     if (!FORMATS.includes(ext) && ext !== 'md') throw bad(`unsupported file type .${ext}; one of ${FORMATS.join(', ')}`);
     const buffer = Buffer.from(await file.arrayBuffer());
-    const result = await ingestFile({ engine, meta, store, scenario: investigation.id, filename: file.name, buffer, system });
-    const extraction = llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, investigation.id) : 'off';
+    const result = await ingestFile({ engine, meta, store, scenario: investigation.id, filename: file.name, buffer, system, filesDir: FILES, root });
+    // Nothing to read in a scan or an empty file: the reply says so and the model never starts on it.
+    const extraction = result.status === 'no text' ? 'no text' : llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, investigation.id) : 'off';
     return { ...result, extraction };
   },
   // (Re)run extraction on one imported document, in the background, with its investigation's blocks. Poll the
@@ -144,6 +155,7 @@ const routes = {
     if (!documentId) throw bad('documentId is required');
     const doc = engine.data.getObject('Document', documentId);
     if (!doc) throw Object.assign(new Error(`document not found: ${documentId}`), { status: 404 });
+    if (doc.status === 'no text') throw bad('no text to read in this file (a scan, or empty)');
     const investigation = requireInvestigation(investigationParam(url) ?? doc.scenario);
     if (!llm.allowed()) throw Object.assign(new Error('the local model is off'), { status: 503 });
     return { documentId, extraction: startExtraction(documentId, investigation.id) };
@@ -188,6 +200,28 @@ const routes = {
   },
 };
 
+/** GET /barghest/file?documentId=: the stored original, inline, so a PDF opens in a browser tab. Not JSON. */
+function serveFile(url, res) {
+  const documentId = url.searchParams.get('documentId');
+  if (!documentId) throw bad('documentId is required');
+  const doc = engine.data.getObject('Document', documentId);
+  if (!doc) throw Object.assign(new Error(`document not found: ${documentId}`), { status: 404 });
+  const file = resolve(root, String(doc.path ?? ''));
+  // Only files under the app folder, and only ones that are still there.
+  const inside = file.startsWith(root + sep);
+  const stat = inside ? (() => { try { return statSync(file); } catch { return null; } })() : null;
+  if (!stat?.isFile()) throw Object.assign(new Error(`no stored copy for ${documentId}`), { status: 404 });
+  const ext = String(doc.format ?? file.split('.').pop()).toLowerCase();
+  const filename = String(doc.title ?? documentId).replace(/["\\\r\n]/g, '_');
+  res.writeHead(200, {
+    'content-type': CONTENT_TYPES[ext] ?? 'application/octet-stream',
+    'content-length': stat.size,
+    'content-disposition': `inline; filename="${filename}"`,
+    'cache-control': 'no-store',
+  });
+  createReadStream(file).pipe(res);
+}
+
 const emitter = new EventEmitter();
 
 /** Hand a request to faux: the 80-line Node-to-msw bridge from the OSDK repo (vite-plugin-oac), adapted. */
@@ -220,6 +254,7 @@ const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? '/', BASE_URL);
   try {
     if (url.pathname.startsWith('/barghest/')) {
+      if (req.method === 'GET' && url.pathname === '/barghest/file') return serveFile(url, res);
       const route = routes[`${req.method} ${url.pathname}`];
       if (!route) return json(res, 404, { error: 'not found', path: url.pathname });
       return json(res, 200, await route(url, req));

@@ -16,10 +16,11 @@ import { extractionPrompt, SYSTEM_EXTRACT } from './extract/prompts.mjs';
 import { toObjects } from './extract/index.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const PORT = 8790;
+const PORT = 8792;
 const BASE = `http://localhost:${PORT}`;
 const DB = 'data/proof-investigations.sqlite';
-const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off' };
+const FILES = 'data/proof-investigations-files';
+const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off', BARGHEST_FILES: FILES };
 const meta = JSON.parse(readFileSync(join(root, 'ontology', 'ontology.json'), 'utf8'));
 
 const results = [];
@@ -55,6 +56,7 @@ async function stopEngine(child) {
 }
 const cleanDb = () => {
   for (const suffix of ['', '-wal', '-shm']) rmSync(join(root, DB + suffix), { force: true });
+  rmSync(join(root, FILES), { recursive: true, force: true });
 };
 const refused = (promise) => promise.then(() => null, (e) => e);
 

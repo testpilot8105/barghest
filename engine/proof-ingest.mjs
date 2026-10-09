@@ -15,7 +15,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 8790;
 const BASE = `http://localhost:${PORT}`;
 const DB = 'data/proof-ingest.sqlite';
-const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off' };
+const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off', BARGHEST_FILES: 'data/proof-ingest-files' };
 
 const results = [];
 function check(name, ok, detail = '') {
@@ -47,6 +47,7 @@ async function stopEngine(child) {
 }
 const cleanDb = () => {
   for (const suffix of ['', '-wal', '-shm']) rmSync(join(root, DB + suffix), { force: true });
+  rmSync(join(root, 'data/proof-ingest-files'), { recursive: true, force: true });
 };
 
 // ---- Fixtures: shaped like the registers the real packs imitate, every identity invented.

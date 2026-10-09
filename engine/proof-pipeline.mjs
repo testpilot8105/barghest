@@ -15,7 +15,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 8794;
 const BASE = `http://localhost:${PORT}`;
 const DB = 'data/proof-pipeline.sqlite';
-const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'on' };
+const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'on', BARGHEST_FILES: 'data/proof-pipeline-files' };
 
 const results = [];
 const t0 = Date.now();
@@ -59,6 +59,7 @@ async function stopEngine(child) {
 }
 const cleanDb = () => {
   for (const suffix of ['', '-wal', '-shm']) rmSync(join(root, DB + suffix), { force: true });
+  rmSync(join(root, 'data/proof-pipeline-files'), { recursive: true, force: true });
 };
 const post = (path, body, json = false) =>
   fetch(`${BASE}${path}`, { method: 'POST', body: json ? JSON.stringify(body) : body, headers: json ? { 'content-type': 'application/json' } : undefined }).then(async (r) => ({ status: r.status, body: await r.json() }));

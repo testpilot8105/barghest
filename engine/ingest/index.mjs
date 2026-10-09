@@ -1,6 +1,8 @@
 // Ingestion: a file becomes one Document, its Passages, and one SourceRecord per table row. All deterministic and
 // written through the engine (store first, then faux). Extraction (the model) runs afterwards, passage by passage.
 import { createHash } from 'node:crypto';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
 import { toServerObject } from '../faux.mjs';
 import { parseFile } from './parse.mjs';
 import { splitPassages } from './passages.mjs';
@@ -34,29 +36,41 @@ function recordLabel(filename, row, i) {
  * @param {string} args.filename
  * @param {Uint8Array | Buffer} args.buffer
  * @param {string} [args.system] which register the file pretends to come from
+ * @param {string} [args.filesDir] where the stored original goes (absolute); without it no copy is kept
+ * @param {string} [args.root] the app folder, so the Document's `path` is relative to it
  */
-export async function ingestFile({ engine, meta, store, scenario, filename, buffer, system = '' }) {
+export async function ingestFile({ engine, meta, store, scenario, filename, buffer, system = '', filesDir = null, root = null }) {
   const parsed = await parseFile(filename, buffer);
   const documentId = shortId('D', scenario, filename, createHash('sha1').update(Buffer.from(buffer)).digest('hex'));
   const format = filename.split('.').pop().toLowerCase();
   const importedAt = new Date().toISOString();
+  // A scanned PDF or an empty file yields nothing to read: say so instead of failing quietly later.
+  const status = parsed.text.trim().length === 0 ? 'no text' : 'imported';
+
+  // Keep the original: the file view opens it, and a later move re-imports it from this copy.
+  let path = `data/${scenario}/sources/${filename}`;
+  if (filesDir) {
+    mkdirSync(filesDir, { recursive: true });
+    const stored = join(filesDir, `${documentId}.${format}`);
+    writeFileSync(stored, Buffer.from(buffer));
+    path = (root ? relative(root, stored) : stored).split(sep).join('/');
+  }
 
   const objs = [];
   objs.push(
     toServerObject(meta, 'Document', {
       documentId,
       title: filename,
-      // Where a pack file ships from; an uploaded file gets a stored copy here once step 3 lands.
-      path: `data/${scenario}/sources/${filename}`,
+      path,
       format,
       system,
       scenario,
       importedAt,
-      status: 'imported',
+      status,
     }),
   );
 
-  const passages = splitPassages(parsed.text);
+  const passages = status === 'no text' ? [] : splitPassages(parsed.text);
   for (const p of passages) {
     objs.push(
       toServerObject(meta, 'Passage', {
@@ -90,10 +104,10 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
     action: 'importDocument',
     actor: 'analyst',
     outcome: 'applied',
-    params: { filename, scenario, system, format, bytes: buffer.length },
+    params: { filename, scenario, system, format, bytes: buffer.length, path, status },
     edits: [{ type: 'addObject', objectType: 'Document', primaryKey: documentId }],
     objectIds: [`Document:${documentId}`],
   });
 
-  return { documentId, format, passages: passages.length, records: rows.length, pages: parsed.pages ?? null, chars: parsed.text.length };
+  return { documentId, format, passages: passages.length, records: rows.length, pages: parsed.pages ?? null, chars: parsed.text.length, status, path };
 }

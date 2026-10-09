@@ -82,8 +82,9 @@ The Files and Data Sources views call the engine only through these. Every call 
 
 | Function | Hook | Underneath | Returns |
 |---|---|---|---|
-| `importFile(dc, { file, investigation, system?, folderId?, extract? })` | | `POST import` | `{ documentId, format, passages, records, pages, chars, extraction }`. `extraction` is `started`, `running` or `off`. `extract: false` stores the file without reading it |
-| `extractAgain(dc, documentId)` | | `POST extract?documentId=` | `{ documentId, extraction }`. With the model off it fails with status 503 |
+| `importFile(dc, { file, investigation, system?, folderId?, extract? })` | | `POST import` | `{ documentId, format, passages, records, pages, chars, status, path, extraction }`. `status` is `imported`, or `no text` when the file yielded no characters (a scanned PDF): then nothing is read and `extraction` is `no text`. Otherwise `extraction` is `started`, `running` or `off`. `extract: false` stores the file without reading it |
+| `extractAgain(dc, documentId)` | | `POST extract?documentId=` | `{ documentId, extraction }`. With the model off it fails with status 503; on a `no text` document with 400 |
+| `fileUrl(dc, documentId)` | | `GET file?documentId=` | the URL of the stored original, for an "Open original" link that opens in a new tab (a PDF renders in the browser) |
 | `fetchInferenceLog(dc, after)` | `useInferenceLog(intervalMs = 2000)` | `GET inference-log?after=` | rows in id order. The hook polls, appends only rows newer than what it holds, never repeats one, and catches up in one go after a long gap |
 | `getHealth(dc)` | `useHealth(intervalMs = 2000)` | `GET health` | the health body of section 3 |
 | | `useExtracting()` | `health.extracting` | the document ids the model is reading now, polled |
@@ -123,9 +124,10 @@ produce exactly the extraction schema and prompt they did before (checked byte f
 | `GET audit?objectId=Type:pk` | action history for one object: `[{ id, at, action, actor, outcome, params, edits, objectIds }]` | real |
 | `GET investigations` | `{ investigations: [{ id, name, template, blocks, documents, createdAt }], templates: [{ id, name, blocks }], blocks: [{ id, label, types }] }`. The blocks, in the order schemas and prompts list them: `persons` People (Person), `organizations` Organisations (Organization), `locations` Places (Location), `events` Events (Event), `incidents` Incidents (Incident), `accounts` Online accounts (DigitalAccount), `groups` Online groups (OnlineGroup), `firearms` Firearms (Firearm), `evidence` Evidence items (EvidenceItem), `schools` Schools (School), `lgus` LGUs (LGU), `barangays` Barangays (Barangay), `haulers` Haulers (Hauler), `contracts` Contracts (Contract), `facilities` Facilities (Facility), `vehicles` Vehicles (Vehicle), `inspections` Inspections (Inspection), `complaints` Complaints (Complaint), `others` Other things (Thing) | real |
 | `POST investigations` | JSON `{ name, template?, blocks? }` in; the new investigation out. The id is a URL-safe slug of the name plus a short hash and never changes. Writes an audit row (`createInvestigation`, `objectIds: ["Investigation:<id>"]`). 400 on an empty name, an unknown template or an unknown block | real |
-| `POST import` | multipart: `file`, `investigation` (an id from `GET investigations`; `scenario` is read as an alias), optional `system`, optional `folderId` (ignored until step 6), `extract=no` to store without reading; `{ documentId, format, passages, records, pages, chars, extraction }` out. The file becomes a Document, its Passages (about 300 tokens each, with character offsets) and one SourceRecord per table row. Same file again: same Document, no duplicate. Accepts pdf, csv, txt, md, json; anything else is 400; an unknown investigation is 400 | real |
+| `POST import` | multipart: `file`, `investigation` (an id from `GET investigations`; `scenario` is read as an alias), optional `system`, optional `folderId` (ignored until step 6), `extract=no` to store without reading; `{ documentId, format, passages, records, pages, chars, status, path, extraction }` out. The bytes are kept as the stored original at `data/files/<documentId>.<ext>` (`path`; gitignored, never in the public repo) and the file becomes a Document, its Passages (about 300 tokens each, with character offsets) and one SourceRecord per table row. A file that yields no characters (a scanned PDF, an empty file) gets `status: "no text"` and `extraction: "no text"`, and the model never starts on it. Same file again: same Document, no duplicate. Accepts pdf, csv, txt, md, json; anything else is 400; an unknown investigation is 400 | real |
+| `GET file?documentId=` | streams the stored original with its content type (`application/pdf`, `text/csv`, `text/plain`, `text/markdown`, `application/json`) and `content-disposition: inline`, so a PDF opens in a browser tab. 400 without an id, 404 for an unknown document or a missing copy | real |
 | `GET inference-log?after=` | rows of `{ id, at, model, purpose, documentId, passageId, promptHash, latencyMs, promptTokens, outputTokens, ok }` | real (rows appear once the model runs, P5) |
-| `POST extract?documentId=` | re-runs extraction on one document with its investigation's blocks, in the background; `{ documentId, extraction }`. 503 with the model off | real |
+| `POST extract?documentId=` | re-runs extraction on one document with its investigation's blocks, in the background; `{ documentId, extraction }`. 503 with the model off; 400 on a `no text` document | real |
 | `POST resolve?investigation=` | runs entity resolution over the investigation's mentions: `{ scenario, summary: { <Type>: { mentions, pairs, autoPairs, modelPairs, reviewPairs, clusters, canonical } }, owners, repointedRelationships, written }` (`scenario` in the reply is the investigation id; `?scenario=` is read as an alias) | real (rule half); the 0.5 to 0.9 band goes to the model at P6 |
 | `GET what-connects?from=&to=` | `{ found, hops, paths: [{ hops, objects, relationships, steps }], objects, relationships, passages }`: up to five of the shortest paths (the shortest plus two hops at most), so "same school" and "took the firearm recovered at the scene" both come back. `objects` are `{ type, pk, title }`; `relationships` carry kind, confidence, status, method, from, to and `passageIds`; `passages` are the union of their evidence. Documents, passages, records and resolutions are never nodes | real |
 | `GET timeline?objectId=&hops=2` | `{ objectId, hops, objects, events }`; events of `{ id, at, kind, summary, tag, confidence, status, objectIds, passageIds }` in time order. A Relationship between two objects is one hop. `tag`: `observed` (a dated relationship, incident, event, complaint, inspection), `system` (a relationship with method `system`, such as the deletion gap, or an engine action), `analyst` (an analyst action from the audit log) | real |
@@ -150,6 +152,10 @@ optionally and cover every investigation without it.
 - `@osdk/react` is not used: its peer dependencies pull a newer OSDK set than the pinned one. The hooks are a small
   `useAsync` over the plain functions.
 - `pnpm dev` is a small spawn script, not pnpm's regex runner, because concurrent regex runs only arrived in pnpm 12.
+- Every imported file is kept as a stored original at `data/files/<documentId>.<ext>` (`BARGHEST_FILES` moves the
+  folder; the proofs point it at a throwaway one). The Document's `path` is that copy, relative to the app. The
+  folder is gitignored: what a judge uploads never reaches the public repo. The two packs still ship from
+  `data/school-incident/sources/` and `data/solid-waste/sources/`; importing one makes a copy like any other file.
 
 ## 5. Names, as frozen at P1
 
@@ -242,3 +248,7 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   names (section 5): the `Thing` type ("Other thing") for the `others` block, `Relationship.kindLabel` for the
   `related_to` kind, and the display name "Investigation" on every `scenario` property. The pack folders are
   `data/school-incident/` and `data/solid-waste/`.
+- 09.10.2026, file manager step 3: the original is kept and served. `import` stores the bytes at
+  `data/files/<documentId>.<ext>` and answers `status` and `path`; a file with no text gets `status: "no text"`,
+  `extraction: "no text"`, and `extract` refuses it with 400. `GET file?documentId=` streams the stored original
+  inline with its content type; `fileUrl(dc, documentId)` in the data layer.

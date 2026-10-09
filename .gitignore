@@ -2,3 +2,5 @@ node_modules
 dist
 dist-shots
 data/*.sqlite*
+data/files/
+data/proof-*/

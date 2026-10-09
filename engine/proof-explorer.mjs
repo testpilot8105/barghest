@@ -19,7 +19,8 @@ const REAL = process.argv.includes('--real');
 const PORT = REAL ? Number(process.env.BARGHEST_ENGINE_PORT ?? 8787) : 8789;
 const BASE = `http://localhost:${PORT}`;
 const DB = 'data/proof-explorer.sqlite';
-const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off' };
+const FILES = 'data/proof-explorer-files';
+const env = { ...process.env, BARGHEST_DB: DB, BARGHEST_ENGINE_PORT: String(PORT), BARGHEST_OLLAMA: 'off', BARGHEST_FILES: FILES };
 const meta = JSON.parse(readFileSync(join(root, 'ontology', 'ontology.json'), 'utf8'));
 
 const results = [];
@@ -61,6 +62,7 @@ function run(script) {
 }
 const cleanDb = () => {
   for (const suffix of ['', '-wal', '-shm']) rmSync(join(root, DB + suffix), { force: true });
+  rmSync(join(root, FILES), { recursive: true, force: true });
 };
 
 const filterStep = (property, op, value) => ({ filter: { property, op, value } });

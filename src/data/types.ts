@@ -184,7 +184,11 @@ export interface ImportResult {
   records: number;
   pages: number | null;
   chars: number;
-  extraction: 'started' | 'running' | 'off';
+  /** `no text` when the file yielded no characters (a scanned PDF, an empty file); nothing is read then. */
+  status: 'imported' | 'no text';
+  /** The stored original, relative to the app; `fileUrl` serves it. */
+  path: string;
+  extraction: 'started' | 'running' | 'off' | 'no text';
 }
 
 export interface ImportRequest {
