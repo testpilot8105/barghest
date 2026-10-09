@@ -41,6 +41,20 @@
   --bh-brand-gap: 11px;
   --bh-search-w: 200px;
 
+  /* The Object Explorer and Browser, from the owner's Figma frames (09.10.2026). */
+  --bh-dock-w: 260px;
+  --bh-dock-pad: 12px;
+  --bh-explorer-list-w: 260px;
+  --bh-bar-short-w: 56px;
+  --bh-value-label-w: 220px;
+  --bh-link-label-w: 160px;
+  --bh-link-target-w: 140px;
+  --bh-count-w: 32px;
+  --bh-result-list-w: 340px;
+  --bh-result-label-w: 110px;
+  --bh-profile-label-w: 180px;
+  --bh-list-search-w: 240px;
+
   /* Paints: Graphite, the owner's pick of three options (09.10.2026), all Blueprint palette. The chrome is dark gray
      1, the main screen one step up, its panel another. Each view's icon wears its own colour (src/shell/nav.ts,
      "Spectrum, vivid"); the open view's highlight stays Blueprint's own grey, the same for every view. */
@@ -50,6 +64,11 @@
   --bh-main-bg: var(--bp-palette-dark-gray-2);
   --bh-panel-bg: var(--bp-palette-dark-gray-3);
   --bh-panel-line: var(--bp-palette-dark-gray-4);
+  /* The Object Explorer's dock sits on the workspace, not the chrome: on dark gray 1 it read as part of the top bar
+     (owner, 09.10.2026). */
+  --bh-dock-bg: var(--bh-main-bg);
+  /* Blueprint's own dark-theme text colour, for names picked out in muted sentences. */
+  --bh-text: var(--bp-palette-light-gray-5);
 }
 
 html,
@@ -88,6 +107,16 @@ h6,
   font-family: var(--bh-face-label);
 }
 
+/* Anything set in capitals is a D-DIN Bold heading (owner, 09.10.2026: "if it's gonna be an all caps thing use D-DIN
+   as the header"). */
+.caps-heading {
+  font-family: var(--bh-face-label);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* ---- The frame. The rail spans all three rows; the app bar, menu bar and main stack to its right. ---- */
 
 .app-shell {
@@ -119,12 +148,15 @@ h6,
   width: var(--bh-rail-expanded-w);
 }
 
-/* The toggle sits in the rail's top cell, level with the app bar. */
+/* The toggle sits in the rail's top cell, level with the app bar. The app bar's bottom line carries on across the rail
+   under the toggle, setting it apart from the views (the owner's Figma edit, 09.10.2026). Drawn inside the cell, like
+   the app bar's, so the toggle and the views keep their places. */
 .rail__top {
   flex: 0 0 var(--bh-appbar-h);
   display: flex;
   align-items: center;
   padding: 0 4px;
+  box-shadow: inset 0 -1px 0 var(--bh-chrome-line);
 }
 
 .rail__views,
@@ -246,7 +278,8 @@ h6,
   justify-self: end;
 }
 
-/* ---- Main: the only scroller. ---- */
+/* ---- Main: the only scroller. The gutter sits on the panels, not on main, so a view's dock can run flush to the
+   edge. ---- */
 
 .app-shell__main {
   grid-row: 3;
@@ -256,7 +289,6 @@ h6,
   min-width: 0;
   min-height: 0;
   box-sizing: border-box;
-  padding: var(--bh-main-gutter);
   overflow: auto;
   overscroll-behavior: contain;
   background: var(--bh-main-bg);
@@ -267,6 +299,423 @@ h6,
   display: grid;
   place-items: center;
   min-height: 0;
+  margin: var(--bh-main-gutter);
   background: var(--bh-panel-bg);
   border: 1px solid var(--bh-panel-line);
+}
+
+.explorer h4,
+.explorer h5,
+.explorer h6,
+.browser h4,
+.browser h5,
+.browser h6 {
+  margin: 0;
+}
+
+/* ---- Object Explorer: the Results card, then the dock (filter path) flush to the right edge. ---- */
+
+.explorer {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--bh-dock-w);
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.explorer__card {
+  display: flex;
+  flex-direction: column;
+  place-items: normal;
+  min-width: 0;
+}
+
+.explorer__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px 0;
+  border-bottom: 1px solid var(--bh-panel-line);
+}
+
+.explorer__title,
+.explorer__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.explorer__title {
+  justify-content: space-between;
+}
+
+/* Tab labels are D-DIN; their counts are figures, so they stay in the body face. */
+.explorer__tab-count {
+  margin-left: 6px;
+  font-family: var(--bp-typography-family-default);
+}
+
+.explorer__body {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.explorer__body--split {
+  grid-template-columns: var(--bh-explorer-list-w) minmax(0, 1fr);
+}
+
+.explorer__body--split > :first-child {
+  border-right: 1px solid var(--bh-panel-line);
+}
+
+.explorer__selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-top: 1px solid var(--bh-panel-line);
+}
+
+.explorer__sentence strong,
+.dock__step-text strong,
+.result-item strong {
+  font-weight: 600;
+}
+
+.explorer__sentence strong {
+  color: var(--bh-text);
+}
+
+.explorer__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+/* A list of bars: heading, optional search, rows that scroll on their own. */
+.bar-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px;
+}
+
+.bar-list__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 8px;
+}
+
+.bar-list__heading h6 {
+  flex: none;
+}
+
+.bar-list__search {
+  margin: 4px 0 6px;
+}
+
+/* The value chart's search bar, on the heading's line where the toggle sits in the other lists. */
+.bar-list__heading .bar-list__search {
+  flex: 0 1 var(--bh-list-search-w);
+  min-width: 0;
+  margin: 0;
+}
+
+.bar-list__rows {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.bar-list__spinner,
+.result-list__spinner {
+  margin: 24px auto;
+}
+
+/* Bar rows are data, so the body face, not the button label face; the cells fill the button. */
+.app-shell .bar-row.bp6-button {
+  flex-shrink: 0;
+  justify-content: flex-start;
+  padding-inline: 8px;
+  font-family: var(--bp-typography-family-default);
+}
+
+.app-shell .bar-row .bp6-button-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bar-row--fixed {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 8px;
+}
+
+.bar-row__cells {
+  display: grid;
+  align-items: center;
+  column-gap: 12px;
+  width: 100%;
+}
+
+.bar-list--short .bar-row__cells {
+  grid-template-columns: minmax(0, 1fr) auto var(--bh-bar-short-w);
+  column-gap: 8px;
+}
+
+.bar-list--long .bar-row__cells {
+  grid-template-columns: var(--bh-value-label-w) minmax(var(--bh-count-w), auto) minmax(0, 1fr);
+}
+
+.bar-list--links .bar-row__cells {
+  grid-template-columns: var(--bh-link-label-w) var(--bh-link-target-w) minmax(var(--bh-count-w), auto) minmax(0, 1fr);
+}
+
+.bar-row__label,
+.bar-row__detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Picking a row only recolours its border: an unpicked row carries the same border, transparent, so nothing moves
+   when the outline appears (the owner, 09.10.2026: "why can't it have a fixed layout"). */
+.app-shell .bar-row.bp6-button.bp6-minimal,
+.app-shell .result-item__open.bp6-button.bp6-minimal {
+  border: var(--bp-surface-border-width) solid transparent;
+  box-sizing: border-box;
+}
+
+/* A picked row is Blueprint's outlined primary button; its label keeps the text colour, as in the owner's frame. */
+.app-shell .bar-row__label:not(.bp6-text-muted) {
+  color: var(--bh-text);
+}
+
+.bar-row__count {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-row__bar {
+  display: block;
+}
+
+/* The dock: three sections split by full-width lines, as in Gotham's figure. The exploration on top, level with the
+   Results card's top edge; the filter path, which scrolls on its own; Results at the foot, level with the card's
+   bottom edge. */
+.dock {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bh-dock-bg);
+  border-left: 1px solid var(--bh-chrome-line);
+}
+
+.dock p {
+  margin: 0;
+}
+
+.dock__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--bh-main-gutter) var(--bh-dock-pad) var(--bh-dock-pad);
+  border-bottom: 1px solid var(--bh-chrome-line);
+}
+
+.dock__section {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--bh-dock-pad);
+}
+
+.dock__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dock__path-head,
+.dock__results-head,
+.dock__results-row,
+.dock__step-counts {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dock__path {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dock__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dock__step > .bp6-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.dock__step-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+}
+
+.dock__connector {
+  margin: 2px 0;
+}
+
+.dock__step:last-child .dock__connector {
+  display: none;
+}
+
+.dock__results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--bh-dock-pad) var(--bh-dock-pad) var(--bh-main-gutter);
+  border-top: 1px solid var(--bh-chrome-line);
+}
+
+/* ---- Browser: the result list down the left, the profile beside it. ---- */
+
+/* The list's column holds its gutters too, so the list itself is --bh-result-list-w wide. */
+.browser {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: calc(var(--bh-result-list-w) + 2 * var(--bh-main-gutter)) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.browser > .view-panel + .view-panel {
+  margin-left: 0;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  place-items: normal;
+  min-width: 0;
+}
+
+.result-list__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--bh-panel-line);
+}
+
+.result-list__title {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  justify-content: space-between;
+}
+
+.result-list__items {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Each result is a Blueprint button inside its divided row, so a click opens it; the open one is outlined primary, the
+   picked-bar look of the Object Explorer. The text is data: the body face, the text colour. */
+.result-item {
+  padding: 4px;
+  border-bottom: 1px solid var(--bh-panel-line);
+}
+
+.app-shell .result-item__open.bp6-button {
+  justify-content: flex-start;
+  padding: 4px 8px;
+  font-family: var(--bp-typography-family-default);
+}
+
+.app-shell .result-item__open .bp6-button-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--bh-text);
+}
+
+.result-item__cells {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: normal;
+}
+
+.result-item__props {
+  display: grid;
+  grid-template-columns: var(--bh-result-label-w) minmax(0, 1fr);
+  column-gap: 8px;
+}
+
+.result-item__props > :not(.bp6-text-muted) {
+  overflow-wrap: anywhere;
+}
+
+/* The open object beside the list: title and type, then its properties as label and value. */
+.profile {
+  display: flex;
+  flex-direction: column;
+  place-items: normal;
+  min-width: 0;
+}
+
+.profile__head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bh-panel-line);
+}
+
+.profile__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 16px;
+}
+
+.profile__props {
+  display: grid;
+  grid-template-columns: var(--bh-profile-label-w) minmax(0, 1fr);
+  gap: 6px 12px;
+  margin: 8px 0 0;
+}
+
+.profile__props dd {
+  margin: 0;
+  overflow-wrap: anywhere;
 }

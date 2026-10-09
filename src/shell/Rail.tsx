@@ -1,6 +1,7 @@
 // The rail: the expand toggle on top, one entry per view, the engine status at the foot (the owner's Figma version,
 // 09.10.2026). Icon only and narrow by default so the main screen keeps the width; expanded, each entry shows its
-// label. Every entry always carries its label, pinned beside an icon that never moves; shell.css fades the labels
+// label. The toggle's label is always "Collapse", seen only once the rail is open; "Expand" is never shown, not even
+// while the rail closes (owner, 09.10.2026). Screen readers still hear Expand or Collapse. Every entry always carries its label, pinned beside an icon that never moves; shell.css fades the labels
 // with the rail's width, so icons and text open and close as one. Each view's icon wears its own colour, unchanged
 // when the view is open; the open view's highlight is Blueprint's own grey. Collapsed tooltips go through
 // renderTarget, never a wrapping <Tooltip>, whose span breaks the column layout: the target's props are spread first
@@ -35,7 +36,7 @@ export function Rail({ investigation, view, expanded, onToggle }: RailProps) {
               aria-expanded={expanded}
               aria-label={expanded ? 'Collapse' : 'Expand'}
               icon={expanded ? <DoubleChevronLeft size={ICON} color={CHROME_ICON} /> : <DoubleChevronRight size={ICON} color={CHROME_ICON} />}
-              text={expanded ? 'Collapse' : 'Expand'}
+              text="Collapse"
               className={join(target.className, 'rail__entry')}
             />
           )}

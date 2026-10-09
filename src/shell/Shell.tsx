@@ -5,9 +5,12 @@
 import { Button, InputGroup, Navbar, NavbarGroup, NonIdealState, Tooltip } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
 import { useState } from 'react';
+import { Browser } from '../browser/Browser';
+import { Explorer } from '../explorer/Explorer';
 import { CHROME_ICON, DEFAULT_VIEW, findView, paletteVar, type ViewDef } from './nav';
 import { Rail } from './Rail';
 import { navigate, parseRoute, usePath, viewHref } from './route';
+import { TitleContext } from './title';
 
 // The dog, from the brand kit's barghest-mark-white.svg (viewBox 0 0 100 100; the dog spans 15 to 86 by 9 to 91).
 const MARK_PATH = 'M15 91L15 41L29 9L41 29L55 33L86 45V58L57 64L47 91Z M43 38L61 43L46 47Z';
@@ -21,6 +24,7 @@ export function Shell() {
   const { investigation, view: slug } = parseRoute(usePath());
   const view = findView(slug);
   const [expanded, setExpanded] = useState(false);
+  const [title, setTitle] = useState<string | null>(null);
 
   return (
     <div className="app-shell" data-rail={expanded ? 'expanded' : 'collapsed'}>
@@ -47,7 +51,7 @@ export function Shell() {
         </div>
         <div className="menubar__title">
           {view && <view.Icon color={paletteVar(view.color)} />}
-          <span>{view ? view.untitled : 'Not found'}</span>
+          <span>{view ? (title ?? view.untitled) : 'Not found'}</span>
         </div>
         <div className="menubar__end">
           <Tooltip content="Refresh (placeholder)" placement="bottom">
@@ -57,7 +61,17 @@ export function Shell() {
       </div>
 
       <main className="app-shell__main">
-        {view ? <Placeholder view={view} /> : <NotFound investigation={investigation} />}
+        <TitleContext.Provider value={setTitle}>
+          {!view ? (
+            <NotFound investigation={investigation} />
+          ) : view.slug === 'explorer' ? (
+            <Explorer investigation={investigation} />
+          ) : view.slug === 'browser' ? (
+            <Browser investigation={investigation} />
+          ) : (
+            <Placeholder view={view} />
+          )}
+        </TitleContext.Provider>
       </main>
     </div>
   );

@@ -17,7 +17,7 @@ export interface ViewDef {
 
 export const VIEWS: readonly ViewDef[] = [
   { slug: 'sources', label: 'Data Sources', Icon: Database, color: 'vermilion-4', untitled: 'All documents' },
-  { slug: 'explorer', label: 'Object Explorer', Icon: SearchTemplate, color: 'gold-4', untitled: 'New exploration' },
+  { slug: 'explorer', label: 'Object Explorer', Icon: SearchTemplate, color: 'gold-4', untitled: 'All objects' },
   { slug: 'browser', label: 'Browser', Icon: IdNumber, color: 'lime-4', untitled: 'No object open' },
   { slug: 'graph', label: 'Graph', Icon: Graph, color: 'forest-4', untitled: 'New graph' },
   { slug: 'timeline', label: 'Timeline', Icon: TimelineEvents, color: 'turquoise-4', untitled: 'New timeline' },

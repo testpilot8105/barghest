@@ -4,10 +4,13 @@
 // Sans 3 on running text; nothing under 14px; the owner's Figma version (the dog and BARGHEST in D-DIN then search
 // across the app bar, the toggle on top of the rail, 4px between rail icons); rail labels not repainted link-blue;
 // the rail at its collapsed width with a tooltip, then expanded; the URL drives the view (click, back); the document
-// never scrolls; zero console errors. Screenshots to dist-shots/. Exit 1 on any failure. Run: pnpm --filter @atlas/barghest smoke
-// --geometry prints the measured boxes as well.
+// never scrolls; zero console errors. Then the Object Explorer on the running engine's data: types with their counts, a
+// type started, a value filter added and removed, Back and Forward, Search Around to digital accounts and their
+// platforms (demo step 3), View results into Browser's list and back, a broken link; all-caps headings in D-DIN Bold.
+// Screenshots to dist-shots/. Exit 1 on any failure. Needs the engine on 8787 (BARGHEST_OLLAMA=off pnpm dev:engine).
+// Run: pnpm --filter @atlas/barghest smoke   --geometry prints the measured boxes as well.
 import { chromium } from 'playwright';
-import { createServer } from 'node:http';
+import { createServer, request } from 'node:http';
 import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,9 +24,30 @@ if (!existsSync(join(dist, 'index.html'))) {
   process.exit(1);
 }
 
+// The engine, reached the way Vite's proxy reaches it: /barghest/ and /api/ go to 8787, everything else is dist/.
+const ENGINE = { host: '127.0.0.1', port: 8787 };
+const health = await fetch(`http://${ENGINE.host}:${ENGINE.port}/barghest/health`).then((r) => r.json()).catch(() => null);
+if (!health?.ok) {
+  console.error('smoke: the engine is not answering on 8787; start it with BARGHEST_OLLAMA=off pnpm dev:engine');
+  process.exit(1);
+}
+const seeded = health.ontology.objects;
+
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ico': 'image/x-icon', '.png': 'image/png' };
 const server = createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
+  if (url.pathname.startsWith('/barghest/') || url.pathname.startsWith('/api/')) {
+    const fwd = request({ ...ENGINE, path: req.url, method: req.method, headers: { ...req.headers, host: `${ENGINE.host}:${ENGINE.port}` } }, (r) => {
+      res.writeHead(r.statusCode ?? 502, r.headers);
+      r.pipe(res);
+    });
+    fwd.on('error', () => {
+      res.writeHead(502);
+      res.end();
+    });
+    req.pipe(fwd);
+    return;
+  }
   let file = join(dist, decodeURIComponent(url.pathname));
   if (!existsSync(file) || statSync(file).isDirectory()) file = join(dist, 'index.html');
   res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream' });
@@ -53,6 +77,207 @@ const t0 = Date.now();
 const failures = [];
 mkdirSync(shots, { recursive: true });
 
+const decode = (u) => {
+  const enc = new URL(u).searchParams.get('exploration');
+  return enc ? JSON.parse(Buffer.from(enc, 'base64url').toString()) : null;
+};
+
+const smallText = (page) =>
+  page.evaluate(() => {
+    const small = [];
+    for (const el of document.querySelectorAll('.app-shell *')) {
+      const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+      if (own && parseFloat(getComputedStyle(el).fontSize) < 14) small.push(`${el.className || el.tagName} ${getComputedStyle(el).fontSize}`);
+    }
+    return small;
+  });
+
+// The Object Explorer on the engine's data, then View results into Browser. Counts come from the engine's health, so
+// the checks hold for any seed.
+/** Where the first two rows and the first row's text sit, so a pick that moves anything shows up as a change. */
+function rowsAt(page, rows, text) {
+  return page.evaluate(([rows, text]) => {
+    const [a, b] = document.querySelectorAll(rows);
+    const t = a?.querySelector(text)?.getBoundingClientRect();
+    const r = (n) => Math.round(n ?? -1);
+    return `text ${r(t?.x)},${r(t?.y)} row ${r(a?.getBoundingClientRect().height)} next ${r(b?.getBoundingClientRect().y)}`;
+  }, [rows, text]);
+}
+
+async function exploreFlow(page, tag, fail, width) {
+  const want = (n) => `${Number(n).toLocaleString('en-US')} object${Number(n) === 1 ? '' : 's'}`;
+  const header = () => page.locator('.explorer__title > span').last().innerText();
+  const settle = (text) => page.locator('.explorer__title', { hasText: text }).waitFor({ timeout: 5000 }).catch(() => {});
+  const expect = async (n, what) => {
+    await settle(want(n));
+    const got = await header();
+    if (got !== want(n)) fail(`${what}: header reads "${got}", want "${want(n)}"`);
+  };
+  const add = () => page.getByRole('button', { name: 'Add to filter path' }).click();
+  const total = Object.values(seeded).reduce((a, b) => a + b, 0);
+
+  // Types: every object counted; People carries the engine's Person count.
+  await expect(total, 'all objects');
+  const people = page.getByRole('button', { name: /^People\b/ });
+  if (!(await people.innerText()).includes(String(seeded.Person))) fail(`People row reads "${await people.innerText()}", want ${seeded.Person}`);
+  const look = await page.evaluate(() => {
+    const b = (s) => { const r = document.querySelector(s)?.getBoundingClientRect(); return r && { x: r.x, y: r.y, w: r.width, h: r.height }; };
+    return {
+      card: b('.explorer__card'), dock: b('.dock'),
+      caps: [...document.querySelectorAll('.caps-heading')].map((h) => { const s = getComputedStyle(h); return { family: s.fontFamily.replace(/["']/g, ''), weight: s.fontWeight, transform: s.textTransform }; }),
+      bold: [...document.fonts].some((f) => f.status === 'loaded' && f.family.replace(/["']/g, '') === 'D-DIN' && f.weight === '700'),
+    };
+  });
+  if (Math.round(look.dock.w) !== 260 || Math.round(look.dock.x + look.dock.w) !== width) fail(`dock ${JSON.stringify(look.dock)}, want 260 wide flush right`);
+  if (Math.round(look.card.x) !== 56 || Math.round(look.card.y) !== 82 || Math.round(look.card.x + look.card.w) !== Math.round(look.dock.x) - 16) fail(`results card ${JSON.stringify(look.card)}, want a 16px gutter`);
+  if (!look.caps.length || !look.bold || look.caps.some((c) => !c.family.startsWith(LABEL_FACE) || c.weight !== '700' || c.transform !== 'uppercase')) fail(`all-caps headings not D-DIN Bold: ${JSON.stringify(look)}`);
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: join(shots, `explorer-${tag}-types.png`) });
+
+  // The menu bar and the dock name the set: everything, before a type is picked.
+  const nameIs = async (want, what) => {
+    const bar = (await page.locator('.menubar__title').innerText()).trim();
+    const dock = (await page.locator('.dock__intro').innerText()).replace(/\s+/g, ' ').trim();
+    if (bar !== want || !dock.startsWith(want)) fail(`${what}: menu bar "${bar}", dock "${dock}", want ${want}`);
+  };
+  await nameIs('All objects', 'no type picked');
+
+  // Properties before a type lists every type's properties; one click on People's Role opens People with that chart.
+  await page.getByRole('tab', { name: /Properties/ }).click();
+  const role = page.getByRole('button', { name: /^Role\s*People/ });
+  await role.waitFor({ timeout: 5000 }).catch(() => fail('Properties before a type does not list People > Role'));
+  await role.click();
+  await expect(seeded.Person, 'Person started from Properties');
+  if ((await page.getByRole('tab', { name: /Properties/ }).getAttribute('aria-selected')) !== 'true') fail('a property click did not land on Properties');
+  const roleHead = await page.locator('.bar-list').nth(1).locator('.caps-heading').innerText().catch(() => '');
+  if (roleHead !== 'ROLE') fail(`a click on People > Role opened "${roleHead}"`);
+  await nameIs('People', 'Person started');
+  if (!(await page.locator('.dock__intro').innerText()).replace(/\s+/g, ' ').includes(`${seeded.Person} of ${total} objects`)) fail('the dock does not say how much of everything the set holds');
+  const started = decode(page.url());
+  if (started?.start !== 'Person' || started.steps.length) fail(`started exploration ${JSON.stringify(started)}`);
+
+  // One click on the first value filters by it; then Back, Forward, and remove the card.
+  const values = page.locator('.bar-list').nth(1).locator('button.bar-row');
+  await values.first().waitFor({ timeout: 5000 }).catch(() => fail('no value bars for the default property'));
+  const picked = Number((await values.first().locator('.bar-row__count').innerText()).replace(/,/g, ''));
+  // Every list has its search bar showing; typing narrows the rows, clearing brings them back.
+  const search = page.locator('.bar-list').nth(1).locator('.bar-list__heading input');
+  if (!(await search.isVisible())) fail('the value list has no search bar showing');
+  // It sits on the heading's line, where the search icon was: the heading row is no taller than the bar itself.
+  const row = await page.locator('.bar-list').nth(1).locator('.bar-list__heading').boundingBox();
+  const bar = await search.boundingBox();
+  if (Math.round(bar.y) !== Math.round(row.y) || Math.round(bar.height) !== Math.round(row.height)) fail(`the search bar is not on the heading's line: heading ${JSON.stringify(row)}, bar ${JSON.stringify(bar)}`);
+  // Only the value chart has the bar; the property list keeps its search icon and shows no box until it's clicked.
+  const propList = page.locator('.bar-list').nth(0);
+  if (!(await propList.getByRole('button', { name: 'Search object properties' }).count()) || (await propList.locator('input').count())) fail('the property list lost its search icon');
+  const all = await values.count();
+  const word = (await values.first().locator('.bar-row__label').innerText()).trim();
+  await search.fill(word);
+  const hits = await values.locator('.bar-row__label').allInnerTexts();
+  if (!hits.length || hits.some((h) => !h.toLowerCase().includes(word.toLowerCase()))) fail(`searching "${word}" left ${JSON.stringify(hits)}`);
+  await search.fill('');
+  if ((await values.count()) !== all) fail('clearing the search did not bring the rows back');
+  await values.first().click();
+  await expect(picked, 'value filter');
+  // Clicking the value again, even several times, adds nothing: the path keeps one card for it.
+  const cards = await page.locator('.dock__step').count();
+  for (let i = 0; i < 3; i++) await values.first().click();
+  await page.waitForTimeout(300);
+  if ((await page.locator('.dock__step').count()) !== cards) fail(`clicking the same value again added cards: ${cards} became ${await page.locator('.dock__step').count()}`);
+  const card = await page.locator('.dock__step').nth(1).innerText();
+  if (!card.replace(/\s+/g, ' ').includes(`${seeded.Person} > ${picked}`)) fail(`filter card reads "${card}", want "${seeded.Person} > ${picked}"`);
+  await page.goBack();
+  await expect(seeded.Person, 'Back');
+  await page.goForward();
+  await expect(picked, 'Forward');
+  await page.getByRole('button', { name: 'Remove this filter' }).click();
+  await expect(seeded.Person, 'filter removed');
+
+  // Shift-click gathers values without filtering; Add to filter path applies them, Clear selection drops them.
+  const before = page.url();
+  await values.first().waitFor({ timeout: 5000 });
+  const barsAt = await rowsAt(page, '.bar-list:nth-child(2) button.bar-row', '.bar-row__label');
+  await values.first().click({ modifiers: ['Shift'] });
+  if (page.url() !== before) fail('a Shift-click filtered straight away');
+  const barsNow = await rowsAt(page, '.bar-list:nth-child(2) button.bar-row', '.bar-row__label');
+  if (barsNow !== barsAt) fail(`picking a value moved the rows: ${barsAt} became ${barsNow}`);
+  if ((await values.first().getAttribute('aria-pressed')) !== 'true') fail('a Shift-click did not pick the value');
+  await page.getByRole('button', { name: 'Clear selection' }).click();
+  if (await page.getByRole('button', { name: 'Add to filter path' }).count()) fail('Clear selection left Add to filter path showing');
+  await values.first().click({ modifiers: ['Shift'] });
+  await add();
+  await expect(picked, 'Shift-click then Add to filter path');
+  await page.goBack();
+  await expect(seeded.Person, 'Back after Add to filter path');
+
+  // One click on a link searches around to digital accounts: the platform histogram opens by itself (demo step 3).
+  await page.getByRole('tab', { name: /Links/ }).click();
+  const link = page.getByRole('button', { name: /^Digital account\b/ });
+  const linked = Number((await link.locator('.bar-row__count').innerText()).replace(/,/g, ''));
+  await link.click();
+  await expect(linked, 'Search Around');
+  await nameIs('People › Digital accounts', 'Search Around');
+  const heading = await page.locator('.bar-list').nth(1).locator('.caps-heading').innerText().catch(() => '');
+  if (heading !== 'PLATFORM') fail(`after Search Around the values are "${heading}", want PLATFORM`);
+  if (!(await page.locator('.bar-list').nth(1).locator('.bar-row').count())) fail('no platform bars');
+  const small = await smallText(page);
+  if (small.length) fail(`explorer text under 14px: ${small.slice(0, 5).join('; ')}`);
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: join(shots, `explorer-${tag}-platform.png`) });
+
+  // View results: Browser lists the set; Back to exploration returns to it.
+  await page.getByRole('link', { name: 'View results' }).click();
+  await page.locator('.result-item').first().waitFor({ timeout: 10000 }).catch(() => fail('View results listed nothing'));
+  if (new URL(page.url()).pathname !== '/a/browser') fail(`View results landed on ${page.url()}`);
+  const items = await page.locator('.result-item').count();
+  const title = (await page.locator('.result-list__title').innerText()).replace(/\s+/g, ' ');
+  if (items !== Math.min(linked, 50) || !title.includes(`Showing ${items} of ${linked}`)) fail(`Browser lists ${items}, title "${title}", want ${linked}`);
+  const list = await page.locator('.result-list').boundingBox();
+  if (Math.round(list.x) !== 56 || Math.round(list.width) !== 340) fail(`result list ${JSON.stringify(list)}, want 340 wide at x 56`);
+  const backFace = await page.locator('.result-list__head .caps-heading').evaluate((el) => { const s = getComputedStyle(el); return `${s.fontFamily.replace(/["']/g, '')}|${s.fontWeight}|${s.textTransform}`; });
+  if (!backFace.startsWith(LABEL_FACE) || !backFace.endsWith('|700|uppercase')) fail(`Back to exploration set in ${backFace}, want ${LABEL_FACE} Bold in capitals`);
+  await page.screenshot({ path: join(shots, `browser-${tag}.png`) });
+
+  // A click on a result opens it beside the list, outlined in the list, named in the address bar.
+  const first = page.locator('.result-item__open').first();
+  const name = (await first.locator('strong').innerText()).trim();
+  const resultsAt = await rowsAt(page, '.result-item__open', 'strong');
+  await first.click();
+  await page.locator('.profile__head h4').waitFor({ timeout: 5000 }).catch(() => fail('a click on a result opened nothing'));
+  const opened = (await page.locator('.profile__head h4').innerText().catch(() => '')).trim();
+  if (opened !== name) fail(`profile reads "${opened}", want "${name}"`);
+  const named = (await page.locator('.menubar__title').innerText()).trim();
+  if (named !== name) fail(`menu bar reads "${named}" with ${name} open`);
+  if (!new URL(page.url()).searchParams.get('object')) fail(`the open object is not in the address: ${page.url()}`);
+  if ((await first.getAttribute('aria-pressed')) !== 'true') fail('the open result is not marked');
+  const resultsNow = await rowsAt(page, '.result-item__open', 'strong');
+  if (resultsNow !== resultsAt) fail(`opening a result moved the list: ${resultsAt} became ${resultsNow}`);
+  if (!(await page.locator('.profile__props dt').count())) fail('the profile lists no properties');
+  const smallB = await smallText(page);
+  if (smallB.length) fail(`browser text under 14px: ${smallB.slice(0, 5).join('; ')}`);
+  await page.screenshot({ path: join(shots, `browser-${tag}-open.png`) });
+  await page.getByRole('link', { name: 'Back to exploration' }).click();
+  await expect(linked, 'Back to exploration');
+  if (decode(page.url())?.steps?.[0]?.pivot !== 'digitalAccounts') fail(`Back to exploration lost the set: ${page.url()}`);
+
+  // A link that won't decode says so.
+  await page.goto(origin + '/a/explorer?exploration=broken', { waitUntil: 'load' });
+  await page.getByText('This exploration link is broken').waitFor({ timeout: 5000 }).catch(() => fail('a broken link did not say so'));
+  await page.goto(origin + '/a/explorer', { waitUntil: 'load' });
+  await page.locator('.bar-row').first().waitFor({ timeout: 10000 });
+
+  // Links before a type lists every type's links; one click searches around from that type.
+  await page.getByRole('tab', { name: /Links/ }).click();
+  const owner = page.getByRole('button', { name: /^Owner\s*of Digital accounts/ });
+  await owner.waitFor({ timeout: 10000 }).catch(() => fail('Links before a type does not list Owner of Digital accounts'));
+  const owners = Number((await owner.locator('.bar-row__count').innerText()).replace(/,/g, ''));
+  await owner.click();
+  await expect(owners, 'Search Around from the Links tab');
+  await nameIs('Digital accounts › People', 'Search Around from the Links tab');
+  await page.goto(origin + '/a/explorer', { waitUntil: 'load' });
+  await page.locator('.bar-row').first().waitFor({ timeout: 10000 });
+}
+
 for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   const tag = `${width}x${height}`;
   const fail = (msg) => failures.push(`${tag} ${msg}`);
@@ -62,6 +287,7 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
 
   await page.goto(origin + '/', { waitUntil: 'load' });
   await page.locator('.app-shell').waitFor({ timeout: 10000 });
+  await page.locator('.bar-row').first().waitFor({ timeout: 15000 }).catch(() => fail('the Object Explorer listed no types'));
   await page.evaluate(() => document.fonts.ready);
   if (new URL(page.url()).pathname !== '/a/explorer') fail(`bare / did not settle on /a/explorer: ${page.url()}`);
 
@@ -100,6 +326,9 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
       small,
       docScroll: { h: scroller.scrollHeight - innerHeight, w: scroller.scrollWidth - innerWidth },
       title: $('.menubar__title')?.textContent ?? '',
+      railLine: cs('.rail__top')?.boxShadow ?? '',
+      toggleLabel: $('.rail__top .bp6-button-text')?.textContent ?? '',
+      appbarLine: cs('.appbar')?.borderBottomColor ?? '',
       geometry: {
         rail: box('.rail'), toggle: box('.rail__top .rail__entry'), entry: box('.rail__views .rail__entry'), appbar: box('.appbar'), mark: box('.appbar__mark'),
         word: box('.appbar__wordmark'), search: box('.appbar__search'), menubar: box('.menubar'), main: box('.app-shell__main'), panel: box('.view-panel'),
@@ -115,6 +344,11 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   if (probe.word !== 'BARGHEST' || !probe.family.word.startsWith(LABEL_FACE) || Math.round(g.word?.x) !== 79 || g.word?.h !== 20) fail(`wordmark "${probe.word}" in "${probe.family.word}" at ${JSON.stringify(g.word)}, want BARGHEST 20px in ${LABEL_FACE} at x 79`);
   if (Math.abs((g.search?.x ?? 0) - (g.word.x + g.word.w + 15)) > 1) fail(`search at x ${g.search?.x}, want 15px after the name`);
   if (!g.toggle || g.toggle.x !== 4 || g.toggle.y !== 3) fail(`toggle at ${JSON.stringify(g.toggle)}, want the rail's top cell (4, 3)`);
+  // The toggle's label is "Collapse" even while the rail is closed (hidden then), so "Expand" never shows.
+  if (probe.toggleLabel !== 'Collapse') fail(`the closed rail's toggle label is "${probe.toggleLabel}", want Collapse (hidden)`);
+  // The app bar's bottom line runs on under the toggle, in the same colour and at the same height.
+  const railTop = await page.locator('.rail__top').boundingBox();
+  if (!probe.railLine.includes(probe.appbarLine) || !probe.railLine.endsWith('0px -1px 0px 0px inset') || Math.round(railTop.y + railTop.height) !== Math.round(g.appbar.y + g.appbar.h)) fail(`no app bar line under the rail toggle: ${probe.railLine}, app bar line ${probe.appbarLine}`);
   const steps = probe.views.slice(1).map((y, i) => y - probe.views[i]);
   if (!steps.length || steps.some((s) => s !== 34)) fail(`rail icons step ${steps.join(', ')}px, want 34 (30 plus a 4px gap)`);
   for (const k of ['rail', 'appbar', 'menubar']) if (probe.bg[k] !== DARK_GRAY_1) fail(`${k} background ${probe.bg[k]}, want dark-gray-1 ${DARK_GRAY_1}`);
@@ -131,7 +365,7 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   if (!probe.family.search.startsWith(BODY_FACE)) fail(`search input set in "${probe.family.search}", want ${BODY_FACE}`);
   if (probe.small.length) fail(`text under 14px: ${probe.small.slice(0, 5).join('; ')}`);
   if (probe.docScroll.h > 0 || probe.docScroll.w > 0) fail(`document scrolls ${JSON.stringify(probe.docScroll)}`);
-  if (probe.title !== 'New exploration') fail(`menu bar title reads "${probe.title}"`);
+  if (probe.title !== 'All objects') fail(`menu bar title reads "${probe.title}", want All objects`);
   if (Math.round(probe.geometry.rail?.w ?? 0) !== 40) fail(`collapsed rail ${probe.geometry.rail?.w}px, want 40`);
   await page.screenshot({ path: join(shots, `shell-${tag}.png`) });
 
@@ -143,6 +377,8 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   await page.screenshot({ path: join(shots, `shell-${tag}-tooltip.png`) });
   await page.mouse.move(width / 2, height / 2);
 
+  await exploreFlow(page, tag, fail, width);
+
   // Expanded rail: labels show in D-DIN and are not link-blue.
   await page.getByRole('button', { name: 'Expand' }).click();
   await page.waitForTimeout(300);
@@ -153,8 +389,10 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
       w: document.querySelector('.rail').getBoundingClientRect().width, color: s?.color, family: s?.fontFamily.replace(/["']/g, ''), text: label?.textContent,
       icons: [...document.querySelectorAll('.rail .rail__entry svg')].map((v) => v.getBoundingClientRect().x),
       opacity: [...document.querySelectorAll('.rail .rail__entry .bp6-button-text')].map((t) => getComputedStyle(t).opacity),
+      toggleText: document.querySelector('.rail__top .rail__entry')?.innerText.trim(),
     };
   });
+  if (expanded.toggleText !== 'Collapse') fail(`the open rail's toggle reads "${expanded.toggleText}", want Collapse`);
   if (Math.round(expanded.w) !== 200) fail(`expanded rail ${expanded.w}px, want 200`);
   // Icons and labels open as one: no icon moves, labels hidden collapsed and shown expanded.
   if (probe.railIcons.some((x) => x !== 10) || expanded.icons.some((x) => x !== 10)) fail(`rail icons moved: collapsed ${probe.railIcons.join(',')} expanded ${expanded.icons.join(',')}, want 10 throughout`);
@@ -179,7 +417,7 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   if (graphOpen?.label !== 'Graph' || graphOpen.bg !== openTile) fail(`open highlight changed with the view: Object Explorer ${openTile}, Graph ${JSON.stringify(graphOpen)}`);
   if (graphOpen?.fill !== `rgb(${VIEW_FILLS.Graph.join(', ')})`) fail(`Graph icon recoloured when open: ${graphOpen?.fill}`);
   await page.goBack();
-  await page.locator('.menubar__title', { hasText: 'New exploration' }).waitFor({ timeout: 3000 }).catch(() => fail('back did not return to Object Explorer'));
+  await page.locator('.menubar__title', { hasText: 'All objects' }).waitFor({ timeout: 3000 }).catch(() => fail('back did not return to Object Explorer'));
 
   if (showGeometry) console.log(tag, JSON.stringify({ ...probe.geometry, faces: probe.faces, family: probe.family, expanded }, null, 1));
   await page.close();
@@ -189,5 +427,5 @@ await browser.close();
 server.close();
 
 const ok = failures.length === 0;
-console.log(ok ? `barghest: OK (shell at 1440x900 and 1920x1080, 0 errors) ${Date.now() - t0}ms  dist-shots/shell-*.png` : `barghest: FAIL\n${failures.join('\n')}`);
+console.log(ok ? `barghest: OK (shell, Object Explorer, Browser list and profile at 1440x900 and 1920x1080, 0 errors) ${Date.now() - t0}ms  dist-shots/*.png` : `barghest: FAIL\n${failures.join('\n')}`);
 process.exit(ok ? 0 : 1);
