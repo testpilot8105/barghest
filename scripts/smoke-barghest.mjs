@@ -194,6 +194,8 @@ async function intakeFlow(page, tag, fail) {
   await page.getByRole('button', { name: 'New folder' }).click();
   await page.getByLabel('Name').fill(folder);
   await page.getByRole('button', { name: 'Create' }).click();
+  // The dialog hands focus back to New folder as it closes; rename only once it has gone, as a person would.
+  await page.locator('.new-investigation').waitFor({ state: 'detached', timeout: 5000 }).catch(() => fail('New folder dialog did not close'));
   const folderRow = page.locator('.files .intake-table tbody tr', { hasText: folder });
   await folderRow.waitFor({ timeout: 5000 }).catch(() => fail('New folder never showed in the list'));
   await folderRow.getByRole('button', { name: `Actions for ${folder}` }).click();
@@ -541,9 +543,12 @@ for (const [width, height] of [[1440, 900], [1920, 1080]]) {
   await page.screenshot({ path: join(shots, `shell-${tag}-expanded.png`) });
 
   // The URL drives the view: a rail click moves it, back returns.
+  // Graph's own words are Builder 3's (a home page now reads "All graphs"), so this checks the address and that a view
+  // opened, never its title text.
   await page.getByRole('link', { name: 'Graph' }).click();
-  await page.locator('.menubar__title', { hasText: 'New graph' }).waitFor({ timeout: 3000 }).catch(() => fail('Graph click did not open Graph'));
-  if (new URL(page.url()).pathname !== `/${FIRST.id}/graph`) fail(`Graph click landed on ${page.url()}`);
+  await page.waitForURL((u) => u.pathname === `/${FIRST.id}/graph`, { timeout: 3000 }).catch(() => fail(`Graph click landed on ${page.url()}`));
+  const graphTitle = await page.locator('.menubar__title').innerText().catch(() => '');
+  if (!graphTitle.trim() || /Not found/.test(graphTitle)) fail(`Graph click did not open Graph: the menu bar reads "${graphTitle}"`);
   // Selecting a view changes nothing about its colours: the highlight is the same grey for every view, and the icon
   // keeps its own colour.
   await page.mouse.move(width / 2, height / 2);
