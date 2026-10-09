@@ -3,7 +3,7 @@
 // "A kind B" with their confidence. Rows of a table file are listed under the passages. The file's model log runs
 // along the foot. `?passage=` scrolls to one passage and outlines it, for the links other views make into a file.
 import { AnchorButton, Button, Classes, EditableText, H4, HTMLTable, Intent, NonIdealState, Spinner, Tag } from '@blueprintjs/core';
-import { Error as ErrorIcon, Refresh, Share, SmallTick, Trash, WarningSign } from '@blueprintjs/icons';
+import { Error as ErrorIcon, Media, Refresh, Share, SmallTick, Trash, WarningSign } from '@blueprintjs/icons';
 import { useEffect, useRef, type ReactNode } from 'react';
 import {
   EngineError,
@@ -23,6 +23,7 @@ import { FormatIcon, useDeleteFile } from '../intake/parts';
 import { callLabel, passageNumber } from '../intake/status';
 import { toast } from '../intake/toaster';
 import { MODEL_OFF, NO_TEXT } from '../intake/useIntake';
+import { PhotoFileView } from '../photos';
 import { navigate, viewHref } from '../shell/route';
 import { useDocumentTitle } from '../shell/title';
 
@@ -99,7 +100,7 @@ export function FileView({ investigation, documentId, passageId, crumbs, listHre
         {crumbs}
         <div className="file-view__row">
           <div className="file-view__name">
-            <FormatIcon format={doc.format} />
+            <FormatIcon format={doc.format} documentId={documentId} />
             <H4>
               <EditableText key={shown} defaultValue={shown} onConfirm={rename} selectAllOnFocus />
             </H4>
@@ -108,7 +109,7 @@ export function FileView({ investigation, documentId, passageId, crumbs, listHre
           </div>
           <div className="file-view__actions">
             {dc && <AnchorButton icon={<Share />} text="Open original" href={fileUrl(dc, documentId)} target="_blank" />}
-            <Button icon={<Refresh />} text="Run the model again" disabled={doc.extracting || doc.status === 'no text'} onClick={runAgain} />
+            {doc.status !== 'photo' && <Button icon={<Refresh />} text="Run the model again" disabled={doc.extracting || doc.status === 'no text'} onClick={runAgain} />}
             <Button icon={<Trash />} text="Delete" intent={Intent.DANGER} variant="minimal" disabled={doc.extracting} onClick={() => del.ask({ id: documentId, name: shown })} />
           </div>
         </div>
@@ -116,7 +117,9 @@ export function FileView({ investigation, documentId, passageId, crumbs, listHre
 
       <div className="file-view__body">
         {doc.status === 'no text' && <p className={Classes.TEXT_MUTED}>{NO_TEXT}</p>}
-        {view.data.passages.map((p) => {
+        {/* A photo shows itself, what it says about itself and what it shows (Builder 4's piece), not passages. */}
+        {doc.status === 'photo' && <PhotoFileView investigation={investigation} documentId={documentId} />}
+        {(doc.status === 'photo' ? [] : view.data.passages).map((p) => {
           const on = p.pk === passageId;
           return (
             <div key={p.pk} ref={on ? picked : undefined} className={`file-pass${on ? ' file-pass--picked' : ''}`}>
@@ -153,7 +156,7 @@ export function FileView({ investigation, documentId, passageId, crumbs, listHre
         )}
       </div>
 
-      <FileLog rows={view.data.inference} />
+      <FileLog rows={view.data.inference} photo={doc.status === 'photo'} />
       {del.alert}
     </div>
   );
@@ -193,6 +196,13 @@ function FileState({ status, extracting }: { status: string; extracting: boolean
         Failed
       </Tag>
     );
+  if (status === 'photo')
+    return (
+      <span className="intake-status">
+        <Media color="var(--bp-palette-gray-4)" />
+        <span className={Classes.TEXT_MUTED}>Photo, details read</span>
+      </span>
+    );
   return <span className={Classes.TEXT_MUTED}>Not read yet</span>;
 }
 
@@ -210,9 +220,16 @@ function Pulled({
   hrefOf: (m: DocumentMention) => string;
   reading: boolean;
 }) {
-  if (!mentions.length && !links.length) return <div className={`file-pass__pulled ${Classes.TEXT_MUTED}`}>{reading ? 'Not read yet.' : 'Nothing found here.'}</div>;
+  if (!mentions.length && !links.length)
+    return (
+      <div className="file-pass__pulled">
+        <span className="caps-heading">Found</span>
+        <span className={Classes.TEXT_MUTED}>{reading ? 'Not read yet.' : 'Nothing found here.'}</span>
+      </div>
+    );
   return (
     <div className="file-pass__pulled">
+      <span className="caps-heading">Found</span>
       <Mentions catalog={catalog} mentions={mentions} hrefOf={hrefOf} grouped />
       {links.length > 0 && (
         <div className="file-found">
@@ -255,13 +272,13 @@ function Mentions({ catalog, mentions, hrefOf, grouped = false }: { catalog: Cat
 }
 
 /** The file's model calls, newest first, along the foot. */
-function FileLog({ rows }: { rows: InferenceRow[] }) {
+function FileLog({ rows, photo = false }: { rows: InferenceRow[]; photo?: boolean }) {
   const newest = [...rows].reverse();
   return (
     <footer className="file-view__log">
       <span className="caps-heading">Model log</span>
       {!newest.length ? (
-        <span className={Classes.TEXT_MUTED}>No model calls yet.</span>
+        <span className={Classes.TEXT_MUTED}>{photo ? 'The model never reads photos. Who or what a photo shows is your link.' : 'No model calls yet.'}</span>
       ) : (
         <div className="file-view__log-rows">
           {newest.map((r) => {
