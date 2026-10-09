@@ -1,0 +1,27 @@
+{
+  "about": "The saved items this pack opens with, by name. pnpm seed:saved school-incident resolves each name to the canonical object after resolution and writes the item at the top level of the investigation; a name it cannot resolve is left out and said. A target is { type, name } or { type, only: true } for the single object of that type.",
+  "items": [
+    {
+      "kind": "graph",
+      "name": "Firearm chain",
+      "focus": { "type": "Person", "name": "Joaquin Dela Peña" },
+      "to": { "type": "Incident", "only": true }
+    },
+    {
+      "kind": "graph",
+      "name": "VOIDHOUSE and the deleted messages",
+      "focus": { "type": "OnlineGroup", "name": "VOIDHOUSE" }
+    },
+    {
+      "kind": "timeline",
+      "name": "The 72 hours",
+      "subjects": [
+        { "type": "Person", "name": "Joaquin Dela Peña" },
+        { "type": "DigitalAccount", "name": "Vesper_Krael" }
+      ],
+      "hops": 2,
+      "from": "2026-09-13T18:00:00+08:00",
+      "until": "2026-09-16T18:00:00+08:00"
+    }
+  ]
+}

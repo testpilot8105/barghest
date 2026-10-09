@@ -1,0 +1,16 @@
+{
+  "about": "The saved items this pack opens with, by name. pnpm seed:saved solid-waste resolves each name to the canonical object after resolution and writes the item at the top level of the investigation; a name it cannot resolve is left out and said. A target is { type, name } or { type, only: true } for the single object of that type.",
+  "items": [
+    {
+      "kind": "graph",
+      "name": "One hauler, three LGUs",
+      "focus": { "type": "Hauler", "name": "Mabansag Hauling Services" }
+    },
+    {
+      "kind": "timeline",
+      "name": "Contracts and inspections",
+      "subjects": [{ "type": "Hauler", "name": "Mabansag Hauling Services" }],
+      "hops": 2
+    }
+  ]
+}

@@ -26,6 +26,8 @@
     "proof:rename": "node engine/proof-rename.mjs",
     "proof:flags": "node engine/proof-flags.mjs",
     "proof:saved": "node engine/proof-saved.mjs",
+    "proof:demo-saved": "node engine/proof-demo-saved.mjs",
+    "seed:saved": "node engine/demo-saved.mjs",
     "proof:images": "node engine/proof-images.mjs",
     "stamp:photo": "node scripts/stamp-photo.mjs",
     "proof:ingest": "node engine/proof-ingest.mjs",

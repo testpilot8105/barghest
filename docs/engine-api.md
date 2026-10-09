@@ -214,6 +214,19 @@ Every change writes an audit row, actor `analyst`, on `Saved:<id>`: `createSaved
 name and folder; `renameSaved` and `moveSaved` with the old and the new value; `updateSavedBody` says the body
 changed, without the body (screens save as they go, so there are many).
 
+**Demo items.** Each pack opens with saved items named in `data/<investigation>/saved.json`, by what they show and
+never by id, so the file works on any engine. `pnpm seed:saved <investigation> [--engine <url>]` (`seedSaved` in
+`engine/demo-saved.mjs`) runs after the pack is imported and resolved: it resolves every name over the data layer to
+the object the graph has one node for (the canonical object, or a lone mention; never a mention that points at a
+canonical), by exact title first, then an alias, then the one title containing the name; `{ type, only: true }`
+takes the single object of that type. It creates the item at the top level, updates one of the same kind and name
+whose body differs, leaves one alone that is already right, and leaves out any item whose name does not resolve,
+saying which. Run it again after every resolution and the items follow the canonical ids. The bodies it writes are
+the Graph's and the Timeline's, as Builder 3 specified: graph `{ nodes: [], focus: "Type:pk", to: "Type:pk" | null }`
+(an empty `nodes` means the Graph lays out the focus and its neighbours itself); timeline
+`{ subjects: ["Type:pk"], hops, from, until }` with ISO times, `from` and `until` null when the pack gives no range.
+The engine still never reads a body; this is the pack writing one.
+
 ### 2.11 Photos (real, 10.10.2026)
 
 A photo goes in the file manager like any other file. Inside the ontology it is tied to the person, vehicle or
@@ -453,3 +466,9 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   photo `analyst`; deleting a photo removes its links and clears the pictures it was. Data layer: `linkImage`,
   `unlinkImage`, `setPhoto`, `isImage`; `ObjectView.photo` and `images`; `photoUrl` on rows, search results and
   `what-connects` objects; `photo` and `depicts` on the file view.
+- 10.10.2026, demo saved items (section 2.10): each pack names the saved items it opens with in
+  `data/<investigation>/saved.json`, by what they show; `pnpm seed:saved <investigation>` resolves the names to the
+  canonical objects over the data layer after import and resolution, creates or updates the items at the top level,
+  and leaves out and names any it cannot resolve. School incident: graphs "Firearm chain" and "VOIDHOUSE and the
+  deleted messages", timeline "The 72 hours"; solid waste: graph "One hauler, three LGUs", timeline "Contracts and
+  inspections". `proof:demo-saved` on port 8799.
