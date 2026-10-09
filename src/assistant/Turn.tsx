@@ -29,6 +29,7 @@ import {
 import { DOCUMENT_PARAM, navigate, OBJECT_PARAM, viewHref } from '../shell/route';
 import { replyKind, type AskCitation, type AskObject, type AskReply, type Turn } from './ask';
 import { useCitedPassages, type CitedPassage } from './reads';
+import { Trace } from './Trace';
 
 const TYPE_ICON: Record<string, ComponentType<SVGIconProps>> = {
   Person,
@@ -71,6 +72,7 @@ export function TurnView({ turn, investigation, modelOff }: { turn: Turn; invest
         <p className="assistant-turn__asked">{turn.question}</p>
         <span className="bp6-text-muted">{clock(turn.at)}</span>
       </div>
+      {reply && !error && <Trace reply={reply} seconds={turn.seconds} />}
       {error ? (
         <Callout intent="danger" compact>
           The question didn't reach the engine: {error}

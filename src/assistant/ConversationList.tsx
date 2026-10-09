@@ -1,10 +1,10 @@
 // The investigation's conversations, the most recent first. Each row names the conversation (its first question until
-// renamed), how many questions it holds and when it was last used. Right-click a row, or its "…" button, for Rename
-// (in place: Enter keeps, Escape drops) and Delete (asked once).
+// renamed), how many questions it holds and when it last changed. Right-click a row, or its "…" button, for Rename
+// (in place: Enter keeps, Escape drops) and Delete (asked once). Both go to the engine; the list reloads after.
 import { useRef, useState } from 'react';
 import { Alert, Button, ContextMenu, InputGroup, Menu, MenuItem, Popover } from '@blueprintjs/core';
 import { Edit, More, Plus, Trash } from '@blueprintjs/icons';
-import { conversationName, deleteConversation, renameConversation, type Conversation } from './conversations';
+import type { ConversationRow } from './conversations';
 
 const questions = (n: number) => `${n} question${n === 1 ? '' : 's'}`;
 
@@ -17,17 +17,17 @@ function when(at: Date): string {
 }
 
 export interface ConversationListProps {
-  conversations: Conversation[];
+  conversations: ConversationRow[];
   openId: string | null;
   onOpen: (id: string) => void;
   onNew: () => void;
-  /** After the open conversation is deleted. */
-  onDeleted: (id: string) => void;
+  onRename: (id: string, name: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export function ConversationList({ conversations, openId, onOpen, onNew, onDeleted }: ConversationListProps) {
+export function ConversationList({ conversations, openId, onOpen, onNew, onRename, onDelete }: ConversationListProps) {
   const [renaming, setRenaming] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<Conversation | null>(null);
+  const [deleting, setDeleting] = useState<ConversationRow | null>(null);
 
   return (
     <aside className="assistant-list" aria-label="Conversations">
@@ -39,8 +39,8 @@ export function ConversationList({ conversations, openId, onOpen, onNew, onDelet
         {conversations.length === 0 && <p className="bp6-text-muted assistant-list__empty">Your first question starts a conversation.</p>}
         {conversations.map((c) => {
           const open = c.id === openId;
-          const name = conversationName(c);
-          const meta = `${questions(c.turns.length)}, ${when(c.updatedAt)}`;
+          const name = c.name;
+          const meta = c.questions != null ? `${questions(c.questions)}, ${when(c.updatedAt)}` : when(c.updatedAt);
           const menu = (
             <Menu>
               <MenuItem icon={<Edit />} text="Rename" onClick={() => setRenaming(c.id)} />
@@ -53,7 +53,7 @@ export function ConversationList({ conversations, openId, onOpen, onNew, onDelet
                 <RenameInput
                   name={name}
                   onDone={(value) => {
-                    if (value != null) renameConversation(c.id, value);
+                    if (value != null && value.trim() !== name) onRename(c.id, value);
                     setRenaming(null);
                   }}
                 />
@@ -82,16 +82,17 @@ export function ConversationList({ conversations, openId, onOpen, onNew, onDelet
         cancelButtonText="Cancel"
         onCancel={() => setDeleting(null)}
         onConfirm={() => {
-          if (deleting) {
-            deleteConversation(deleting.id);
-            onDeleted(deleting.id);
-          }
+          if (deleting) onDelete(deleting.id);
           setDeleting(null);
         }}
       >
         <p>
-          Delete “{deleting ? conversationName(deleting) : ''}”?{' '}
-          {deleting && deleting.turns.length > 1 ? `Its ${questions(deleting.turns.length)} and their answers go with it.` : 'Its question and answer go with it.'}
+          Delete “{deleting?.name ?? ''}”?{' '}
+          {deleting?.questions == null || deleting.questions === 0
+            ? 'This can’t be undone.'
+            : deleting.questions > 1
+              ? `Its ${questions(deleting.questions)} and their answers go with it.`
+              : 'Its question and answer go with it.'}
         </p>
       </Alert>
     </aside>

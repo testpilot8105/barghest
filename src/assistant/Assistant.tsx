@@ -1,7 +1,8 @@
 // The Assistant (S6): questions about one investigation, answered by the local model from its files, every answer
 // citing the passages it used. Laid out as the owner approved it in Figma (09.10.2026): the conversations on the left,
 // the open conversation on the right with the newest question at the bottom, the input and the model switcher under
-// it. `?saved=` names the open conversation; `?q=` fills the input and never sends.
+// it. `?saved=` names the open conversation, a saved item that survives a reload; `?q=` fills the input and never
+// sends.
 import { useEffect, useRef, useState } from 'react';
 import { Button, Callout, H4, NonIdealState } from '@blueprintjs/core';
 import { Chat, WarningSign } from '@blueprintjs/icons';
@@ -12,13 +13,17 @@ import { useDocumentTitle } from '../shell/title';
 import { ask, type Turn } from './ask';
 import { Composer } from './Composer';
 import { ConversationList } from './ConversationList';
-import { addTurn, conversationName, settleTurn, startConversation, useConversations } from './conversations';
+import { toast } from '../intake/toaster';
+import { addTurn, deleteConversation, renameConversation, settleTurn, startConversation, useConversation, useConversationList } from './conversations';
 import { useExamples } from './reads';
 import { TurnView } from './Turn';
 import './assistant.css';
 
 const questions = (n: number) => `${n} question${n === 1 ? '' : 's'}`;
-let nextTurn = 1;
+/** Turn ids only need to differ within a conversation, across reloads too. */
+let lastTurn = 0;
+const nextTurnId = () => (lastTurn = Math.max(lastTurn + 1, Date.now()));
+const failed = (what: string, e: unknown) => toast(`${what}: ${e instanceof Error ? e.message : String(e)}`);
 
 export function Assistant({ investigation }: { investigation: string }) {
   const { dc } = useDataClient();
@@ -27,17 +32,17 @@ export function Assistant({ investigation }: { investigation: string }) {
   const inv = list.data?.investigations.find((i) => i.id === investigation);
   const examples = useExamples(investigation, inv?.template ?? null);
 
-  const conversations = useConversations(investigation);
+  const convos = useConversationList(investigation);
   const savedId = useSearchParam('saved');
-  const open = conversations.find((c) => c.id === savedId) ?? null;
+  const { conversation: open, ready, missing, reload } = useConversation(savedId);
   const turns = open?.turns ?? [];
   const busy = turns.some((t) => !t.reply && !t.error);
   const href = (id: string | null) => (id ? `${viewHref(investigation, 'assistant')}?saved=${id}` : viewHref(investigation, 'assistant'));
 
-  // A conversation this tab no longer holds (a reload, a pasted link) opens a new one in its place.
+  // A conversation the engine no longer has (deleted elsewhere, a stale link) opens a new one in its place.
   useEffect(() => {
-    if (savedId && !open) navigate(href(null), { replace: true });
-  }, [savedId, open]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (missing) navigate(href(null), { replace: true });
+  }, [missing]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const prefill = useSearchParam('q');
   const [draft, setDraft] = useState(prefill ?? '');
@@ -48,7 +53,7 @@ export function Assistant({ investigation }: { investigation: string }) {
   const modelOff = health.data ? health.data.ollama === null : false;
   const model = health.data && !Array.isArray(health.data.models) ? health.data.models.chat : null;
 
-  useDocumentTitle(open ? conversationName(open) : null);
+  useDocumentTitle(open ? open.name : null);
 
   const input = useRef<HTMLTextAreaElement>(null);
   const thread = useRef<HTMLDivElement>(null);
@@ -59,22 +64,37 @@ export function Assistant({ investigation }: { investigation: string }) {
 
   async function send() {
     const question = draft.trim();
-    if (!question || !dc || busy) return;
-    const turn: Turn = { id: nextTurn++, question, at: new Date(), seconds: null, reply: null, error: null };
+    if (!question || !dc || busy || (savedId && !ready)) return;
+    const turn: Turn = { id: nextTurnId(), question, at: new Date(), seconds: null, reply: null, error: null };
+    const name = open?.name ?? null;
     let id = open?.id;
     if (id) addTurn(id, turn);
     else {
-      id = startConversation(investigation, turn).id;
+      try {
+        id = await startConversation(dc, investigation, turn);
+      } catch (e) {
+        failed('The conversation could not be saved', e);
+        return;
+      }
       navigate(href(id));
     }
     setDraft('');
+    convos.reload();
     const started = performance.now();
+    let patch: Partial<Turn>;
     try {
       const reply = await ask(dc, { question, investigation });
-      settleTurn(id, turn.id, { reply, seconds: Math.round((performance.now() - started) / 1000) });
+      patch = { reply, seconds: Math.round((performance.now() - started) / 1000) };
     } catch (e) {
-      settleTurn(id, turn.id, { error: e instanceof Error ? e.message : String(e) });
+      patch = { error: e instanceof Error ? e.message : String(e) };
     }
+    try {
+      await settleTurn(dc, id, turn.id, patch, name);
+    } catch (e) {
+      failed('This answer is shown but not saved', e);
+    }
+    convos.reload();
+    reload();
   }
 
   function fill(question: string) {
@@ -86,7 +106,7 @@ export function Assistant({ investigation }: { investigation: string }) {
   return (
     <div className="assistant">
       <ConversationList
-        conversations={conversations}
+        conversations={convos.rows}
         openId={open?.id ?? null}
         onOpen={(id) => navigate(href(id))}
         onNew={() => {
@@ -94,8 +114,23 @@ export function Assistant({ investigation }: { investigation: string }) {
           setDraft('');
           input.current?.focus();
         }}
-        onDeleted={(id) => {
-          if (id === open?.id) navigate(href(null), { replace: true });
+        onRename={(id, name) => {
+          if (!dc) return;
+          renameConversation(dc, id, name)
+            .then(() => {
+              convos.reload();
+              if (id === open?.id) reload();
+            })
+            .catch((e) => failed('Rename failed', e));
+        }}
+        onDelete={(id) => {
+          if (!dc) return;
+          deleteConversation(dc, id)
+            .then(() => {
+              convos.reload();
+              if (id === open?.id) navigate(href(null), { replace: true });
+            })
+            .catch((e) => failed('Delete failed', e));
         }}
       />
 
@@ -139,7 +174,7 @@ export function Assistant({ investigation }: { investigation: string }) {
           draft={draft}
           onDraft={setDraft}
           onAsk={send}
-          busy={busy}
+          busy={busy || (!!savedId && !ready)}
           placeholder={inv ? `Ask about ${inv.name}` : 'Ask about this investigation'}
           inputRef={input}
           model={model}

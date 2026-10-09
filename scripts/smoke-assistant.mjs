@@ -3,10 +3,12 @@
 // the smoke refuses to run if the engine has the model on, so it never starts a model call. At 1440 x 900 and
 // 1920 x 1080: `?q=` fills the input and sends nothing; the empty conversation shows example questions; the model-off
 // callout shows; Ask returns the keyword records as numbered citations under "Found by keyword", never as an answer;
-// the conversation is named by its question; the model switcher lists this Mac first and Online second; a citation
-// opens Files at its passage; all-caps headings in D-DIN Bold; nothing under 14px; the document never scrolls; zero
-// console errors. Read-only: with the model off, ask writes nothing. Screenshots to dist-shots/assistant/. Exit 1 on
-// any failure.
+// "How this was answered" folds the steps into one line and, opened, says the model was off; the conversation is a
+// saved item named by its question, its turn is in the engine and still there after a reload; the model switcher lists
+// this Mac first and Online second; rename reaches the engine; a citation opens Files at its passage; all-caps headings
+// in D-DIN Bold; nothing under 14px; the document never scrolls; zero console errors. With the model off ask writes
+// nothing; the conversations the smoke makes are deleted (one through the menu) and checked gone from the engine.
+// Screenshots to dist-shots/assistant/. Exit 1 on any failure.
 // Run: node scripts/smoke-assistant.mjs   (with `pnpm exec vite --port 5184 --strictPort` running)
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
@@ -37,6 +39,7 @@ if (!appUp) {
 // The question, by query: the person with the most source spellings, else the most links out.
 const { connect } = await import('../src/data/client.ts');
 const { fetchRows, histogram } = await import('../src/data/reads.ts');
+const { deleteSaved, getSaved, listSaved } = await import('../src/data/intake.ts');
 const dc = await connect(ENGINE);
 let subject = null;
 for (const [start, steps, property] of [
@@ -58,6 +61,10 @@ const person = (await fetchRows(dc, { start: 'Person', steps: [{ filter: { prope
 const investigation = String(person.properties.scenario);
 const question = `What connects ${person.title} to the incident?`;
 console.log(`smoke-assistant: asking "${question}" in ${investigation}`);
+
+const conversationIds = async () => (await listSaved(dc, investigation, 'conversation')).items.map((i) => i.id);
+const already = new Set(await conversationIds());
+const goneFromEngine = (id) => getSaved(dc, id).then(() => false, (e) => e.status === 404);
 
 mkdirSync(shots, { recursive: true });
 const browser = await chromium.launch({ channel: 'chromium', headless: true });
@@ -124,11 +131,36 @@ async function run(width, height) {
     if (!t.includes('Keyword match')) fail(`citation ${i + 1} is not tagged "Keyword match"`);
     if (t.replace(/Keyword match|\d/g, '').trim().length < 20) fail(`citation ${i + 1} shows no quote`);
   }
-  const row = await page.locator('.assistant-list__row').innerText().catch(() => '');
+  // How it was answered: one folded line; opened, the steps end on the model being off.
+  const traceToggle = turn.locator('.assistant-trace__toggle');
+  const folded = await traceToggle.innerText().catch(() => '');
+  if (!folded.includes('How this was answered:') || !folded.includes('found by keyword')) fail(`the folded trace reads: ${folded}`);
+  await traceToggle.click();
+  const steps = turn.locator('.assistant-trace__step');
+  await steps.first().waitFor({ timeout: 5000 }).catch(() => fail('the trace did not open'));
+  const stepText = (await steps.allInnerTexts()).join(' / ');
+  if (!stepText.includes('Searched for') || !stepText.endsWith('The local model is off: no answer written')) fail(`the trace steps read: ${stepText}`);
+  const row = await page.locator('.assistant-list__row--open').innerText().catch(() => '');
   if (!row.includes(question)) fail('the conversation is not named by its first question');
   if ((await input.inputValue()) !== '') fail('the input was not cleared after Ask');
   if (!(await noScroll())) fail('answered: the document scrolls');
   await page.screenshot({ path: join(shots, `${tag}-keyword.png`) });
+
+  // Saved: the conversation is in the engine with its turn, and a reload brings it back.
+  const firstSaved = new URL(page.url()).searchParams.get('saved');
+  if (!firstSaved) fail('the first question did not put its conversation in the address bar (?saved=)');
+  let stored = null;
+  for (let i = 0; i < 20 && firstSaved; i++) {
+    stored = await getSaved(dc, firstSaved).catch(() => null);
+    if (stored?.body?.turns?.length === 1) break;
+    await page.waitForTimeout(250);
+  }
+  if (stored?.kind !== 'conversation' || stored?.name !== question || stored?.body?.turns?.length !== 1) fail(`the engine holds ${JSON.stringify({ kind: stored?.kind, name: stored?.name, turns: stored?.body?.turns?.length })}`);
+  await page.reload();
+  await turn.waitFor({ timeout: 15000 });
+  if (!(await turn.innerText()).includes(question)) fail('after a reload the conversation lost its question');
+  if (!(await turn.locator('.assistant-trace__toggle').count())) fail('after a reload the answer lost how it was answered');
+  if (!(await page.locator('.assistant-list__row--open').innerText()).includes('1 question')) fail('the open row does not count its question');
 
   // The model switcher: this Mac first, Online second.
   await page.locator('.assistant-composer__model').click();
@@ -150,23 +182,25 @@ async function run(width, height) {
   // Conversations: the first is named by its question and opens in the address bar; Rename from the right-click menu
   // renames the row and the menu bar; a second conversation lists first; a row reopens its own; Delete from "…" asks.
   const rows = page.locator('.assistant-list__row');
-  const firstSaved = new URL(page.url()).searchParams.get('saved');
-  if (!firstSaved) fail('the first question did not put its conversation in the address bar (?saved=)');
+  const others = (await conversationIds()).filter((id) => id !== firstSaved).length;
   const renamed = `${person.title} and the incident`;
-  await rows.first().click({ button: 'right' });
+  await page.locator('.assistant-list__row--open').click({ button: 'right' });
   await page.getByRole('menuitem', { name: 'Rename' }).click();
   const nameBox = page.getByRole('textbox', { name: 'Conversation name' });
   await nameBox.fill(renamed);
   await nameBox.press('Enter');
-  await page.waitForTimeout(200);
+  await page.waitForTimeout(800);
   if (!(await rows.first().innerText()).includes(renamed)) fail('Rename did not rename the row');
   if (!(await page.locator('.menubar__title').innerText()).includes(renamed)) fail('the menu bar does not name the renamed conversation');
+  if ((await getSaved(dc, firstSaved).catch(() => null))?.name !== renamed) fail('Rename did not reach the engine');
   await page.getByRole('button', { name: 'New conversation' }).click();
   await page.locator('.assistant-examples .bp6-button').nth(1).click();
   const second = await input.inputValue();
   await page.getByRole('button', { name: 'Ask', exact: true }).click();
   await page.locator('.assistant-turn .assistant-turn__body, .assistant-turn .bp6-callout').first().waitFor({ timeout: 20000 });
-  if ((await rows.count()) !== 2) fail(`expected 2 conversations, the list holds ${await rows.count()}`);
+  await page.waitForTimeout(800);
+  const secondSaved = new URL(page.url()).searchParams.get('saved');
+  if ((await rows.count()) !== others + 2) fail(`expected ${others + 2} conversations, the list holds ${await rows.count()}`);
   if (!(await rows.first().innerText()).includes(second)) fail('the newest conversation is not listed first');
   await page.screenshot({ path: join(shots, `${tag}-two.png`) });
   await rows.nth(1).locator('.assistant-list__open').click();
@@ -182,8 +216,9 @@ async function run(width, height) {
   await page.waitForTimeout(400);
   await page.screenshot({ path: join(shots, `${tag}-delete.png`) });
   await alert.getByRole('button', { name: 'Delete' }).click();
-  await page.waitForTimeout(400);
-  if ((await rows.count()) !== 1) fail(`Delete left ${await rows.count()} conversations`);
+  await page.waitForTimeout(800);
+  if ((await rows.count()) !== others + 1) fail(`Delete left ${await rows.count()} conversations, expected ${others + 1}`);
+  if (secondSaved && !(await goneFromEngine(secondSaved))) fail('the engine still has the deleted conversation');
 
   // A citation opens Files at its passage.
   if (nCites) {
@@ -197,6 +232,10 @@ async function run(width, height) {
     }
   }
 
+  if (firstSaved) {
+    await deleteSaved(dc, firstSaved).catch(() => {});
+    if (!(await goneFromEngine(firstSaved))) fail('the engine still has the first conversation after its delete');
+  }
   if (errors.length) fail(`console errors: ${errors.slice(0, 5).join(' | ')}`);
   console.log(`smoke-assistant: ${tag} ${examples.length} example(s), ${nCites} keyword citation(s)`);
   await page.close();
@@ -205,6 +244,10 @@ async function run(width, height) {
 await run(1440, 900);
 await run(1920, 1080);
 await browser.close();
+// Whatever a failed run left behind.
+const left = (await conversationIds()).filter((id) => !already.has(id));
+for (const id of left) await deleteSaved(dc, id).catch(() => {});
+if (left.length) failures.push(`left ${left.length} conversation(s) behind; deleted them`);
 
 if (failures.length) {
   console.error(`smoke-assistant: FAIL\n  ${failures.join('\n  ')}`);

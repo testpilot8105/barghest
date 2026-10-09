@@ -10,6 +10,7 @@ import { encodeExploration, useObjectView, type AuditEntry, type Catalog, type C
 import { EvidenceDrawer } from '../evidence/EvidenceDrawer';
 import { usePassageFiles, type EvidencePassage } from '../evidence/passages';
 import { formatCount } from '../explorer/parts';
+import { ObjectPicture, ProfilePhotos } from '../photos';
 import { showValue } from '../explorer/steps';
 import { findView, paletteVar } from '../shell/nav';
 import { viewHref } from '../shell/route';
@@ -96,6 +97,8 @@ function Overview({ catalog, def, view, investigation, openEvidence }: { catalog
           <div className="profile-column">
             <Links def={def} view={view} investigation={investigation} />
             <Relationships catalog={catalog} view={view} investigation={investigation} openEvidence={openEvidence} />
+            {/* Last in the source on purpose: profile.css orders the first two, so Photos keeps order 0 and leads. */}
+            <ProfilePhotos investigation={investigation} objectKey={`${view.type}:${view.pk}`} title={view.title} />
           </div>
         </div>
       </div>
@@ -113,7 +116,7 @@ function Header({ def, view, investigation }: { def: CatalogType; view: ObjectVi
   return (
     <header className="profile-head">
       <div className="profile-head__name">
-        {browser && <browser.Icon size={20} color={paletteVar(browser.color)} />}
+        <ObjectPicture objectKey={`${view.type}:${view.pk}`} fallback={browser && <browser.Icon size={20} color={paletteVar(browser.color)} />} />
         <div className="profile-head__titles">
           <H4>{view.title}</H4>
           <div className="profile-head__type">

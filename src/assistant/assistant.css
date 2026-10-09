@@ -255,6 +255,63 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* How it was answered: one line above the answer, the steps under a 2px rule in the Assistant's colour when open. */
+.assistant-trace {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: -6px;
+}
+
+/* The caret lines up with the question above it. */
+.assistant-trace__toggle.bp6-button {
+  margin-left: -8px;
+}
+
+.assistant-trace > .bp6-collapse {
+  align-self: stretch;
+}
+
+.assistant-trace__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 2px 0 2px 14px;
+  border-left: 2px solid var(--bp-palette-cerulean-4);
+  list-style: none;
+}
+
+.assistant-trace__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 20px;
+  color: var(--bh-text);
+}
+
+.assistant-trace__step > .bp6-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.assistant-trace__ok {
+  color: var(--bp-palette-green-5);
+}
+
+.assistant-trace__warn {
+  color: var(--bp-palette-orange-5);
+}
+
+.assistant-trace__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.assistant-trace__seconds {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Links inside the app keep the text colour; dark theme would repaint them blue. */
 .assistant a.assistant-chip,
 .assistant a.assistant-cite {

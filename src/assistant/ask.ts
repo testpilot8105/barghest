@@ -8,6 +8,8 @@ export interface AskObject {
   pk: string;
   title: string;
   detail: string;
+  /** Found because the question names its type ("the incident"), not by its own name. */
+  byType?: boolean;
 }
 
 export interface AskCitation {
@@ -28,6 +30,8 @@ export interface AskReply {
   /** The model that answered, or null when none was asked. */
   model: string | null;
   latencyMs?: number;
+  promptTokens?: number | null;
+  outputTokens?: number | null;
 }
 
 export function ask(dc: DataClient, req: { question: string; investigation: string }): Promise<AskReply> {

@@ -7,6 +7,7 @@ import { Document, FolderOpen, Share } from '@blueprintjs/icons';
 import { fileUrl, useDataClient } from '../data/index.ts';
 import { filesHref, follow } from '../browser/links';
 import { formatCount } from '../explorer/parts';
+import { PassagePicture } from '../photos';
 import { parseRoute, usePath } from '../shell/route';
 import { usePassageFiles, type EvidencePassage } from './passages';
 import './evidence.css';
@@ -62,6 +63,7 @@ function PassageCard({ passage, onClose }: { passage: EvidencePassage; onClose: 
   return (
     <Card className="evidence-passage">
       {passage.index != null && <span className="bp6-text-muted">Passage {formatCount(passage.index + 1)}</span>}
+      <PassagePicture documentId={passage.documentId} />
       <p className="evidence-passage__text">{passage.text || passage.label}</p>
       <div className="evidence-passage__file">
         <strong>{passage.fileName}</strong>
