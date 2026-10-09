@@ -72,6 +72,7 @@ add('EvidenceItem', { evidenceId: 'E-002', tag: 'E-002', kind: 'firearm, Armscor
 add('Document', {
   documentId: 'D-001', title: 'Messenger thread, extract from DFER-R14-2026-0188', path: 'data/school-incident/sources/messenger-thread.txt',
   format: 'txt', system: 'PNP-ACG Cyber Forensics', importedAt: '2026-10-09T00:00:00Z', status: 'imported',
+  name: 'Messenger thread, extract from DFER-R14-2026-0188', register: 'PNP-ACG Cyber Forensics',
 });
 add('Passage', {
   passageId: 'PS-001', label: 'messenger-thread.txt #1 (M-0107)', documentId: 'D-001', index: 0,

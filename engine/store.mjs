@@ -56,6 +56,16 @@ CREATE TABLE IF NOT EXISTS folders (
   investigation TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS saved (
+  id TEXT PRIMARY KEY,
+  investigation TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  name TEXT NOT NULL,
+  folder_id TEXT NOT NULL DEFAULT '',
+  body TEXT NOT NULL DEFAULT '{}',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
 `;
 
 export function openStore(path) {
@@ -63,6 +73,8 @@ export function openStore(path) {
   const db = new DatabaseSync(path);
   db.exec('PRAGMA journal_mode = WAL');
   db.exec(SCHEMA);
+  // A deleted investigation keeps its row with deleted_at set, so an engine start never recreates a demo one.
+  if (!db.prepare('PRAGMA table_info(investigations)').all().some((c) => c.name === 'deleted_at')) db.exec('ALTER TABLE investigations ADD COLUMN deleted_at TEXT');
 
   const upsertStmt = db.prepare(
     'INSERT INTO objects (type, pk, data, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(type, pk) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at',
@@ -113,9 +125,11 @@ export function openStore(path) {
   const investigationUpsert = db.prepare(
     'INSERT INTO investigations (id, name, template, blocks, created_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name = excluded.name, template = excluded.template, blocks = excluded.blocks',
   );
-  const investigationGet = db.prepare('SELECT id, name, template, blocks, created_at FROM investigations WHERE id = ?');
-  const investigationsAll = db.prepare('SELECT id, name, template, blocks, created_at FROM investigations ORDER BY created_at, id');
-  const investigationRow = (row) => (row ? { id: row.id, name: row.name, template: row.template, blocks: JSON.parse(row.blocks), createdAt: row.created_at } : null);
+  const investigationGet = db.prepare('SELECT id, name, template, blocks, created_at, deleted_at FROM investigations WHERE id = ? AND deleted_at IS NULL');
+  const investigationAny = db.prepare('SELECT id, name, template, blocks, created_at, deleted_at FROM investigations WHERE id = ?');
+  const investigationsAll = db.prepare('SELECT id, name, template, blocks, created_at, deleted_at FROM investigations WHERE deleted_at IS NULL ORDER BY created_at, id');
+  const investigationMarkDeleted = db.prepare('UPDATE investigations SET deleted_at = ? WHERE id = ?');
+  const investigationRow = (row) => (row ? { id: row.id, name: row.name, template: row.template, blocks: JSON.parse(row.blocks), createdAt: row.created_at, deletedAt: row.deleted_at ?? null } : null);
   const folderUpsert = db.prepare(
     'INSERT INTO folders (id, name, parent_id, investigation, created_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name = excluded.name, parent_id = excluded.parent_id',
   );
@@ -123,6 +137,18 @@ export function openStore(path) {
   const foldersOf = db.prepare('SELECT id, name, parent_id, investigation, created_at FROM folders WHERE investigation = ? ORDER BY parent_id, name, id');
   const folderRemove = db.prepare('DELETE FROM folders WHERE id = ?');
   const folderRow = (row) => (row ? { id: row.id, name: row.name, parentId: row.parent_id, investigation: row.investigation, createdAt: row.created_at } : null);
+  const savedUpsert = db.prepare(
+    'INSERT INTO saved (id, investigation, kind, name, folder_id, body, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET name = excluded.name, folder_id = excluded.folder_id, body = excluded.body, updated_at = excluded.updated_at',
+  );
+  const savedGet = db.prepare('SELECT id, investigation, kind, name, folder_id, body, created_at, updated_at FROM saved WHERE id = ?');
+  const savedOf = db.prepare('SELECT id, investigation, kind, name, folder_id, created_at, updated_at FROM saved WHERE investigation = ? ORDER BY updated_at DESC, id');
+  const savedRemove = db.prepare('DELETE FROM saved WHERE id = ?');
+  const savedRow = (row) => {
+    if (!row) return null;
+    const item = { id: row.id, investigation: row.investigation, kind: row.kind, name: row.name, folderId: row.folder_id, createdAt: row.created_at, updatedAt: row.updated_at };
+    if (row.body !== undefined) item.body = JSON.parse(row.body);
+    return item;
+  };
 
   return {
     path,
@@ -198,11 +224,19 @@ export function openStore(path) {
     putInvestigation({ id, name, template = null, blocks, createdAt }) {
       investigationUpsert.run(id, name, template, JSON.stringify(blocks), createdAt ?? new Date().toISOString());
     },
+    /** A live investigation, or null when unknown or deleted. */
     investigation(id) {
       return investigationRow(investigationGet.get(String(id)));
     },
+    /** The row whether deleted or not, for the demo check at engine start. */
+    investigationEverCreated(id) {
+      return investigationRow(investigationAny.get(String(id)));
+    },
     investigations() {
       return investigationsAll.all().map(investigationRow);
+    },
+    markInvestigationDeleted(id) {
+      investigationMarkDeleted.run(new Date().toISOString(), String(id));
     },
     /** Folders live here too: { id, name, parentId ('' at the top level), investigation, createdAt }. */
     putFolder({ id, name, parentId = '', investigation, createdAt }) {
@@ -216,6 +250,22 @@ export function openStore(path) {
     },
     removeFolder(id) {
       folderRemove.run(String(id));
+    },
+    /** Saved items (graphs, timelines, conversations, explorations) live here too; the body is JSON the engine never reads. */
+    putSaved({ id, investigation, kind, name, folderId = '', body = {}, createdAt, updatedAt }) {
+      const now = new Date().toISOString();
+      savedUpsert.run(id, investigation, kind, name, folderId ?? '', JSON.stringify(body ?? {}), createdAt ?? now, updatedAt ?? now);
+    },
+    /** One item with its body, or null. */
+    saved(id) {
+      return savedRow(savedGet.get(String(id)));
+    },
+    /** The investigation's items without their bodies, newest change first. */
+    savedOf(investigation) {
+      return savedOf.all(String(investigation)).map(savedRow);
+    },
+    removeSaved(id) {
+      savedRemove.run(String(id));
     },
     close() {
       db.close();

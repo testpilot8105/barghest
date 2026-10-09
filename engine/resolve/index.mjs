@@ -187,10 +187,7 @@ export async function resolveScenario({ engine, meta, store, scenario, decide = 
       }
     }
     // A canonical object whose cluster dissolved (re-run on changed data) is removed: it is derived, not source.
-    for (const stale of previousCanonicals) {
-      data.unregisterObjectOrThrow(type, stale);
-      store.remove(type, stale);
-    }
+    for (const stale of previousCanonicals) engine.remove(type, stale);
 
     // Resolution rows, one per decided pair, deterministic ids so a re-run overwrites rather than duplicates.
     for (const r of resolutions) {

@@ -41,6 +41,12 @@ export namespace createObjectPerson {
       nullable: true;
       type: 'string';
     };
+    photoId: {
+      displayName: 'Photo';
+      multiplicity: false;
+      nullable: true;
+      type: 'string';
+    };
     recordId: {
       displayName: 'Source record';
       multiplicity: false;
@@ -78,6 +84,8 @@ export namespace createObjectPerson {
 
     readonly personId?: ActionParam.PrimitiveType<'string'> | null;
 
+    readonly photoId?: ActionParam.PrimitiveType<'string'> | null;
+
     readonly recordId?: ActionParam.PrimitiveType<'string'> | null;
 
     readonly role?: ActionParam.PrimitiveType<'string'> | null;
@@ -113,6 +121,7 @@ export namespace createObjectPerson {
  * @param {ActionParam.PrimitiveType<"string">} [fullName]
  * @param {ActionParam.PrimitiveType<"string">} [passageId]
  * @param {ActionParam.PrimitiveType<"string">} [personId]
+ * @param {ActionParam.PrimitiveType<"string">} [photoId]
  * @param {ActionParam.PrimitiveType<"string">} [recordId]
  * @param {ActionParam.PrimitiveType<"string">} [role]
  * @param {ActionParam.PrimitiveType<"string">} [scenario]

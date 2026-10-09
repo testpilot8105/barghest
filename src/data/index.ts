@@ -4,25 +4,42 @@ export type * from './types.ts';
 export { connect, EngineError, type DataClient } from './client.ts';
 export { buildCatalog, linkOf, propertyOf } from './catalog.ts';
 export { currentType, decodeExploration, encodeExploration, startExploration, typeAt, withStep } from './exploration.ts';
-export { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround, toRefs, toWhere } from './reads.ts';
+export { countRows, fetchRows, getObjectView, histogram, photoUrlOf, searchAll, searchAround, toRefs, toWhere } from './reads.ts';
 export {
   createFolder,
   createInvestigation,
+  createSaved,
   deleteDocument,
   deleteFolder,
+  deleteInvestigation,
+  deleteSaved,
+  editInvestigation,
   extractAgain,
+  extractAll,
   fetchInferenceLog,
   fileUrl,
   getDocumentView,
   getFolders,
   getHealth,
   getInvestigations,
+  getSaved,
   importFile,
+  linkImage,
+  listSaved,
   mergeInferenceRows,
   moveDocument,
+  moveDocumentToInvestigation,
   moveFolder,
+  renameDocument,
   renameFolder,
+  renameInvestigation,
+  renameRegister,
+  setPhoto,
+  setRegister,
+  unlinkImage,
+  updateSaved,
 } from './intake.ts';
+export { hasNoPreview, IMAGE_FORMATS, isImage, NO_PREVIEW_FORMATS } from './images.ts';
 export {
   BarghestDataProvider,
   useAsync,
@@ -39,6 +56,8 @@ export {
   useObjectView,
   usePoll,
   useRows,
+  useSaved,
+  useSavedItem,
   useSearchAll,
   useSearchAround,
   type AsyncState,
@@ -46,4 +65,6 @@ export {
   type FoldersState,
   type InvestigationsState,
   type RowsState,
+  type SavedItemState,
+  type SavedState,
 } from './hooks.tsx';

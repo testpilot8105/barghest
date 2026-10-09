@@ -28,6 +28,7 @@ export namespace Facility {
     | 'name'
     | 'passageId'
     | 'permitNo'
+    | 'photoId'
     | 'recordId'
     | 'scenario'
     | 'status';
@@ -86,6 +87,12 @@ export namespace Facility {
      *   display name: 'Permit no.'
      */
     readonly permitNo: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -199,6 +206,12 @@ export interface Facility extends $ObjectTypeDefinition {
        *   display name: 'Permit no.'
        */
       permitNo: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

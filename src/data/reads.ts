@@ -82,10 +82,18 @@ export function toObjectSet(dc: DataClient, exp: Exploration): { os: Any; type: 
   return { os, type };
 }
 
-function toRow(obj: Any): Row {
+/** The URL of an object's picture: the stored photo, served by the engine (section 2.11). */
+export function photoUrlOf(dc: DataClient, photoId: unknown): string | undefined {
+  return photoId ? `${dc.baseUrl}/barghest/file?documentId=${encodeURIComponent(String(photoId))}` : undefined;
+}
+
+function toRow(dc: DataClient, obj: Any): Row {
   const properties: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(obj)) if (!k.startsWith('$')) properties[k] = v;
-  return { pk: String(obj.$primaryKey), title: obj.$title ?? String(obj.$primaryKey), properties };
+  const row: Row = { pk: String(obj.$primaryKey), title: obj.$title ?? String(obj.$primaryKey), properties };
+  const photoUrl = photoUrlOf(dc, obj.photoId);
+  if (photoUrl) row.photoUrl = photoUrl;
+  return row;
 }
 
 export async function fetchRows(dc: DataClient, exp: Exploration, pageToken?: string): Promise<Page> {
@@ -94,7 +102,7 @@ export async function fetchRows(dc: DataClient, exp: Exploration, pageToken?: st
   if (pageToken) args.$nextPageToken = pageToken;
   if (exp.sort) args.$orderBy = { [exp.sort.property]: exp.sort.direction };
   const page = await os.fetchPage(args);
-  return { rows: page.data.map(toRow), nextPageToken: page.nextPageToken ?? undefined };
+  return { rows: page.data.map((o: Any) => toRow(dc, o)), nextPageToken: page.nextPageToken ?? undefined };
 }
 
 export async function countRows(dc: DataClient, exp: Exploration): Promise<number> {
@@ -271,6 +279,16 @@ export async function getObjectView(dc: DataClient, type: string, pk: string): P
       canonicalId: String(r.canonicalId ?? ''),
     }));
 
+  // The photos the analyst linked to this object (section 2.11), newest taken first, and the one its node shows.
+  const imageIds = into.filter((r) => r.kind === 'depicts' && r.otherType === 'Document').map((r) => r.otherPk);
+  let images: ObjectView['images'] = [];
+  if (imageIds.length) {
+    const page = await objectSet(dc, 'Document').where({ documentId: { $in: imageIds } }).fetchPage({ $pageSize: 100 });
+    const listed: ObjectView['images'] = page.data.map((d: Any) => ({ documentId: String(d.documentId), name: String(d.name ?? d.title ?? d.documentId), takenAt: d.takenAt ?? null }));
+    images = listed.sort((x, y) => String(y.takenAt ?? '').localeCompare(String(x.takenAt ?? '')) || x.name.localeCompare(y.name));
+  }
+  const photoUrl = photoUrlOf(dc, obj.photoId);
+
   return {
     type,
     pk,
@@ -283,6 +301,8 @@ export async function getObjectView(dc: DataClient, type: string, pk: string): P
     candidates,
     resolutions,
     audit,
+    photo: photoUrl ? { documentId: String(obj.photoId), url: photoUrl } : null,
+    images,
   };
 }
 
@@ -297,7 +317,7 @@ export async function searchAll(dc: DataClient, text: string): Promise<Record<st
         os.aggregate({ $select: { $count: 'unordered' } }),
         os.fetchPage({ $pageSize: 5, $orderBy: { [def.titleProperty]: 'asc' } }),
       ]);
-      return [type, { count: Number(count.$count ?? 0), top: page.data.map((o: Any) => ({ pk: String(o.$primaryKey), title: o.$title ?? String(o.$primaryKey) })) }] as const;
+      return [type, { count: Number(count.$count ?? 0), top: page.data.map((o: Any) => ({ pk: String(o.$primaryKey), title: o.$title ?? String(o.$primaryKey), ...(o.photoId ? { photoUrl: photoUrlOf(dc, o.photoId) } : {}) })) }] as const;
     }),
   );
   return Object.fromEntries(entries);

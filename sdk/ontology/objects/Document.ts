@@ -3,6 +3,7 @@ import { $osdkMetadata } from '../../OntologyMetadata.js';
 import type { $ExpectedClientVersion } from '../../OntologyMetadata.js';
 import type { Passage } from './Passage.js';
 import type { SourceRecord } from './SourceRecord.js';
+import type { Relationship } from './Relationship.js';
 import type {
   PropertyKeys as $PropertyKeys,
   ObjectTypeDefinition as $ObjectTypeDefinition,
@@ -18,22 +19,46 @@ import type {
 
 export namespace Document {
   export type PropertyKeys =
+    | 'cameraMake'
+    | 'cameraModel'
     | 'documentId'
     | 'folderId'
     | 'format'
+    | 'height'
     | 'importedAt'
+    | 'latitude'
+    | 'longitude'
+    | 'name'
+    | 'orientation'
     | 'path'
+    | 'register'
     | 'scenario'
     | 'status'
     | 'system'
-    | 'title';
+    | 'takenAt'
+    | 'title'
+    | 'width';
 
   export interface Links {
     readonly passages: Passage.ObjectSet;
     readonly records: SourceRecord.ObjectSet;
+    readonly relationshipsFrom: Relationship.ObjectSet;
+    readonly relationshipsTo: Relationship.ObjectSet;
   }
 
   export interface Props {
+    /**
+     *   property status: active
+     *
+     *   display name: 'Camera make'
+     */
+    readonly cameraMake: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Camera model'
+     */
+    readonly cameraModel: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -55,15 +80,51 @@ export namespace Document {
     /**
      *   property status: active
      *
+     *   display name: 'Height'
+     */
+    readonly height: $PropType['integer'] | undefined;
+    /**
+     *   property status: active
+     *
      *   display name: 'Imported at'
      */
     readonly importedAt: $PropType['timestamp'] | undefined;
     /**
      *   property status: active
      *
+     *   display name: 'Latitude'
+     */
+    readonly latitude: $PropType['double'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Longitude'
+     */
+    readonly longitude: $PropType['double'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Name'
+     */
+    readonly name: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Orientation'
+     */
+    readonly orientation: $PropType['integer'] | undefined;
+    /**
+     *   property status: active
+     *
      *   display name: 'Path'
      */
     readonly path: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Register'
+     */
+    readonly register: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -85,9 +146,21 @@ export namespace Document {
     /**
      *   property status: active
      *
+     *   display name: 'Taken at'
+     */
+    readonly takenAt: $PropType['timestamp'] | undefined;
+    /**
+     *   property status: active
+     *
      *   display name: 'Title'
      */
     readonly title: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Width'
+     */
+    readonly width: $PropType['integer'] | undefined;
   }
   export type StrictProps = Props;
 
@@ -130,11 +203,25 @@ export interface Document extends $ObjectTypeDefinition {
     links: {
       passages: $ObjectMetadata.Link<Passage, true>;
       records: $ObjectMetadata.Link<SourceRecord, true>;
+      relationshipsFrom: $ObjectMetadata.Link<Relationship, true>;
+      relationshipsTo: $ObjectMetadata.Link<Relationship, true>;
     };
     pluralDisplayName: 'Documents';
     primaryKeyApiName: 'documentId';
     primaryKeyType: 'string';
     properties: {
+      /**
+       *   property status: active
+       *
+       *   display name: 'Camera make'
+       */
+      cameraMake: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Camera model'
+       */
+      cameraModel: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *
@@ -156,15 +243,51 @@ export interface Document extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
+       *   display name: 'Height'
+       */
+      height: $PropertyDef<'integer', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
        *   display name: 'Imported at'
        */
       importedAt: $PropertyDef<'timestamp', 'nullable', 'single'>;
       /**
        *   property status: active
        *
+       *   display name: 'Latitude'
+       */
+      latitude: $PropertyDef<'double', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Longitude'
+       */
+      longitude: $PropertyDef<'double', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Name'
+       */
+      name: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Orientation'
+       */
+      orientation: $PropertyDef<'integer', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
        *   display name: 'Path'
        */
       path: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Register'
+       */
+      register: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *
@@ -186,9 +309,21 @@ export interface Document extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
+       *   display name: 'Taken at'
+       */
+      takenAt: $PropertyDef<'timestamp', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
        *   display name: 'Title'
        */
       title: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Width'
+       */
+      width: $PropertyDef<'integer', 'nullable', 'single'>;
     };
     rid: 'ri.Document';
     status: 'ACTIVE';

@@ -26,6 +26,7 @@ export namespace Hauler {
     | 'haulerId'
     | 'name'
     | 'passageId'
+    | 'photoId'
     | 'recordId'
     | 'registrationNo'
     | 'scenario'
@@ -68,6 +69,12 @@ export namespace Hauler {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -170,6 +177,12 @@ export interface Hauler extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

@@ -27,6 +27,7 @@ export namespace Person {
     | 'fullName'
     | 'passageId'
     | 'personId'
+    | 'photoId'
     | 'recordId'
     | 'role'
     | 'scenario'
@@ -76,6 +77,12 @@ export namespace Person {
      *   display name: 'Person id'
      */
     readonly personId: $PropType['string'];
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -185,6 +192,12 @@ export interface Person extends $ObjectTypeDefinition {
        *   display name: 'Person id'
        */
       personId: $PropertyDef<'string', 'non-nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

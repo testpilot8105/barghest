@@ -28,6 +28,7 @@ export namespace Incident {
     | 'locationId'
     | 'occurredAt'
     | 'passageId'
+    | 'photoId'
     | 'recordId'
     | 'scenario'
     | 'schoolId'
@@ -82,6 +83,12 @@ export namespace Incident {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -196,6 +203,12 @@ export interface Incident extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

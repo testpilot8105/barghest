@@ -3,9 +3,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { connect, type DataClient } from './client.ts';
 import { encodeExploration } from './exploration.ts';
-import { fetchInferenceLog, getDocumentView, getFolders, getHealth, getInvestigations, INFERENCE_LOG_PAGE, mergeInferenceRows } from './intake.ts';
+import { fetchInferenceLog, getDocumentView, getFolders, getHealth, getInvestigations, getSaved, INFERENCE_LOG_PAGE, listSaved, mergeInferenceRows } from './intake.ts';
 import { countRows, fetchRows, getObjectView, histogram, searchAll, searchAround } from './reads.ts';
-import type { Catalog, DocumentView, Exploration, FoldersResult, Health, Histogram, InferenceRow, InvestigationsResult, ObjectView, Row, SearchAllEntry, SearchAroundEntry } from './types.ts';
+import type { Catalog, DocumentView, Exploration, FoldersResult, Health, Histogram, InferenceRow, InvestigationsResult, ObjectView, Row, SavedItem, SavedKind, SavedList, SearchAllEntry, SearchAroundEntry } from './types.ts';
 
 export interface AsyncState<T> {
   data: T | null;
@@ -147,6 +147,32 @@ export function useFolders(investigation: string): FoldersState {
   const state = useAsync((dc) => getFolders(dc, investigation), `folders:${investigation}:${tick}`);
   const reload = useCallback(() => setTick((t) => t + 1), []);
   return { ...state, reload };
+}
+
+export interface SavedState extends AsyncState<SavedList> {
+  /** Ask again, after creating, renaming, moving or deleting an item. */
+  reload: () => void;
+}
+
+/** The investigation's saved items of one kind (or every kind), newest change first, without bodies: a view's home page. */
+export function useSaved(investigation: string, kind?: SavedKind): SavedState {
+  const [tick, setTick] = useState(0);
+  const state = useAsync((dc) => listSaved(dc, investigation, kind), `saved:${investigation}:${kind ?? ''}:${tick}`);
+  const reload = useCallback(() => setTick((t) => t + 1), []);
+  return { ...state, reload };
+}
+
+export interface SavedItemState extends AsyncState<SavedItem> {
+  /** Ask again, for instance after another screen changed the item. */
+  reload: () => void;
+}
+
+/** One saved item with its body, the one in `?saved=`. With no id, nothing is fetched and `data` stays null. */
+export function useSavedItem(id: string | null): SavedItemState {
+  const [tick, setTick] = useState(0);
+  const state = useAsync<SavedItem | null>((dc) => (id ? getSaved(dc, id) : Promise.resolve(null)), `saved-item:${id ?? ''}:${tick}`);
+  const reload = useCallback(() => setTick((t) => t + 1), []);
+  return { ...state, reload } as SavedItemState;
 }
 
 export interface DocumentViewState extends AsyncState<DocumentView> {

@@ -28,6 +28,7 @@ export namespace Complaint {
     | 'filedAt'
     | 'label'
     | 'passageId'
+    | 'photoId'
     | 'recordId'
     | 'scenario';
 
@@ -90,6 +91,12 @@ export namespace Complaint {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -202,6 +209,12 @@ export interface Complaint extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

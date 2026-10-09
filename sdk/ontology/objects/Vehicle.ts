@@ -24,6 +24,7 @@ export namespace Vehicle {
     | 'canonicalId'
     | 'haulerId'
     | 'passageId'
+    | 'photoId'
     | 'plateNo'
     | 'recordId'
     | 'scenario'
@@ -64,6 +65,12 @@ export namespace Vehicle {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -164,6 +171,12 @@ export interface Vehicle extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

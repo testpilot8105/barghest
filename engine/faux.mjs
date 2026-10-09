@@ -112,5 +112,18 @@ export function createEngine({ meta, store, baseUrl, actionImpls, actor = 'analy
     register(objs);
   }
 
-  return { foundry, ontology, data, handlers: foundry.handlers, load, put };
+  /** Remove one object from memory and the store. faux derives links from foreign keys and only drops them when the
+   * object is replaced without them, so the keys go first; otherwise a pivot on the far side keeps naming the ghost. */
+  function remove(type, pk) {
+    const obj = data.getObject(type, pk);
+    if (obj) {
+      const bare = { ...obj };
+      for (const fk of foreignKeys[type] ?? []) delete bare[fk];
+      data.replaceObjectOrThrow(bare);
+      data.unregisterObjectOrThrow(type, pk);
+    }
+    store.remove(type, pk);
+  }
+
+  return { foundry, ontology, data, handlers: foundry.handlers, load, put, remove };
 }

@@ -123,6 +123,126 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "name": {
+            "displayName": "Name",
+            "rid": "ri.Document.name",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "register": {
+            "displayName": "Register",
+            "rid": "ri.Document.register",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "takenAt": {
+            "displayName": "Taken at",
+            "rid": "ri.Document.takenAt",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "timestamp"
+            },
+            "typeClasses": []
+          },
+          "latitude": {
+            "displayName": "Latitude",
+            "rid": "ri.Document.latitude",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "longitude": {
+            "displayName": "Longitude",
+            "rid": "ri.Document.longitude",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "double"
+            },
+            "typeClasses": []
+          },
+          "cameraMake": {
+            "displayName": "Camera make",
+            "rid": "ri.Document.cameraMake",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "cameraModel": {
+            "displayName": "Camera model",
+            "rid": "ri.Document.cameraModel",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "width": {
+            "displayName": "Width",
+            "rid": "ri.Document.width",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "integer"
+            },
+            "typeClasses": []
+          },
+          "height": {
+            "displayName": "Height",
+            "rid": "ri.Document.height",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "integer"
+            },
+            "typeClasses": []
+          },
+          "orientation": {
+            "displayName": "Orientation",
+            "rid": "ri.Document.orientation",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "integer"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Document",
@@ -148,6 +268,22 @@
           "apiName": "records",
           "displayName": "Source record",
           "objectTypeApiName": "SourceRecord"
+        },
+        {
+          "linkTypeRid": "ri.Document.relationship-from-document.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsFrom",
+          "displayName": "Relationship from",
+          "objectTypeApiName": "Relationship"
+        },
+        {
+          "linkTypeRid": "ri.Document.relationship-to-document.Relationship",
+          "status": "ACTIVE",
+          "cardinality": "MANY",
+          "apiName": "relationshipsTo",
+          "displayName": "Relationship to",
+          "objectTypeApiName": "Relationship"
         }
       ]
     },
@@ -804,6 +940,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Person.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Person",
@@ -997,6 +1145,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Organization.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Organization",
@@ -1181,6 +1341,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.Location.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Location.photoId",
             "status": {
               "type": "active"
             },
@@ -1413,6 +1585,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Event.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Event",
@@ -1618,6 +1802,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.DigitalAccount.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.DigitalAccount",
@@ -1815,6 +2011,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.OnlineGroup.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.OnlineGroup",
@@ -2003,6 +2211,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.Incident.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Incident.photoId",
             "status": {
               "type": "active"
             },
@@ -2293,6 +2513,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Firearm.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Firearm",
@@ -2524,6 +2756,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.EvidenceItem.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.EvidenceItem",
@@ -2706,6 +2950,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.School.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.School.photoId",
             "status": {
               "type": "active"
             },
@@ -2902,6 +3158,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.LGU.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.LGU",
@@ -3078,6 +3346,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.Barangay.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Barangay.photoId",
             "status": {
               "type": "active"
             },
@@ -3267,6 +3547,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.Hauler.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Hauler.photoId",
             "status": {
               "type": "active"
             },
@@ -3519,6 +3811,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Contract.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Contract",
@@ -3733,6 +4037,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Facility.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Facility",
@@ -3914,6 +4230,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.Vehicle.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Vehicle.photoId",
             "status": {
               "type": "active"
             },
@@ -4139,6 +4467,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Inspection.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Inspection",
@@ -4353,6 +4693,18 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Complaint.photoId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Complaint",
@@ -4514,6 +4866,18 @@
           "scenario": {
             "displayName": "Investigation",
             "rid": "ri.Thing.scenario",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "photoId": {
+            "displayName": "Photo",
+            "rid": "ri.Thing.photoId",
             "status": {
               "type": "active"
             },
@@ -5254,6 +5618,30 @@
               "type": "string"
             },
             "typeClasses": []
+          },
+          "fromDocumentId": {
+            "displayName": "From document",
+            "rid": "ri.Relationship.fromDocumentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
+          },
+          "toDocumentId": {
+            "displayName": "To document",
+            "rid": "ri.Relationship.toDocumentId",
+            "status": {
+              "type": "active"
+            },
+            "visibility": "NORMAL",
+            "dataType": {
+              "type": "string"
+            },
+            "typeClasses": []
           }
         },
         "rid": "ri.Relationship",
@@ -5605,6 +5993,24 @@
           "objectTypeApiName": "Thing",
           "cardinality": "ONE",
           "foreignKeyPropertyApiName": "toThingId"
+        },
+        {
+          "linkTypeRid": "ri.Document.relationship-from-document.Relationship",
+          "status": "ACTIVE",
+          "apiName": "fromDocument",
+          "displayName": "From document",
+          "objectTypeApiName": "Document",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "fromDocumentId"
+        },
+        {
+          "linkTypeRid": "ri.Document.relationship-to-document.Relationship",
+          "status": "ACTIVE",
+          "apiName": "toDocument",
+          "displayName": "To document",
+          "objectTypeApiName": "Document",
+          "cardinality": "ONE",
+          "foreignKeyPropertyApiName": "toDocumentId"
         }
       ]
     },
@@ -5866,6 +6272,15 @@
         },
         "scenario": {
           "displayName": "Investigation",
+          "description": "",
+          "required": false,
+          "dataType": {
+            "type": "string"
+          },
+          "typeClasses": []
+        },
+        "photoId": {
+          "displayName": "Photo",
           "description": "",
           "required": false,
           "dataType": {

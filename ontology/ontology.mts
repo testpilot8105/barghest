@@ -30,6 +30,8 @@ const provenance: Props = {
   passageId: str('Passage'),
   recordId: str('Source record'),
   scenario: str('Investigation'),
+  // The object's picture: the Document id of a photo linked to it (engine-api.md 2.11); the graph node shows it.
+  photoId: str('Photo'),
 };
 
 function entity(def: Omit<ObjectTypeDefinition, 'properties'> & { properties: Props }): ObjectTypeDefinition {
@@ -55,6 +57,18 @@ const Document = defineObject({
     status: str('Status'),
     // The folder the file lives in (a store record, engine/folders.mjs); empty at the investigation's top level.
     folderId: str('Folder'),
+    // The shown name and register, which a rename writes; title and system stay as the file came in.
+    name: str('Name'),
+    register: str('Register'),
+    // A photo's own metadata, read on import with no model (engine-api.md 2.11); absent on every other file.
+    takenAt: when('Taken at'),
+    latitude: num('Latitude'),
+    longitude: num('Longitude'),
+    cameraMake: str('Camera make'),
+    cameraModel: str('Camera model'),
+    width: int('Width'),
+    height: int('Height'),
+    orientation: int('Orientation'),
   },
 });
 
@@ -423,6 +437,9 @@ for (const [type] of ENTITIES) {
   relationshipEnds[`from${type.apiName}Id`] = str(`From ${type.displayName.toLowerCase()}`);
   relationshipEnds[`to${type.apiName}Id`] = str(`To ${type.displayName.toLowerCase()}`);
 }
+// A Document can be an end too: a photo `depicts` the person, vehicle or firearm it shows (engine-api.md 2.11).
+relationshipEnds.fromDocumentId = str('From document');
+relationshipEnds.toDocumentId = str('To document');
 
 const relationshipProps: Props = {
   relationshipId: str('Relationship id'),
@@ -527,6 +544,9 @@ for (const [type, plural] of ENTITIES) {
   oneToMany(type, [`from${type.apiName}`, `From ${single.toLowerCase()}`], Relationship, ['relationshipsFrom', 'Relationship from', 'Relationships from'], `from${type.apiName}Id`);
   oneToMany(type, [`to${type.apiName}`, `To ${single.toLowerCase()}`], Relationship, ['relationshipsTo', 'Relationship to', 'Relationships to'], `to${type.apiName}Id`);
 }
+// A photo's `depicts` links hang off the Document the same way (engine-api.md 2.11).
+oneToMany(Document, ['fromDocument', 'From document'], Relationship, ['relationshipsFrom', 'Relationship from', 'Relationships from'], 'fromDocumentId');
+oneToMany(Document, ['toDocument', 'To document'], Relationship, ['relationshipsTo', 'Relationship to', 'Relationships to'], 'toDocumentId');
 
 // ---- Actions. Each one writes the audit log (engine/actions.mjs). The primary key is the caller's, so the engine's
 // ids (P-001, RS-001) stay readable.

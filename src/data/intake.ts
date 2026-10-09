@@ -5,8 +5,12 @@ import { engineGet, enginePost, type DataClient } from './client.ts';
 import type {
   CreateFolderRequest,
   CreateInvestigationRequest,
+  CreateSavedRequest,
+  DeleteInvestigationResult,
+  DepictsLink,
   DeleteResult,
   DocumentView,
+  ExtractAllResult,
   ExtractResult,
   Folder,
   FoldersResult,
@@ -16,6 +20,16 @@ import type {
   InferenceRow,
   Investigation,
   InvestigationsResult,
+  MoveDocumentToRequest,
+  MoveDocumentToResult,
+  RenameDocumentResult,
+  RenameRegisterResult,
+  SavedItem,
+  SavedKind,
+  SavedList,
+  SetRegisterResult,
+  UnlinkImageResult,
+  UpdateSavedRequest,
 } from './types.ts';
 
 /** Store a file in an investigation; the model starts reading it unless `extract` is false or the model is off. */
@@ -67,6 +81,46 @@ export function moveDocument(dc: DataClient, documentId: string, folderId: strin
   return enginePost<{ documentId: string; folderId: string }>(dc, '/barghest/move-document', {}, { documentId, folderId });
 }
 
+/** Rename an investigation. The id and the address bar keep the first name. */
+export function renameInvestigation(dc: DataClient, investigation: string, name: string): Promise<Investigation> {
+  return enginePost<Investigation>(dc, '/barghest/rename-investigation', {}, { investigation, name });
+}
+
+/** Change what an investigation looks for. The next extraction uses the new blocks; files already read keep what they had. */
+export function editInvestigation(dc: DataClient, investigation: string, blocks: string[]): Promise<Investigation> {
+  return enginePost<Investigation>(dc, '/barghest/edit-investigation', {}, { investigation, blocks });
+}
+
+/** Run the model again on every file of the investigation. Fails with 503 while the model is off. */
+export function extractAll(dc: DataClient, investigation: string): Promise<ExtractAllResult> {
+  return enginePost<ExtractAllResult>(dc, '/barghest/extract-all', { investigation });
+}
+
+/** Delete an investigation with every file, folder and object in it. Fails with 409 while a file of it is being read. */
+export function deleteInvestigation(dc: DataClient, investigation: string): Promise<DeleteInvestigationResult> {
+  return enginePost<DeleteInvestigationResult>(dc, '/barghest/delete-investigation', {}, { investigation });
+}
+
+/** Rename a file's shown name. The extension is kept; the title it came in with never changes. */
+export function renameDocument(dc: DataClient, documentId: string, name: string): Promise<RenameDocumentResult> {
+  return enginePost<RenameDocumentResult>(dc, '/barghest/rename-document', {}, { documentId, name });
+}
+
+/** Change a file's shown register (free text, empty for none). The system it came from never changes. */
+export function setRegister(dc: DataClient, documentId: string, register: string): Promise<SetRegisterResult> {
+  return enginePost<SetRegisterResult>(dc, '/barghest/set-register', {}, { documentId, register });
+}
+
+/** Rename a register on every file of the investigation that carries it. */
+export function renameRegister(dc: DataClient, investigation: string, from: string, to: string): Promise<RenameRegisterResult> {
+  return enginePost<RenameRegisterResult>(dc, '/barghest/rename-register', {}, { investigation, from, to });
+}
+
+/** Move a file to another investigation: removed here, imported there from its stored copy, read again by the model. */
+export function moveDocumentToInvestigation(dc: DataClient, req: MoveDocumentToRequest): Promise<MoveDocumentToResult> {
+  return enginePost<MoveDocumentToResult>(dc, '/barghest/move-document-to', {}, { ...req });
+}
+
 /** Delete a file and everything the model pulled from it. Fails with 409 while the model is reading the file. */
 export function deleteDocument(dc: DataClient, documentId: string): Promise<DeleteResult> {
   return enginePost<DeleteResult>(dc, '/barghest/delete-document', { documentId });
@@ -107,4 +161,43 @@ export function getInvestigations(dc: DataClient): Promise<InvestigationsResult>
 /** Create an investigation. Its id comes back fixed for life; the shell puts it in the address bar. */
 export function createInvestigation(dc: DataClient, req: CreateInvestigationRequest): Promise<Investigation> {
   return enginePost<Investigation>(dc, '/barghest/investigations', {}, { ...req });
+}
+
+/** The investigation's saved items of one kind, or of every kind when `kind` is left out. Newest change first, no bodies. */
+export function listSaved(dc: DataClient, investigation: string, kind?: SavedKind): Promise<SavedList> {
+  return engineGet<SavedList>(dc, '/barghest/saved', kind ? { investigation, kind } : { investigation });
+}
+
+/** One saved item with its body. Fails with 404 when it is gone. */
+export function getSaved(dc: DataClient, id: string): Promise<SavedItem> {
+  return engineGet<SavedItem>(dc, '/barghest/saved-item', { id });
+}
+
+/** Make a saved item in a folder (or the top level). Its id comes back fixed for life; the shell puts it in `?saved=`. */
+export function createSaved(dc: DataClient, req: CreateSavedRequest): Promise<SavedItem> {
+  return enginePost<SavedItem>(dc, '/barghest/saved', {}, { ...req });
+}
+
+/** Rename, save the body or move a saved item, any mix in one call. Returns the item with its body. */
+export function updateSaved(dc: DataClient, id: string, changes: UpdateSavedRequest): Promise<SavedItem> {
+  return enginePost<SavedItem>(dc, '/barghest/update-saved', {}, { id, ...changes });
+}
+
+export function deleteSaved(dc: DataClient, id: string): Promise<{ id: string; deleted: true }> {
+  return enginePost<{ id: string; deleted: true }>(dc, '/barghest/delete-saved', {}, { id });
+}
+
+/** "This photo shows this object": a `depicts` link from the photo to `objectId` (`Type:pk`). The first photo linked becomes the object's picture. */
+export function linkImage(dc: DataClient, documentId: string, objectId: string): Promise<DepictsLink> {
+  return enginePost<DepictsLink>(dc, '/barghest/link-image', {}, { documentId, objectId });
+}
+
+/** Remove the link. If the photo was the object's picture, another linked photo takes over or the picture clears. */
+export function unlinkImage(dc: DataClient, documentId: string, objectId: string): Promise<UnlinkImageResult> {
+  return enginePost<UnlinkImageResult>(dc, '/barghest/unlink-image', {}, { documentId, objectId });
+}
+
+/** The object's picture, the one its graph node shows; `null` clears it. A photo not yet linked is linked first. */
+export function setPhoto(dc: DataClient, objectId: string, documentId: string | null): Promise<{ objectId: string; photoId: string }> {
+  return enginePost<{ objectId: string; photoId: string }>(dc, '/barghest/set-photo', {}, { objectId, documentId });
 }

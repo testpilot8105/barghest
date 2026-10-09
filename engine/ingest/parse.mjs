@@ -2,8 +2,10 @@
 // (Apache 2.0), CSV through papaparse (MIT), TXT and JSON through Node itself.
 import { extname } from 'node:path';
 import Papa from 'papaparse';
+import { IMAGE_FORMATS, isImageFormat, photoText, readPhoto } from './photo.mjs';
 
-export const FORMATS = ['pdf', 'csv', 'txt', 'json', 'md'];
+/** Everything `import` accepts: the text formats the model reads, and the photo formats it never does (2.11). */
+export const FORMATS = ['pdf', 'csv', 'txt', 'json', 'md', ...IMAGE_FORMATS];
 
 export function formatOf(filename) {
   const ext = extname(filename).toLowerCase().slice(1);
@@ -63,7 +65,12 @@ function parseJson(text) {
 /** @returns {Promise<{ text: string, rows: object[] | null, columns?: string[], pages?: number }>} */
 export async function parseFile(filename, buffer) {
   const format = formatOf(filename);
-  if (!format) throw new Error(`unsupported file type: ${filename} (pdf, csv, txt, md, json)`);
+  if (!format) throw new Error(`unsupported file type: ${filename} (pdf, csv, txt, md, json, or a photo)`);
+  // A photo: its own metadata, read with no model, becomes one passage of plain text (engine-api.md 2.11).
+  if (isImageFormat(format)) {
+    const { takenText, ...photo } = readPhoto(buffer, format);
+    return { text: photoText(filename.split(/[\\/]/).pop(), { ...photo, takenText }), rows: null, photo };
+  }
   if (format === 'pdf') return parsePdf(buffer);
   const text = Buffer.from(buffer).toString('utf8');
   if (format === 'csv') return parseCsv(text);

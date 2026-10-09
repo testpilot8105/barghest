@@ -21,9 +21,12 @@ import { createLlm, MODELS } from './llm.mjs';
 import { timeline, whatConnects } from './queries/graph.mjs';
 import { documentView } from './queries/document.mjs';
 import { ask, embedAll, searchPassages } from './ask/index.mjs';
-import { createInvestigation, ensureDemoInvestigations, listInvestigations } from './investigations.mjs';
-import { deleteDocument } from './documents.mjs';
+import { createInvestigation, editInvestigation, ensureDemoInvestigations, listInvestigations, renameInvestigation } from './investigations.mjs';
+import { deleteDocument, deleteInvestigation, moveDocumentToInvestigation, renameDocument, renameRegister, setRegister } from './documents.mjs';
 import { createFolder, deleteFolder, folderFor, listFolders, moveDocument, moveFolder, renameFolder } from './folders.mjs';
+import { createSaved, deleteSaved, getSaved, listSaved, updateSaved } from './saved.mjs';
+import { linkImage, setPhoto, unlinkImage } from './images.mjs';
+import { IMAGE_CONTENT_TYPES, isImageFormat } from './ingest/photo.mjs';
 import { ownership } from '../ontology/ownership.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -39,6 +42,7 @@ const CONTENT_TYPES = {
   txt: 'text/plain; charset=utf-8',
   md: 'text/markdown; charset=utf-8',
   json: 'application/json; charset=utf-8',
+  ...IMAGE_CONTENT_TYPES,
 };
 
 const meta = JSON.parse(readFileSync(join(root, 'ontology', 'ontology.json'), 'utf8'));
@@ -154,9 +158,41 @@ const routes = {
   'POST /barghest/move-folder': async (url, req) => moveFolder(store, await jsonBodyOf(req)),
   'POST /barghest/delete-folder': async (url, req) => deleteFolder(store, engine.data, await jsonBodyOf(req)),
   'POST /barghest/move-document': async (url, req) => moveDocument(engine, store, await jsonBodyOf(req)),
+  // Saved items: graphs, timelines, conversations and explorations as store records (engine-api.md 2.10).
+  'GET /barghest/saved': (url) => listSaved(store, requireInvestigation(investigationParam(url)).id, url.searchParams.get('kind') ?? ''),
+  'GET /barghest/saved-item': (url) => getSaved(store, url.searchParams.get('id') ?? ''),
+  'POST /barghest/saved': async (url, req) => createSaved(store, await jsonBodyOf(req)),
+  'POST /barghest/update-saved': async (url, req) => updateSaved(store, await jsonBodyOf(req)),
+  'POST /barghest/delete-saved': async (url, req) => deleteSaved(store, await jsonBodyOf(req)),
+  // Photos in the ontology (engine-api.md 2.11): the analyst's "this photo shows this object", and the picture a node shows.
+  'POST /barghest/link-image': async (url, req) => linkImage({ engine, meta, store, ...(await jsonBodyOf(req)) }),
+  'POST /barghest/unlink-image': async (url, req) => unlinkImage({ engine, meta, store, ...(await jsonBodyOf(req)) }),
+  'POST /barghest/set-photo': async (url, req) => setPhoto({ engine, meta, store, ...(await jsonBodyOf(req)) }),
   // Investigations: store records, outside the ontology (engine-api.md 2.6).
   'GET /barghest/investigations': () => listInvestigations(store, engine.data),
   'POST /barghest/investigations': async (url, req) => createInvestigation(store, await jsonBodyOf(req)),
+  // Rename, edit, delete and move everything (engine-api.md 2.8). Names are labels on fixed ids.
+  'POST /barghest/rename-investigation': async (url, req) => renameInvestigation(store, await jsonBodyOf(req)),
+  'POST /barghest/edit-investigation': async (url, req) => editInvestigation(store, await jsonBodyOf(req)),
+  'POST /barghest/extract-all': async (url) => {
+    const inv = requireInvestigation(investigationParam(url));
+    if (!llm.allowed()) throw Object.assign(new Error('the local model is off'), { status: 503 });
+    const docs = [...engine.data.getObjectsOfType('Document')].filter((d) => d.scenario === inv.id && d.status !== 'no text' && d.status !== 'photo');
+    const started = docs.map((d) => ({ documentId: String(d.__primaryKey), extraction: startExtraction(String(d.__primaryKey), inv.id) }));
+    return { investigation: inv.id, documents: started.length, started };
+  },
+  'POST /barghest/delete-investigation': async (url, req) => {
+    const body = await jsonBodyOf(req);
+    return deleteInvestigation({ engine, meta, store, investigation: body.investigation ?? investigationParam(url), filesDir: FILES, root, jobs });
+  },
+  'POST /barghest/rename-document': async (url, req) => renameDocument(engine, store, await jsonBodyOf(req)),
+  'POST /barghest/set-register': async (url, req) => setRegister(engine, store, await jsonBodyOf(req)),
+  'POST /barghest/rename-register': async (url, req) => renameRegister(engine, store, await jsonBodyOf(req)),
+  'POST /barghest/move-document-to': async (url, req) => {
+    const body = await jsonBodyOf(req);
+    if (body.documentId && jobs.has(String(body.documentId))) throw Object.assign(new Error('the model is still reading this file; wait for it to finish'), { status: 409 });
+    return moveDocumentToInvestigation({ engine, meta, store, llm, ...body, filesDir: FILES, root, start: startExtraction });
+  },
   'POST /barghest/import': async (url, req) => {
     const form = await formDataOf(req);
     const file = form.get('file');
@@ -168,8 +204,9 @@ const routes = {
     if (!FORMATS.includes(ext) && ext !== 'md') throw bad(`unsupported file type .${ext}; one of ${FORMATS.join(', ')}`);
     const buffer = Buffer.from(await file.arrayBuffer());
     const result = await ingestFile({ engine, meta, store, scenario: investigation.id, filename: file.name, buffer, system, folderId, filesDir: FILES, root });
-    // Nothing to read in a scan or an empty file: the reply says so and the model never starts on it.
-    const extraction = result.status === 'no text' ? 'no text' : llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, investigation.id) : 'off';
+    // Nothing to read in a scan or an empty file, and nothing the model can see in a photo: the reply says so and
+    // the model never starts on it.
+    const extraction = result.status === 'no text' ? 'no text' : result.status === 'photo' ? 'photo' : llm.allowed() && form.get('extract') !== 'no' ? startExtraction(result.documentId, investigation.id) : 'off';
     return { ...result, extraction };
   },
   // (Re)run extraction on one imported document, in the background, with its investigation's blocks. Poll the
@@ -180,6 +217,7 @@ const routes = {
     const doc = engine.data.getObject('Document', documentId);
     if (!doc) throw Object.assign(new Error(`document not found: ${documentId}`), { status: 404 });
     if (doc.status === 'no text') throw bad('no text to read in this file (a scan, or empty)');
+    if (doc.status === 'photo') throw bad('a photo: the model never reads one');
     const investigation = requireInvestigation(investigationParam(url) ?? doc.scenario);
     if (!llm.allowed()) throw Object.assign(new Error('the local model is off'), { status: 503 });
     return { documentId, extraction: startExtraction(documentId, investigation.id) };
@@ -237,11 +275,14 @@ function serveFile(url, res) {
   if (!stat?.isFile()) throw Object.assign(new Error(`no stored copy for ${documentId}`), { status: 404 });
   const ext = String(doc.format ?? file.split('.').pop()).toLowerCase();
   const filename = String(doc.title ?? documentId).replace(/["\\\r\n]/g, '_');
+  // An image opened directly is a sandboxed document, so an SVG's scripts never run; <img> is unaffected (2.11).
   res.writeHead(200, {
     'content-type': CONTENT_TYPES[ext] ?? 'application/octet-stream',
     'content-length': stat.size,
     'content-disposition': `inline; filename="${filename}"`,
     'cache-control': 'no-store',
+    'x-content-type-options': 'nosniff',
+    ...(isImageFormat(ext) ? { 'content-security-policy': 'sandbox' } : {}),
   });
   createReadStream(file).pipe(res);
 }

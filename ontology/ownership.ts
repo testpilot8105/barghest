@@ -9,8 +9,8 @@ export type TypeOwnership = { default: Ownership; props?: Record<string, Ownersh
 // '*' is every entity type (Person, Firearm, Hauler and the rest): extracted values are source-backed, the
 // provenance fields are the app's.
 export const ownership: Record<string, TypeOwnership> = {
-  '*': { default: 'source', props: { canonicalId: 'ontology', passageId: 'ontology', recordId: 'ontology', scenario: 'ontology' } },
-  Document: { default: 'source', props: { status: 'ontology', importedAt: 'ontology', scenario: 'ontology', folderId: 'ontology' } },
+  '*': { default: 'source', props: { canonicalId: 'ontology', passageId: 'ontology', recordId: 'ontology', scenario: 'ontology', photoId: 'ontology' } },
+  Document: { default: 'source', props: { status: 'ontology', importedAt: 'ontology', scenario: 'ontology', folderId: 'ontology', name: 'ontology', register: 'ontology' } },
   Passage: { default: 'source' },
   SourceRecord: { default: 'source' },
   Relationship: { default: 'ontology', props: { confidence: 'derived', passageIds: 'source', recordIds: 'source', observedAt: 'source' } },

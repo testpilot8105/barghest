@@ -28,6 +28,7 @@ export namespace Location {
     | 'lon'
     | 'name'
     | 'passageId'
+    | 'photoId'
     | 'recordId'
     | 'scenario';
 
@@ -85,6 +86,12 @@ export namespace Location {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -192,6 +199,12 @@ export interface Location extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

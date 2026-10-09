@@ -20,6 +20,7 @@ import type { Vehicle } from './Vehicle.js';
 import type { Inspection } from './Inspection.js';
 import type { Complaint } from './Complaint.js';
 import type { Thing } from './Thing.js';
+import type { Document } from './Document.js';
 import type {
   PropertyKeys as $PropertyKeys,
   ObjectTypeDefinition as $ObjectTypeDefinition,
@@ -40,6 +41,7 @@ export namespace Relationship {
     | 'fromComplaintId'
     | 'fromContractId'
     | 'fromDigitalAccountId'
+    | 'fromDocumentId'
     | 'fromEventId'
     | 'fromEvidenceItemId'
     | 'fromFacilityId'
@@ -72,6 +74,7 @@ export namespace Relationship {
     | 'toComplaintId'
     | 'toContractId'
     | 'toDigitalAccountId'
+    | 'toDocumentId'
     | 'toEventId'
     | 'toEvidenceItemId'
     | 'toFacilityId'
@@ -95,6 +98,7 @@ export namespace Relationship {
     readonly fromComplaint: $SingleLinkAccessor<Complaint>;
     readonly fromContract: $SingleLinkAccessor<Contract>;
     readonly fromDigitalAccount: $SingleLinkAccessor<DigitalAccount>;
+    readonly fromDocument: $SingleLinkAccessor<Document>;
     readonly fromEvent: $SingleLinkAccessor<Event>;
     readonly fromEvidenceItem: $SingleLinkAccessor<EvidenceItem>;
     readonly fromFacility: $SingleLinkAccessor<Facility>;
@@ -114,6 +118,7 @@ export namespace Relationship {
     readonly toComplaint: $SingleLinkAccessor<Complaint>;
     readonly toContract: $SingleLinkAccessor<Contract>;
     readonly toDigitalAccount: $SingleLinkAccessor<DigitalAccount>;
+    readonly toDocument: $SingleLinkAccessor<Document>;
     readonly toEvent: $SingleLinkAccessor<Event>;
     readonly toEvidenceItem: $SingleLinkAccessor<EvidenceItem>;
     readonly toFacility: $SingleLinkAccessor<Facility>;
@@ -162,6 +167,12 @@ export namespace Relationship {
      *   display name: 'From digital account'
      */
     readonly fromDigitalAccountId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'From document'
+     */
+    readonly fromDocumentId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -357,6 +368,12 @@ export namespace Relationship {
     /**
      *   property status: active
      *
+     *   display name: 'To document'
+     */
+    readonly toDocumentId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
      *   display name: 'To event'
      */
     readonly toEventId: $PropType['string'] | undefined;
@@ -500,6 +517,7 @@ export interface Relationship extends $ObjectTypeDefinition {
       fromComplaint: $ObjectMetadata.Link<Complaint, false>;
       fromContract: $ObjectMetadata.Link<Contract, false>;
       fromDigitalAccount: $ObjectMetadata.Link<DigitalAccount, false>;
+      fromDocument: $ObjectMetadata.Link<Document, false>;
       fromEvent: $ObjectMetadata.Link<Event, false>;
       fromEvidenceItem: $ObjectMetadata.Link<EvidenceItem, false>;
       fromFacility: $ObjectMetadata.Link<Facility, false>;
@@ -519,6 +537,7 @@ export interface Relationship extends $ObjectTypeDefinition {
       toComplaint: $ObjectMetadata.Link<Complaint, false>;
       toContract: $ObjectMetadata.Link<Contract, false>;
       toDigitalAccount: $ObjectMetadata.Link<DigitalAccount, false>;
+      toDocument: $ObjectMetadata.Link<Document, false>;
       toEvent: $ObjectMetadata.Link<Event, false>;
       toEvidenceItem: $ObjectMetadata.Link<EvidenceItem, false>;
       toFacility: $ObjectMetadata.Link<Facility, false>;
@@ -569,6 +588,12 @@ export interface Relationship extends $ObjectTypeDefinition {
        *   display name: 'From digital account'
        */
       fromDigitalAccountId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'From document'
+       */
+      fromDocumentId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *
@@ -761,6 +786,12 @@ export interface Relationship extends $ObjectTypeDefinition {
        *   display name: 'To digital account'
        */
       toDigitalAccountId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'To document'
+       */
+      toDocumentId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

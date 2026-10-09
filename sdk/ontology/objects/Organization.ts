@@ -19,7 +19,15 @@ import type {
 } from '@osdk/client';
 
 export namespace Organization {
-  export type PropertyKeys = 'canonicalId' | 'kind' | 'name' | 'organizationId' | 'passageId' | 'recordId' | 'scenario';
+  export type PropertyKeys =
+    | 'canonicalId'
+    | 'kind'
+    | 'name'
+    | 'organizationId'
+    | 'passageId'
+    | 'photoId'
+    | 'recordId'
+    | 'scenario';
 
   export interface Links {
     readonly candidates: Organization.ObjectSet;
@@ -62,6 +70,12 @@ export namespace Organization {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -156,6 +170,12 @@ export interface Organization extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

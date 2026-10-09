@@ -51,10 +51,18 @@ export function listFolders(store, data, investigation) {
   }
   const subfolders = new Map();
   for (const f of folders) if (f.parentId) subfolders.set(f.parentId, (subfolders.get(f.parentId) ?? 0) + 1);
+  // Saved items (graphs, timelines, conversations, explorations) sit next to the files (engine-api.md 2.10).
+  const saved = new Map();
+  let topLevelSaved = 0;
+  for (const s of store.savedOf(investigation)) {
+    if (!s.folderId) topLevelSaved++;
+    else saved.set(s.folderId, (saved.get(s.folderId) ?? 0) + 1);
+  }
   return {
     investigation,
-    folders: folders.map((f) => ({ id: f.id, name: f.name, parentId: f.parentId, files: files.get(f.id) ?? 0, subfolders: subfolders.get(f.id) ?? 0 })),
+    folders: folders.map((f) => ({ id: f.id, name: f.name, parentId: f.parentId, files: files.get(f.id) ?? 0, subfolders: subfolders.get(f.id) ?? 0, saved: saved.get(f.id) ?? 0 })),
     topLevelFiles,
+    topLevelSaved,
   };
 }
 
@@ -113,7 +121,7 @@ export function moveFolder(store, { folderId, parentId } = {}) {
 export function deleteFolder(store, data, { folderId } = {}) {
   const folder = requireFolder(store, folderId ?? '');
   const me = listFolders(store, data, folder.investigation).folders.find((f) => f.id === folder.id);
-  if (me.files || me.subfolders) throw conflict("Move or delete what's inside first.");
+  if (me.files || me.subfolders || me.saved) throw conflict("Move or delete what's inside first.");
   store.removeFolder(folder.id);
   store.audit({ action: 'deleteFolder', actor: 'analyst', params: { folderId: folder.id, name: folder.name, parentId: folder.parentId }, edits: [], objectIds: [`Folder:${folder.id}`] });
   return { folderId: folder.id, deleted: true };

@@ -26,6 +26,7 @@ export namespace School {
     | 'division'
     | 'name'
     | 'passageId'
+    | 'photoId'
     | 'recordId'
     | 'scenario'
     | 'schoolId';
@@ -72,6 +73,12 @@ export namespace School {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -173,6 +180,12 @@ export interface School extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

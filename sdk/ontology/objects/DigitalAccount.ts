@@ -26,6 +26,7 @@ export namespace DigitalAccount {
     | 'handle'
     | 'passageId'
     | 'personId'
+    | 'photoId'
     | 'platform'
     | 'platformId'
     | 'recordId'
@@ -78,6 +79,12 @@ export namespace DigitalAccount {
      *   display name: 'Owner'
      */
     readonly personId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -190,6 +197,12 @@ export interface DigitalAccount extends $ObjectTypeDefinition {
        *   display name: 'Owner'
        */
       personId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

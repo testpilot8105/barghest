@@ -20,7 +20,15 @@ import type {
 } from '@osdk/client';
 
 export namespace Barangay {
-  export type PropertyKeys = 'barangayId' | 'canonicalId' | 'lguId' | 'name' | 'passageId' | 'recordId' | 'scenario';
+  export type PropertyKeys =
+    | 'barangayId'
+    | 'canonicalId'
+    | 'lguId'
+    | 'name'
+    | 'passageId'
+    | 'photoId'
+    | 'recordId'
+    | 'scenario';
 
   export interface Links {
     readonly candidates: Barangay.ObjectSet;
@@ -64,6 +72,12 @@ export namespace Barangay {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -159,6 +173,12 @@ export interface Barangay extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

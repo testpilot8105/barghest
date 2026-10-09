@@ -32,7 +32,9 @@ function neighbours(data, meta, obj) {
 }
 
 function summarise(o) {
-  return { type: o.__apiName, pk: String(o.__primaryKey), title: o.__title ?? String(o.__primaryKey) };
+  // The object's picture rides along (engine-api.md 2.11), so the graph draws a face without opening the full view.
+  const photoId = o.photoId ? String(o.photoId) : null;
+  return { type: o.__apiName, pk: String(o.__primaryKey), title: o.__title ?? String(o.__primaryKey), photoId, photoUrl: photoId ? `/barghest/file?documentId=${encodeURIComponent(photoId)}` : null };
 }
 
 function relationshipSummary(r) {
@@ -192,7 +194,7 @@ export function timeline(data, meta, store, objectId, { hops = 2 } = {}) {
       at: r.observedAt,
       kind: r.kind ?? 'relationship',
       summary: r.label ?? '',
-      tag: r.method === 'system' ? 'system' : 'observed',
+      tag: r.method === 'system' ? 'system' : r.method === 'analyst' ? 'analyst' : 'observed',
       confidence: r.confidence ?? null,
       status: r.status ?? '',
       objectIds: [`${r.fromType}:${r.fromId}`, `${r.toType}:${r.toId}`],

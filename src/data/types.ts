@@ -64,6 +64,8 @@ export interface Row {
   pk: string;
   title: string;
   properties: Record<string, unknown>;
+  /** The object's picture, when it has one: a photo linked to it (section 2.11). */
+  photoUrl?: string;
 }
 
 export interface Page {
@@ -169,11 +171,15 @@ export interface ObjectView {
   candidates: Array<{ pk: string; title: string; passageId: string | null }>;
   resolutions: ResolutionView[];
   audit: AuditEntry[];
+  /** The object's picture, the one its graph node shows; null when no photo is set (section 2.11). */
+  photo: { documentId: string; url: string } | null;
+  /** Every photo linked to the object, newest taken first. */
+  images: Array<{ documentId: string; name: string; takenAt: string | null }>;
 }
 
 export interface SearchAllEntry {
   count: number;
-  top: Array<{ pk: string; title: string }>;
+  top: Array<{ pk: string; title: string; photoUrl?: string }>;
 }
 
 /** What `POST import` answers. `extraction` says whether the model started reading the file. */
@@ -184,11 +190,13 @@ export interface ImportResult {
   records: number;
   pages: number | null;
   chars: number;
-  /** `no text` when the file yielded no characters (a scanned PDF, an empty file); nothing is read then. */
-  status: 'imported' | 'no text';
+  /** `no text` when the file yielded no characters (a scanned PDF, an empty file); `photo` for a picture: nothing is read then. */
+  status: 'imported' | 'no text' | 'photo';
   /** The stored original, relative to the app; `fileUrl` serves it. */
   path: string;
-  extraction: 'started' | 'running' | 'off' | 'no text';
+  extraction: 'started' | 'running' | 'off' | 'no text' | 'photo';
+  /** System flags written from the file itself (Relationships with method `system`); 0 for most files. */
+  flags: number;
 }
 
 export interface ImportRequest {
@@ -288,10 +296,51 @@ export interface DocumentView {
   };
   /** The folder the file lives in; null at the investigation's top level. */
   folder: { id: string; name: string } | null;
+  /** A photo's own metadata (section 2.11); null for every other file. */
+  photo: PhotoMetadata | null;
+  /** What the analyst says the photo shows; empty for every other file. */
+  depicts: Array<{ type: string; pk: string; title: string }>;
   passages: DocumentPassage[];
   records: DocumentRecord[];
   /** This document's model log, oldest first. */
   inference: InferenceRow[];
+}
+
+/** What a photo says about itself, read on import with no model; each field null when the file does not say. */
+export interface PhotoMetadata {
+  takenAt: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  cameraMake: string | null;
+  cameraModel: string | null;
+  width: number | null;
+  height: number | null;
+  orientation: number | null;
+}
+
+/** The `depicts` Relationship `linkImage` writes: from the photo (a Document) to the object, by the analyst. */
+export interface DepictsLink {
+  relationshipId: string;
+  label: string;
+  kind: 'depicts';
+  fromType: 'Document';
+  fromId: string;
+  toType: string;
+  toId: string;
+  observedAt?: string;
+  confidence: number;
+  method: 'analyst';
+  status: 'confirmed';
+  passageIds: string[];
+  scenario: string;
+}
+
+export interface UnlinkImageResult {
+  documentId: string;
+  objectId: string;
+  unlinked: true;
+  /** The picture the object is left with: another linked photo, or empty. */
+  photoId: string;
 }
 
 /** A folder: a store record inside one investigation. The id never changes; the name is a label on it. */
@@ -311,6 +360,8 @@ export interface FolderEntry {
   parentId: string;
   files: number;
   subfolders: number;
+  /** Saved items (graphs, timelines, conversations, explorations) in this folder. */
+  saved: number;
 }
 
 export interface FoldersResult {
@@ -318,6 +369,8 @@ export interface FoldersResult {
   folders: FolderEntry[];
   /** Files at the investigation's top level, outside any folder. */
   topLevelFiles: number;
+  /** Saved items at the investigation's top level. */
+  topLevelSaved: number;
 }
 
 export interface CreateFolderRequest {
@@ -325,6 +378,107 @@ export interface CreateFolderRequest {
   name: string;
   /** Empty or missing means the top level. */
   parentId?: string;
+}
+
+/** What a person makes and keeps: each kind's body belongs to the screen that draws it. */
+export type SavedKind = 'graph' | 'timeline' | 'conversation' | 'exploration';
+
+/** A saved item: a store record inside one investigation. The id never changes; the name is a label on it. */
+export interface SavedItem {
+  id: string;
+  investigation: string;
+  kind: SavedKind;
+  name: string;
+  /** Empty at the investigation's top level. */
+  folderId: string;
+  createdAt: string;
+  /** Moves on every change; lists sort by it, newest first. */
+  updatedAt: string;
+  /** JSON the engine never reads. Present from `getSaved`, `createSaved` and `updateSaved`; absent in lists. */
+  body?: Record<string, unknown>;
+}
+
+export interface SavedList {
+  investigation: string;
+  /** The kind asked for, or null for every kind. */
+  kind: SavedKind | null;
+  /** Newest change first, without bodies. */
+  items: SavedItem[];
+}
+
+export interface CreateSavedRequest {
+  investigation: string;
+  kind: SavedKind;
+  name: string;
+  /** Empty or missing means the top level. */
+  folderId?: string;
+  /** Defaults to `{}`. */
+  body?: Record<string, unknown>;
+}
+
+/** Any mix: a rename, a new body, a move (empty `folderId` is the top level). */
+export interface UpdateSavedRequest {
+  name?: string;
+  body?: Record<string, unknown>;
+  folderId?: string;
+}
+
+export interface ExtractAllResult {
+  investigation: string;
+  documents: number;
+  started: Array<{ documentId: string; extraction: 'started' | 'running' }>;
+}
+
+export interface DeleteInvestigationResult {
+  investigation: string;
+  deleted: true;
+  documents: number;
+  folders: number;
+  /** Saved items that went with it. */
+  saved: number;
+  /** Objects that still carried the investigation id after its files went: canonical objects, resolutions, links. */
+  objects: number;
+}
+
+export interface RenameDocumentResult {
+  documentId: string;
+  /** The shown name, with the original extension kept. */
+  name: string;
+  /** The name the file came in with; never changes. */
+  title: string;
+}
+
+export interface SetRegisterResult {
+  documentId: string;
+  register: string;
+  /** The system the file came from; never changes. */
+  system: string;
+}
+
+export interface RenameRegisterResult {
+  investigation: string;
+  from: string;
+  to: string;
+  documents: number;
+}
+
+export interface MoveDocumentToRequest {
+  documentId: string;
+  investigation: string;
+  /** A folder of the target investigation; empty is its top level. */
+  folderId?: string;
+  /** `false` stores it there without the model reading it again. */
+  extract?: boolean;
+}
+
+export interface MoveDocumentToResult {
+  /** The file's new id in the target investigation. */
+  documentId: string;
+  previousDocumentId: string;
+  investigation: string;
+  folderId: string;
+  passages: number;
+  extraction: 'started' | 'running' | 'off' | 'no text' | 'photo';
 }
 
 /** What `POST delete-document` answers: what went with the file, and what the re-run of resolution wrote. */

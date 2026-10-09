@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { toServerObject } from '../faux.mjs';
+import { systemFlags } from './flags.mjs';
 import { parseFile } from './parse.mjs';
 import { splitPassages } from './passages.mjs';
 
@@ -45,8 +46,9 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
   const documentId = shortId('D', scenario, filename, createHash('sha1').update(Buffer.from(buffer)).digest('hex'));
   const format = filename.split('.').pop().toLowerCase();
   const importedAt = new Date().toISOString();
-  // A scanned PDF or an empty file yields nothing to read: say so instead of failing quietly later.
-  const status = parsed.text.trim().length === 0 ? 'no text' : 'imported';
+  // A scanned PDF or an empty file yields nothing to read: say so instead of failing quietly later. A photo says
+  // it is one: the model never reads it, its metadata and one passage of plain text are what there is (2.11).
+  const status = parsed.photo ? 'photo' : parsed.text.trim().length === 0 ? 'no text' : 'imported';
 
   // Keep the original: the file view opens it, and a later move re-imports it from this copy.
   let path = `data/${scenario}/sources/${filename}`;
@@ -69,6 +71,11 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
       importedAt,
       status,
       folderId: folderId || undefined,
+      // The shown name and register start as the title and the system; a rename writes these, never those.
+      name: filename,
+      register: system || undefined,
+      // A photo's own metadata (takenAt, latitude, longitude, cameraMake, cameraModel, width, height, orientation).
+      ...(parsed.photo ?? {}),
     }),
   );
 
@@ -101,15 +108,29 @@ export async function ingestFile({ engine, meta, store, scenario, filename, buff
     );
   });
 
+  // What the engine notices in the file on its own (engine-api.md 2.9): Relationships with method "system".
+  const flagged = status === 'no text' ? { objects: [], flags: [] } : systemFlags({ meta, scenario, documentId, parsed, passages });
+  objs.push(...flagged.objects);
+
   engine.put(objs);
   store.audit({
     action: 'importDocument',
     actor: 'analyst',
     outcome: 'applied',
-    params: { filename, scenario, system, format, bytes: buffer.length, path, status, folderId: folderId || '' },
+    params: { filename, scenario, system, format, bytes: buffer.length, path, status, folderId: folderId || '', flags: flagged.flags.length },
     edits: [{ type: 'addObject', objectType: 'Document', primaryKey: documentId }],
     objectIds: [`Document:${documentId}`],
   });
+  for (const f of flagged.flags) {
+    store.audit({
+      action: 'flag',
+      actor: 'engine',
+      outcome: 'applied',
+      params: { documentId, filename, scenario, label: f.label, observedAt: f.observedAt, passageId: f.passageId, recordId: f.recordId },
+      edits: [{ type: 'addObject', objectType: 'Relationship', primaryKey: f.relationshipId }],
+      objectIds: [...f.objectIds, `Document:${documentId}`],
+    });
+  }
 
-  return { documentId, format, passages: passages.length, records: rows.length, pages: parsed.pages ?? null, chars: parsed.text.length, status, path };
+  return { documentId, format, passages: passages.length, records: rows.length, pages: parsed.pages ?? null, chars: parsed.text.length, status, path, flags: flagged.flags.length };
 }

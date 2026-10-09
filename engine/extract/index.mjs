@@ -15,6 +15,8 @@ const PREFIX = {
 };
 
 const id = (type, passageId, name) => `${PREFIX[type] ?? type}-${createHash('sha1').update(`${passageId}|${type}|${String(name).trim().toLowerCase()}`).digest('hex').slice(0, 8)}`;
+/** The id of a candidate named in a passage; the system flags (ingest/flags.mjs) use the same scheme so their ends meet the model's. */
+export const objectId = id;
 const nonEmpty = (v) => v != null && v !== '' && !(Array.isArray(v) && v.length === 0);
 const iso = (s) => {
   if (!s) return undefined;

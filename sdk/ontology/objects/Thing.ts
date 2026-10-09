@@ -18,7 +18,15 @@ import type {
 } from '@osdk/client';
 
 export namespace Thing {
-  export type PropertyKeys = 'canonicalId' | 'kind' | 'name' | 'passageId' | 'recordId' | 'scenario' | 'thingId';
+  export type PropertyKeys =
+    | 'canonicalId'
+    | 'kind'
+    | 'name'
+    | 'passageId'
+    | 'photoId'
+    | 'recordId'
+    | 'scenario'
+    | 'thingId';
 
   export interface Links {
     readonly candidates: Thing.ObjectSet;
@@ -54,6 +62,12 @@ export namespace Thing {
      *   display name: 'Passage'
      */
     readonly passageId: $PropType['string'] | undefined;
+    /**
+     *   property status: active
+     *
+     *   display name: 'Photo'
+     */
+    readonly photoId: $PropType['string'] | undefined;
     /**
      *   property status: active
      *
@@ -147,6 +161,12 @@ export interface Thing extends $ObjectTypeDefinition {
        *   display name: 'Passage'
        */
       passageId: $PropertyDef<'string', 'nullable', 'single'>;
+      /**
+       *   property status: active
+       *
+       *   display name: 'Photo'
+       */
+      photoId: $PropertyDef<'string', 'nullable', 'single'>;
       /**
        *   property status: active
        *

@@ -62,9 +62,24 @@ export function documentView({ data, meta, store, documentId, extracting = false
   }
 
   const folder = document.folderId ? store.folder(String(document.folderId)) : null;
+
+  // A photo: its metadata and what the analyst says it shows (engine-api.md 2.11); null and empty for other files.
+  const isPhoto = document.status === 'photo';
+  const photo = isPhoto
+    ? Object.fromEntries(['takenAt', 'latitude', 'longitude', 'cameraMake', 'cameraModel', 'width', 'height', 'orientation'].map((k) => [k, document[k] ?? null]))
+    : null;
+  const depicts = isPhoto
+    ? [...data.getObjectsOfType('Relationship')]
+        .filter((r) => r.kind === 'depicts' && r.fromType === 'Document' && String(r.fromId) === String(documentId))
+        .map((r) => ({ type: String(r.toType), pk: String(r.toId), title: titleOf(r.toType, r.toId) }))
+        .sort(byTitle)
+    : [];
+
   return {
     document: { ...plain(document), extracting },
     folder: folder ? { id: folder.id, name: folder.name } : null,
+    photo,
+    depicts,
     passages: passages.map((p) => {
       const pk = String(p.__primaryKey);
       return {

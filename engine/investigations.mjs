@@ -11,11 +11,11 @@ export const DEMO_INVESTIGATIONS = [
   { id: 'solid-waste', name: 'Solid waste', template: 'solid-waste' },
 ];
 
-/** Create the two demo investigations if the store lacks them. Returns how many were created. */
+/** Create the two demo investigations if the store never had them. A deleted one stays deleted. */
 export function ensureDemoInvestigations(store) {
   let created = 0;
   for (const demo of DEMO_INVESTIGATIONS) {
-    if (store.investigation(demo.id)) continue;
+    if (store.investigationEverCreated(demo.id)) continue;
     const record = { ...demo, blocks: [...templateOf(demo.template).blocks], createdAt: new Date().toISOString() };
     store.putInvestigation(record);
     store.audit({ action: 'createInvestigation', actor: 'engine', params: { id: demo.id, name: demo.name, template: demo.template, blocks: record.blocks }, edits: [], objectIds: [`Investigation:${demo.id}`] });
@@ -60,6 +60,38 @@ export function createInvestigation(store, { name, template, blocks } = {}) {
   store.putInvestigation(record);
   store.audit({ action: 'createInvestigation', actor: 'analyst', params: { id, name: trimmed, template: record.template, blocks: chosen }, edits: [], objectIds: [`Investigation:${id}`] });
   return { ...record, documents: 0 };
+}
+
+function requireInvestigation(store, id) {
+  const inv = store.investigation(id ?? '');
+  if (!inv) throw bad(`unknown investigation: ${id}`);
+  return inv;
+}
+
+/** A rename changes the label only; the id, the address bar and every object's `scenario` stay put. */
+export function renameInvestigation(store, { investigation, name } = {}) {
+  const inv = requireInvestigation(store, investigation);
+  const trimmed = String(name ?? '').trim();
+  if (!trimmed) throw bad('name is required');
+  if (trimmed === inv.name) return inv;
+  const next = { ...inv, name: trimmed };
+  store.putInvestigation(next);
+  store.audit({ action: 'renameInvestigation', actor: 'analyst', params: { investigation: inv.id, from: inv.name, to: trimmed }, edits: [], objectIds: [`Investigation:${inv.id}`] });
+  return next;
+}
+
+/** New blocks for the next extraction. Files already read keep what they had until extract-all re-reads them. */
+export function editInvestigation(store, { investigation, blocks } = {}) {
+  const inv = requireInvestigation(store, investigation);
+  if (!Array.isArray(blocks) || blocks.length === 0) throw bad('blocks must be a non-empty list of block ids');
+  const unknown = blocks.filter((b) => !isBlock(b));
+  if (unknown.length) throw bad(`unknown block(s): ${unknown.join(', ')}`);
+  const chosen = normaliseBlocks(blocks);
+  if (chosen.join(',') === inv.blocks.join(',')) return inv;
+  const next = { ...inv, blocks: chosen };
+  store.putInvestigation(next);
+  store.audit({ action: 'editInvestigation', actor: 'analyst', params: { investigation: inv.id, from: inv.blocks, to: chosen }, edits: [], objectIds: [`Investigation:${inv.id}`] });
+  return next;
 }
 
 /** GET investigations: every record with its document count, the templates, and the block list. */
