@@ -111,7 +111,7 @@ VOIDHOUSE as a possible Cell 09 of 764 (ACG report, "assessed", "for validation"
 
 ## Dates the timeline should place
 
-20 Jul first contact; 27 Jul move to Messenger (M-0107, 21:12); 3 Aug join of VOIDHOUSE; 15 Aug document posted in #gates and a reaction; 24 Aug, 28 Aug and 2 Sep TikTok posts; 27 Aug second member joins; 2 Sep "that one."; 11 and 12 Sep neutral posts; 13 Sep 21:40 pistol last seen, 22:15 found missing, 22:20 "nakuha ko na" (M-0188), 22:31 reply; 14 Sep 07:30 exit unlocked, 08:41:52 stream starts, 08:42 incident, 08:46 stream reported, 08:55 stream removed, 09:05 SOCO recovery, 09:22 "wipe everything.", 09:24 to 09:31 fourteen messages deleted (the gap); 15 Sep ballistics report; 17 Sep IAS-2026-0771 opened; 21 Sep ACG report, CICC advisory and platform letters.
+20 Jul first contact; 27 Jul move to Messenger (M-0107, 21:12); 3 Aug join of VOIDHOUSE; 15 Aug document posted in #gates and a reaction; 24 Aug, 28 Aug and 2 Sep TikTok posts; 27 Aug second member joins; 2 Sep "that one."; 11 and 12 Sep posts withheld by the examiner; 13 Sep 21:40 pistol last seen, 22:15 found missing, 22:20 "nakuha ko na" (M-0188), 22:31 reply; 14 Sep 07:30 exit unlocked, 08:41:52 stream starts, 08:42 incident, 08:46 stream reported, 08:55 stream removed, 09:05 SOCO recovery, 09:22 "wipe everything.", 09:24 to 09:31 fourteen messages deleted (the gap); 15 Sep ballistics report; 17 Sep IAS-2026-0771 opened; 21 Sep ACG report, CICC advisory and platform letters.
 
 ## Where this pack differs from the cast, on purpose
 
@@ -121,5 +121,6 @@ VOIDHOUSE as a possible Cell 09 of 764 (ACG report, "assessed", "for validation"
 - `hollow.ix` is asked for by Joaquin DP in M-0107 ("add me hollow.ix"); it is not sent by VesperK.
 - The 5 Sep "final statement" task appears only in the ACG report, in the third person. No chat line states it.
 - No file states "co_planned". The Messenger lines are neutral ("nakuha ko na", "ako din"); if the model proposes that link it belongs in review.
-- Both suspects are taken into custody. Nothing in the pack involves self-harm.
+- Both suspects are in custody from 08:58, so the fourteen messages are deleted by Vesper_Krael (a moderator of the server), not by the suspect. Nothing in the pack involves self-harm.
+- `groomed_by` is the schema's word for a handler directing a minor online; nothing in the pack is sexual.
 - The school name is shared with several real schools; the province, city and barangay are fictional.

@@ -10,14 +10,14 @@
   "members": [
     { "platform": "Discord", "username": "hollow.ix", "user_id": "912338817221345280", "guild": "VOIDHOUSE", "note": "Member of the server." },
     { "platform": "Discord", "username": "nullveil", "user_id": "915402211783901", "guild": "VOIDHOUSE", "note": "Member of the server." },
-    { "platform": "Discord", "username": "Vesper_Krael", "user_id": "884217700112233", "guild": "VOIDHOUSE", "note": "Member of the server who created the invite used by hollow.ix." },
+    { "platform": "Discord", "username": "Vesper_Krael", "user_id": "884217700112233", "guild": "VOIDHOUSE", "note": "Moderator of the server, who created the invite used by hollow.ix." },
     { "platform": "Discord", "username": "ashgrave_", "user_id": "901155420077118", "guild": "VOIDHOUSE", "note": "Member of the server." },
     { "platform": "Discord", "username": "lowtide.kk", "user_id": "907723310045672", "guild": "VOIDHOUSE", "note": "Member of the server." }
   ],
   "audit_log": [
     { "timestamp": "2026-08-03T21:14:00+08:00", "action": "MEMBER_JOIN", "user": "hollow.ix", "guild": "VOIDHOUSE", "note": "Joined through an invite created by Vesper_Krael." },
     { "timestamp": "2026-08-27T20:41:00+08:00", "action": "MEMBER_JOIN", "user": "nullveil", "guild": "VOIDHOUSE", "note": "Joined through an invite link." },
-    { "timestamp": "2026-09-14T09:31:00+08:00", "action": "MESSAGE_BULK_DELETE", "user": "hollow.ix", "guild": "VOIDHOUSE", "count": 14, "window_start": "2026-09-14T09:24:00+08:00", "window_end": "2026-09-14T09:31:00+08:00", "note": "14 messages by hollow.ix were deleted between 09:24 and 09:31 and recovered from the device cache." }
+    { "timestamp": "2026-09-14T09:31:00+08:00", "action": "MESSAGE_BULK_DELETE", "user": "Vesper_Krael", "target_user": "hollow.ix", "guild": "VOIDHOUSE", "count": 14, "window_start": "2026-09-14T09:24:00+08:00", "window_end": "2026-09-14T09:31:00+08:00", "note": "14 messages by hollow.ix were deleted by Vesper_Krael between 09:24 and 09:31 and recovered from the device cache." }
   ],
   "messages": [
     { "timestamp": "2026-08-15T21:03:00+08:00", "channel": "#gates", "author": "Vesper_Krael", "guild": "VOIDHOUSE", "content": "[attachment, one document, withheld by the examiner]." },
