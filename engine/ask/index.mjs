@@ -185,6 +185,30 @@ function relationshipDetail(data, meta, obj) {
   return lines.join('; ');
 }
 
+/** The people one object is linked to through Relationships, with the passages that state each link. */
+function linkedPeople(data, obj) {
+  const people = new Map();
+  for (const link of ['relationshipsFrom', 'relationshipsTo']) {
+    let rels = [];
+    try {
+      rels = data.getLinksOrThrow(obj.type, obj.pk, link);
+    } catch {
+      continue;
+    }
+    for (const r of rels) {
+      const end = link === 'relationshipsFrom' ? 'to' : 'from';
+      if (r[`${end}Type`] !== 'Person') continue;
+      const pk = String(r[`${end}PersonId`] ?? r[`${end}Id`]);
+      const p = data.getObject('Person', pk);
+      if (!p) continue;
+      const cur = people.get(pk) ?? { type: 'Person', pk, title: String(p.__title ?? pk), passageIds: [] };
+      cur.passageIds.push(...(r.passageIds ?? []));
+      people.set(pk, cur);
+    }
+  }
+  return [...people.values()].slice(0, 6);
+}
+
 export async function ask({ engine, meta, store, llm, question, scenario = null }) {
   const data = engine.data;
   const q = String(question ?? '').trim();
@@ -205,7 +229,19 @@ export async function ask({ engine, meta, store, llm, question, scenario = null 
   const detailed = objects.map((o) => ({ ...o, detail: relationshipDetail(data, meta, o) }));
   const relationships = [];
   const byName = objects.filter((o) => !o.byType);
-  const ends = byName.length && objects.length > byName.length ? [byName[0], objects.find((o) => o.byType)] : objects.slice(0, 2);
+  const byType = objects.filter((o) => o.byType);
+  // Never a path between two things of one type (two incidents): with no one named, the two best of different types.
+  const ends = byName.length && byType.length ? [byName[0], byType[0]] : byName.length ? byName.slice(0, 2) : [byType[0], byType.find((o) => o.type !== byType[0]?.type)].filter(Boolean);
+  // With no one named, the people linked to what the question names ("the incident": who took, who is held).
+  if (!byName.length) {
+    for (const o of byType) {
+      for (const person of linkedPeople(data, o)) {
+        if (detailed.length >= 16) break;
+        if (!detailed.some((d) => d.type === 'Person' && d.pk === person.pk)) detailed.push({ ...person, detail: relationshipDetail(data, meta, person) });
+        for (const id of person.passageIds) addPassage(passageView(data.getObject('Passage', id) ?? { __primaryKey: id, text: '' }));
+      }
+    }
+  }
   if (ends.length === 2) {
     const path = whatConnects(data, meta, `${ends[0].type}:${ends[0].pk}`, `${ends[1].type}:${ends[1].pk}`);
     if (path.found) {
@@ -251,6 +287,8 @@ export async function ask({ engine, meta, store, llm, question, scenario = null 
   return {
     ...base,
     answer: refused && citations.length === 0 ? 'no supporting records' : v.data.answer,
+    // The model's own words, kept on a refusal too, so the screen can show what it said.
+    modelText: v.data.answer,
     citations,
     refused,
     model: r.model,

@@ -210,6 +210,14 @@ export async function resolveScenario({ engine, meta, store, scenario, decide = 
         }),
       );
     }
+    // A decision on a pair the rules no longer raise (a rule changed) is removed, so no old verdict is left on show.
+    const decided = new Set(resolutions.map((r) => resolutionIdFor(type, ...[String(r.pair.a.__primaryKey), String(r.pair.b.__primaryKey)].sort())));
+    for (const old of [...data.getObjectsOfType('Resolution')]) {
+      const ids = Array.isArray(old.candidateIds) ? old.candidateIds : [];
+      if (old.scenario === scenario && old.canonicalType === type && ids.length === 2 && ids.every((c) => String(c).startsWith(`${type}:`)) && !decided.has(String(old.__primaryKey))) {
+        engine.remove('Resolution', old.__primaryKey);
+      }
+    }
 
     summary[type] = { mentions: mentions.length, pairs: pairs.length, autoPairs: autoPairs.length, modelPairs, reviewPairs, clusters: clusters.size, canonical: canonicalCount };
   }

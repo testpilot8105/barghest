@@ -57,10 +57,14 @@ export function Assistant({ investigation }: { investigation: string }) {
 
   const input = useRef<HTMLTextAreaElement>(null);
   const thread = useRef<HTMLDivElement>(null);
+  // `turns` is a new array on every render (the health poll re-renders this screen), so the jump to the newest
+  // question keys on what actually moves it: another conversation, a new question, an answer arriving.
+  const settled = turns.filter((t) => t.reply || t.error).length;
+  const scrollKey = `${open?.id ?? ''}:${turns.length}:${settled}`;
   useEffect(() => {
     const el = thread.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [turns]);
+  }, [scrollKey]);
 
   async function send() {
     const question = draft.trim();

@@ -5,7 +5,7 @@ import { handleKey, identifierKey, nameTokens, orgTokens, splitInitials } from '
 
 // Which property is the name, which properties are hard identifiers, which property groups mentions (a boost).
 export const TYPE_RULES = {
-  Person: { name: 'fullName', tokens: nameTokens, ids: [], context: ['schoolId'] },
+  Person: { name: 'fullName', tokens: nameTokens, ids: [], context: ['schoolId'], firstName: true },
   Organization: { name: 'name', tokens: orgTokens, ids: [], context: [] },
   Location: { name: 'name', tokens: nameTokens, ids: [], context: [] },
   Event: { name: 'summary', tokens: nameTokens, ids: [], context: [] },
@@ -30,6 +30,33 @@ export const TYPE_RULES = {
 export const AUTO = 0.9;
 export const REVIEW = 0.5;
 
+const plain = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+/**
+ * The comparable key of one hard identifier. A platform id is its longest run of digits, so the model's
+ * "strconv(884217700112233)" is the same id as 884217700112233; a platform id that only repeats the object's own
+ * name (an export that gives no user id) is no id at all.
+ */
+function idKey(rule, id, o) {
+  if (id !== 'platformId') return identifierKey(o[id]);
+  const raw = String(o[id] ?? '');
+  if (!raw || plain(raw) === plain(o[rule.name])) return '';
+  const digits = (raw.match(/\d{6,}/g) ?? []).sort((x, y) => y.length - x.length)[0];
+  return digits ?? identifierKey(raw);
+}
+
+/**
+ * Whether two people's first words cannot be one name: two different full words (Joaquin, Rowena), or an initial
+ * that does not start the other word ("J." against Nestor). nameTokens has already turned "LAST, FIRST" around.
+ */
+function firstNamesClash(ta, tb) {
+  const [x, y] = [ta[0], tb[0]];
+  if (!x || !y || x === y) return false;
+  if (x.length === 1) return !y.startsWith(x);
+  if (y.length === 1) return !x.startsWith(y);
+  return true;
+}
+
 function jaccard(a, b) {
   const A = new Set(a);
   const B = new Set(b);
@@ -47,8 +74,8 @@ export function scorePair(type, a, b) {
 
   // Hard identifiers: equal and non-empty means the same thing, whatever the names say.
   for (const id of rule.ids) {
-    const ka = identifierKey(a[id]);
-    const kb = identifierKey(b[id]);
+    const ka = idKey(rule, id, a);
+    const kb = idKey(rule, id, b);
     if (ka && kb) {
       if (ka === kb) {
         reasons.push(`same ${id} ${a[id]}`);
@@ -68,6 +95,8 @@ export function scorePair(type, a, b) {
   const ta = rule.tokens(a[rule.name]);
   const tb = rule.tokens(b[rule.name]);
   if (ta.length === 0 || tb.length === 0) return score ? { score, reasons } : null;
+  // Relatives share a surname: two people with different first names are never one person, whatever the model says.
+  if (rule.firstName && !score && firstNamesClash(ta, tb)) return { score: 0, reasons: ['different first names'] };
 
   const keyA = ta.join(' ');
   const keyB = tb.join(' ');

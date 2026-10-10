@@ -14,7 +14,7 @@ import { createEngine } from './faux.mjs';
 import { createActionImpls } from './actions.mjs';
 import { ingestFile } from './ingest/index.mjs';
 import { FORMATS } from './ingest/parse.mjs';
-import { resolveScenario } from './resolve/index.mjs';
+import { rememberedDecisions, resolveScenario } from './resolve/index.mjs';
 import { createDecide } from './resolve/decide.mjs';
 import { extractDocument } from './extract/index.mjs';
 import { createLlm, MODELS } from './llm.mjs';
@@ -223,10 +223,12 @@ const routes = {
     return { documentId, extraction: startExtraction(documentId, investigation.id) };
   },
   // Resolution over everything extracted so far in one investigation. The 0.5 to 0.9 band goes to the local model
-  // when it is on; otherwise those pairs are written as Resolutions at "review".
+  // when it is on; otherwise those pairs are written as Resolutions at "review". model=remembered reuses the model's
+  // earlier decisions without calling it (after a rule change), the way a delete re-resolves.
   'POST /barghest/resolve': async (url) => {
     const investigation = requireInvestigation(investigationParam(url));
-    const decide = llm.allowed() && url.searchParams.get('model') !== 'off' ? createDecide(llm) : null;
+    const mode = url.searchParams.get('model');
+    const decide = mode === 'remembered' ? rememberedDecisions(engine.data) : llm.allowed() && mode !== 'off' ? createDecide(llm) : null;
     return resolveScenario({ engine, meta, store, scenario: investigation.id, decide });
   },
   'GET /barghest/what-connects': (url) => {

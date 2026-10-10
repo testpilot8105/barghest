@@ -119,7 +119,7 @@ A rule scored this pair ${pair.score} for these reasons: ${pair.reasons.join('; 
 ${pair.question ?? `Are A and B the same ${pair.type}?`}`;
 }
 
-export const SYSTEM_ASK = `You are the assistant of an investigation workbench. You answer ONLY from the records and passages given to you below. Every claim in your answer must cite a passage id from the material. If the material does not support an answer, set refused to true and say "no supporting records" in answer. Never use outside knowledge. Keep the answer under 120 words. JSON only.`;
+export const SYSTEM_ASK = `You are the assistant of an investigation workbench. You answer ONLY from the records and passages given to you below. Every claim in your answer must cite a passage id from the material. The files often use other words than the question: a question about a "perpetrator" is answered by what the files say about "suspects". Answer in the files' own words. When the material answers only part of the question, say what it does say and what it does not (for example "The files name no main perpetrator; the spot report lists two suspects, ..."), cite it, and set refused to false. Set refused to true and say "no supporting records" in answer only when nothing in the material bears on the question. Never use outside knowledge. Keep the answer under 120 words. JSON only.`;
 
 export function askPrompt({ question, objects, passages }) {
   const objs = objects.map((o) => `- ${o.type} ${o.pk}: ${o.title}${o.detail ? ` (${o.detail})` : ''}`).join('\n');
