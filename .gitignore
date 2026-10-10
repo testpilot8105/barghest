@@ -4,3 +4,5 @@ dist-shots
 data/*.sqlite*
 data/files/
 data/proof-*/
+ollama-models/
+.DS_Store
