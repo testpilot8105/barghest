@@ -73,17 +73,45 @@ BARGHEST_OLLAMA=on pnpm dev       # engine on 8787, app on 5180
 Open `http://localhost:5180`. The store starts empty. On a Mac, double-clicking `Start BARGHEST.command` does the
 same, including the first-run install and model download.
 
-**Load a demo investigation** (in a second terminal, with `pnpm dev` running):
+### Load a demo investigation
+
+The store starts empty, so the first thing to do is load one of the two investigations that ship with the repo.
+Keep the terminal from the step above running (it is the app and the engine), and open a second terminal in the
+same folder.
+
+**1. Import the files.** Pick one investigation; `school-incident` is the better first look.
 
 ```sh
-pnpm import:pack school-incident  # about 35 minutes with the model on: about a minute per passage
-pnpm import:pack solid-waste      # about 37 minutes
+pnpm import:pack school-incident
 ```
 
-Then open the investigation in the app and watch Data Sources fill. You can also import any PDF, TXT, CSV, JSON or MD
-file from the Files screen.
+This puts the 14 case files into their folders and has the local model read them, one passage at a time. It takes
+about 35 minutes on an Apple Silicon Mac, and you can watch it happen: open `http://localhost:5180`, click
+**Data Sources** in the left rail, and each file goes from Reading to Done as the model gets to it. The model log
+on the right shows every call. If the import stops partway (laptop closed, terminal shut), run the same command
+again; files already imported are skipped.
 
-Two investigations ship with the repo, both fully synthetic:
+**2. Add the saved graphs and timelines.** Once the import says it is done:
+
+```sh
+pnpm seed:saved school-incident
+```
+
+This creates the ready-made views the investigation opens with ("The Glock 17 and its evidence photo", "The 72
+hours", and so on) under **Graph** and **Timeline**.
+
+**3. Look around.** Open **Object Explorer** for everything the model found, click any person or firearm for its
+profile, open a saved graph, then ask the **Assistant** a question such as *Who owned the Glock 17, and how did the
+suspect get it?* Every line of the answer cites a passage you can open.
+
+The second investigation loads the same way, with `solid-waste` in place of `school-incident` (11 files, about 37
+minutes). You can also import your own PDF, TXT, CSV, JSON or MD files from the **Files** screen, in either
+investigation or a new one.
+
+To start over from empty, stop `pnpm dev`, delete `data/barghest.sqlite` and the `data/files/` folder, and start it
+again.
+
+Both investigations are fully synthetic:
 
 | Investigation | The question it answers |
 |---|---|
