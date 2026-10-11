@@ -15,8 +15,6 @@ No cloud API is called at any point. After setup it runs with Wi-Fi off.
 
 <p align="center"><img src="docs/screenshots/graph.png" alt="The Graph: one investigation's people, firearms, accounts and evidence, with the timeline docked under the canvas" width="100%"></p>
 
-**[Watch the film (1 min 25 s, 8 MB)](docs/barghest-film.mp4)**
-
 ## Who it is for
 
 An investigator or analyst in a public office: a police investigator, a provincial environment officer, an auditor.
