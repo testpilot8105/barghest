@@ -91,7 +91,7 @@ async function main() {
       toServerObject(meta, 'Person', { personId: 'M-rb', fullName: 'Rowena Dela Peña', aliases: [], role: 'mention', passageId: pb, scenario: INV }),
       toServerObject(meta, 'Person', { personId: 'M-rc', fullName: 'R. Dela Peña', aliases: [], role: 'mention', passageId: pb, scenario: INV }),
       toServerObject(meta, 'Relationship', { relationshipId: 'R-only', label: 'Rowena Dela Peña messaged Marco Villarin', kind: 'messaged', fromType: 'Person', fromId: 'M-ra', toType: 'Person', toId: 'M-mv', fromPersonId: 'M-ra', toPersonId: 'M-mv', confidence: 0.95, method: 'extracted', status: 'proposed', passageIds: [pa], recordIds: [], scenario: INV }),
-      toServerObject(meta, 'Relationship', { relationshipId: 'R-shared', label: 'Joaquin Dela Peña mentions San Isidro National High School', kind: 'mentions', fromType: 'Person', fromId: 'P-001', toType: 'School', toId: 'S-001', fromPersonId: 'P-001', toSchoolId: 'S-001', confidence: 0.9, method: 'extracted', status: 'proposed', passageIds: [pa, 'PS-002'], recordIds: [], scenario: INV }),
+      toServerObject(meta, 'Relationship', { relationshipId: 'R-shared', label: 'Joaquin Dela Peña mentions Maharlika National High School', kind: 'mentions', fromType: 'Person', fromId: 'P-001', toType: 'School', toId: 'S-001', fromPersonId: 'P-001', toSchoolId: 'S-001', confidence: 0.9, method: 'extracted', status: 'proposed', passageIds: [pa, 'PS-002'], recordIds: [], scenario: INV }),
     ]);
     store.putEmbedding(pa, 'nomic-embed-text', [0.1, 0.2, 0.3]);
     store.putEmbedding(pb, 'nomic-embed-text', [0.3, 0.2, 0.1]);

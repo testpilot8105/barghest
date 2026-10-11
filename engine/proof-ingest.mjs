@@ -52,19 +52,19 @@ const cleanDb = () => {
 
 // ---- Fixtures: shaped like the registers the real packs imitate, every identity invented.
 const fixtures = mkdtempSync(join(tmpdir(), 'barghest-ingest-'));
-const SPOT_REPORT = `PHILIPPINE NATIONAL POLICE
-SAN MATEO CITY POLICE STATION
-SPOT REPORT SR-SMPPO-2026-09-14-001
+const SPOT_REPORT = `MAHARLIKA POLICE DEPARTMENT
+SAN MATEO STATION
+FIELD REPORT FR-SMS-2026-09-14-001
 
 Date and time of incident: 14 September 2026, 0842H.
-Place of incident: San Isidro National High School, Barangay Mabini, City of San Mateo.
+Place of incident: Maharlika National High School, Barangay Mabini, City of San Mateo.
 Nature of incident: Shooting incident inside the junior high building.
 
-Narrative: On or about 0842H, a male student identified as Joaquin Dela Pena, 15 years old, Grade 9, allegedly fired a Glock 17 pistol, serial number BHPZ417, at students and a teacher in the north corridor. Responding personnel recovered the pistol at the scene, tagged as evidence E-001, together with a .38 caliber revolver, serial RIA38-1177093, tagged E-002. Victims were brought to San Mateo Provincial Hospital. Investigator on case: PMSg R. Tolentino.`;
-writeFileSync(join(fixtures, 'irf-blotter.txt'), SPOT_REPORT.replace('SPOT REPORT', 'INCIDENT RECORD FORM IRF-2026-09-14-004, blotter entry 2026-1187'));
+Narrative: On or about 0842H, a male student identified as Joaquin Dela Pena, 15 years old, Grade 9, allegedly fired a Glock 17 pistol, serial number BHPZ417, at students and a teacher in the north corridor. Responding personnel recovered the pistol at the scene, tagged as evidence E-001, together with a .38 caliber revolver, serial RIA38-1177093, tagged E-002. Victims were brought to San Mateo Provincial Hospital. Investigator on case: Sgt. R. Tolentino.`;
+writeFileSync(join(fixtures, 'mpd-blotter.txt'), SPOT_REPORT.replace('FIELD REPORT', 'INCIDENT RECORD IR-2026-09-14-004, blotter entry 2026-1187'));
 writeFileSync(
-  join(fixtures, 'deped-lis-export.csv'),
-  'LRN,Learner Name,Grade,Section,Adviser,Guardian,Date\n' +
+  join(fixtures, 'school-records.csv'),
+  'Student ID,Learner Name,Grade,Section,Adviser,Guardian,Date\n' +
     '109876543210,"DELA PENA, JOAQUIN",9,Rizal,"ABALOS, LORNA","DELA PENA, NESTOR",2026-06-02\n' +
     '109876551234,"VILLARIN, MARCO",9,Bonifacio,"CRUZ, ANA","VILLARIN, RAMON",2026-06-02\n' +
     '109876544001,"RAMOS, ALTHEA",9,Rizal,"ABALOS, LORNA","RAMOS, ELENA",2026-06-02\n',
@@ -82,7 +82,7 @@ async function makePdf() {
   const browser = await chromium.launch({ channel: 'chromium', headless: true });
   const page = await browser.newPage();
   await page.setContent(`<html><body style="font-family: Helvetica; font-size: 12px"><pre style="white-space: pre-wrap; font-family: Helvetica">${SPOT_REPORT}</pre></body></html>`);
-  const path = join(fixtures, 'spot-report.pdf');
+  const path = join(fixtures, 'field-report.pdf');
   await page.pdf({ path, format: 'A4' });
   await browser.close();
   return path;
@@ -105,19 +105,19 @@ try {
   await makePdf();
   const dc = await connect(BASE);
 
-  const pdf = await importFile(join(fixtures, 'spot-report.pdf'));
-  check('spot-report.pdf imports with text from pdfjs', pdf.passages >= 1 && pdf.chars > 400 && pdf.pages === 1, `${pdf.passages} passages, ${pdf.chars} chars`);
+  const pdf = await importFile(join(fixtures, 'field-report.pdf'));
+  check('field-report.pdf imports with text from pdfjs', pdf.passages >= 1 && pdf.chars > 400 && pdf.pages === 1, `${pdf.passages} passages, ${pdf.chars} chars`);
   const pdfView = await getObjectView(dc, 'Document', pdf.documentId);
   const pdfPassages = pdfView.links.find((l) => l.link === 'passages');
   check('the PDF Document links to its passages', (pdfPassages?.count ?? 0) === pdf.passages, `${pdfPassages?.count} passages`);
   const serial = await fetchRows(dc, withStep(startExploration('Passage'), { filter: { property: 'text', op: 'contains', value: 'BHPZ417' } }));
   check('the serial number is findable in a PDF passage', serial.rows.length >= 1, `${serial.rows.length} passages mention BHPZ417`);
 
-  const txt = await importFile(join(fixtures, 'irf-blotter.txt'));
-  check('irf-blotter.txt imports', txt.passages >= 1 && txt.records === 0, `${txt.passages} passages`);
+  const txt = await importFile(join(fixtures, 'mpd-blotter.txt'));
+  check('mpd-blotter.txt imports', txt.passages >= 1 && txt.records === 0, `${txt.passages} passages`);
 
-  const csv = await importFile(join(fixtures, 'deped-lis-export.csv'));
-  check('deped-lis-export.csv imports as 3 source records', csv.records === 3 && csv.passages >= 1, `${csv.records} records, ${csv.passages} passages`);
+  const csv = await importFile(join(fixtures, 'school-records.csv'));
+  check('school-records.csv imports as 3 source records', csv.records === 3 && csv.passages >= 1, `${csv.records} records, ${csv.passages} passages`);
   const rec = await fetchRows(dc, withStep(startExploration('SourceRecord'), { filter: { property: 'rawJson', op: 'contains', value: '109876543210' } }));
   check('a CSV row is a SourceRecord with its raw JSON and observedAt', rec.rows.length === 1 && String(rec.rows[0].properties.observedAt ?? '').startsWith('2026-06-02'), rec.rows[0]?.title);
 
@@ -128,7 +128,7 @@ try {
   const lrns = Array.from({ length: 40 }, (_, i) => String(109876500000 + i));
   writeFileSync(
     join(fixtures, 'big-roster.csv'),
-    'LRN,Learner Name,Grade,Section,Adviser,Guardian,Remarks\n' + lrns.map((lrn, i) => `${lrn},"LEARNER ${i} WITH A LONG FAMILY NAME",9,Rizal,"ABALOS, LORNA","GUARDIAN ${i}",enrolled and attending regularly this school year`).join('\n') + '\n',
+    'Student ID,Learner Name,Grade,Section,Adviser,Guardian,Remarks\n' + lrns.map((lrn, i) => `${lrn},"LEARNER ${i} WITH A LONG FAMILY NAME",9,Rizal,"ABALOS, LORNA","GUARDIAN ${i}",enrolled and attending regularly this school year`).join('\n') + '\n',
   );
   const big = await importFile(join(fixtures, 'big-roster.csv'));
   const lost = [];
@@ -141,7 +141,7 @@ try {
   const docs = await countRows(dc, startExploration('Document'));
   check('five Documents in the store', docs === 5, `${docs}`);
 
-  const twice = await importFile(join(fixtures, 'deped-lis-export.csv'));
+  const twice = await importFile(join(fixtures, 'school-records.csv'));
   const docsAfter = await countRows(dc, startExploration('Document'));
   check('importing the same file again does not duplicate it', twice.documentId === csv.documentId && docsAfter === 5, `${docsAfter} documents`);
 

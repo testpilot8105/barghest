@@ -74,7 +74,7 @@ export namespace Firearm {
     /**
      *   property status: active
      *
-     *   display name: 'FEO registration no.'
+     *   display name: 'FLD registration no.'
      */
     readonly feoRegistrationNo: $PropType['string'] | undefined;
     /**
@@ -225,7 +225,7 @@ export interface Firearm extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'FEO registration no.'
+       *   display name: 'FLD registration no.'
        */
       feoRegistrationNo: $PropertyDef<'string', 'nullable', 'single'>;
       /**

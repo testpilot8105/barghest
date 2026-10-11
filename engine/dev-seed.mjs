@@ -16,8 +16,8 @@ const rows = [];
 const add = (type, props) => rows.push(toServerObject(meta, type, { scenario: INVESTIGATION, ...props }));
 
 // School and place
-add('School', { schoolId: 'S-001', name: 'San Isidro National High School', depedId: '303912', division: 'San Mateo' });
-add('Location', { locationId: 'L-001', name: 'San Isidro National High School, Barangay Mabini, City of San Mateo', kind: 'school' });
+add('School', { schoolId: 'S-001', name: 'Maharlika National High School', depedId: '303912', division: 'San Mateo' });
+add('Location', { locationId: 'L-001', name: 'Maharlika National High School, Barangay Mabini, City of San Mateo', kind: 'school' });
 
 // People
 add('Person', { personId: 'P-001', fullName: 'Joaquin Dela Peña', aliases: ['Wacky'], role: 'subject', schoolId: 'S-001' });
@@ -26,7 +26,7 @@ add('Person', { personId: 'P-003', fullName: 'Althea Ramos', aliases: [], role: 
 add('Person', { personId: 'P-004', fullName: 'Jerome Catacutan', aliases: [], role: 'victim', schoolId: 'S-001' });
 add('Person', { personId: 'P-005', fullName: 'Princess Mae Bautista', aliases: [], role: 'victim', schoolId: 'S-001' });
 add('Person', { personId: 'P-006', fullName: 'Lorna Abalos', aliases: ['Ms. L. Abalos'], role: 'teacher', schoolId: 'S-001' });
-add('Person', { personId: 'P-007', fullName: 'Rowena Dela Peña', aliases: ['PSSg R. Dela Peña'], role: 'police officer' });
+add('Person', { personId: 'P-007', fullName: 'Rowena Dela Peña', aliases: ['Sgt. R. Dela Peña'], role: 'police officer' });
 add('Person', { personId: 'P-008', fullName: 'Ramon Villarin', aliases: [], role: 'parent' });
 add('Person', { personId: 'P-009', fullName: 'Vesper Krael', aliases: ['Vesper_Krael', '@vkrael', 'VesperK'], role: 'unknown' });
 add('Person', { personId: 'P-010', fullName: 'Nestor Dela Peña', aliases: [], role: 'parent' });
@@ -48,31 +48,31 @@ add('DigitalAccount', { accountId: 'A-011', platform: 'Facebook', handle: 'Rowen
 add('OnlineGroup', { groupId: 'G-001', name: 'SIDEWINDER RP', platform: 'Roblox', platformId: '33871204', channels: [] });
 add('OnlineGroup', { groupId: 'G-002', name: 'VOIDHOUSE', platform: 'Discord', platformId: '1183322990011223344', channels: ['#gates', '#void-logs', '#proof'] });
 add('OnlineGroup', { groupId: 'G-003', name: 'vkrael_drops', platform: 'Telegram', platformId: '-1001882211009', channels: [] });
-add('Organization', { organizationId: 'O-001', name: '764', kind: 'network' });
-add('Organization', { organizationId: 'O-002', name: 'No Lives Matter (NLM)', kind: 'ideology' });
-add('Organization', { organizationId: 'O-003', name: 'Philippine National Police', kind: 'agency' });
+add('Organization', { organizationId: 'O-001', name: 'ASHFALL', kind: 'network' });
+add('Organization', { organizationId: 'O-002', name: 'Nullwave (NW)', kind: 'ideology' });
+add('Organization', { organizationId: 'O-003', name: 'Maharlika Police Department', kind: 'agency' });
 
 // Firearms and the incident
 add('Firearm', {
   firearmId: 'F-001', label: 'Glock 17 Gen 4 BHPZ417', make: 'Glock', model: '17 Gen 4', calibre: '9x19mm', serial: 'BHPZ417',
-  feoRegistrationNo: 'GOV-PNP-2024-18827', storage: 'locked plastic locker', registeredAgencyId: 'O-003', custodianId: 'P-007',
+  feoRegistrationNo: 'GOV-MPD-2024-18827', storage: 'locked plastic locker', registeredAgencyId: 'O-003', custodianId: 'P-007',
 });
 add('Firearm', {
   firearmId: 'F-002', label: 'Armscor M200 RIA38-1177093', make: 'Armscor', model: 'M200', calibre: '.38 Special', serial: 'RIA38-1177093',
   feoRegistrationNo: 'FR-2023-0917-55021', storage: 'vehicle glovebox', registeredToId: 'P-008',
 });
 add('Incident', {
-  incidentId: 'I-001', label: 'I-001 San Isidro NHS, 14 Sep 2026', summary: 'Shooting at the junior high building, entry through the north emergency exit.',
+  incidentId: 'I-001', label: 'I-001 Maharlika NHS, 14 Sep 2026', summary: 'Shooting at the junior high building, entry through the north emergency exit.',
   occurredAt: '2026-09-14T00:42:00Z', locationId: 'L-001', schoolId: 'S-001',
 });
-add('EvidenceItem', { evidenceId: 'E-001', tag: 'E-001', kind: 'firearm, Glock 17 recovered at scene', custodyStatus: 'SOCO', matchedFirearmId: 'F-001', incidentId: 'I-001' });
-add('EvidenceItem', { evidenceId: 'E-002', tag: 'E-002', kind: 'firearm, Armscor M200 recovered at scene', custodyStatus: 'SOCO', matchedFirearmId: 'F-002', incidentId: 'I-001' });
+add('EvidenceItem', { evidenceId: 'E-001', tag: 'E-001', kind: 'firearm, Glock 17 recovered at scene', custodyStatus: 'Crime Scene Unit', matchedFirearmId: 'F-001', incidentId: 'I-001' });
+add('EvidenceItem', { evidenceId: 'E-002', tag: 'E-002', kind: 'firearm, Armscor M200 recovered at scene', custodyStatus: 'Crime Scene Unit', matchedFirearmId: 'F-002', incidentId: 'I-001' });
 
 // One document, two passages, the second one the message the "took" relationship rests on
 add('Document', {
   documentId: 'D-001', title: 'Messenger thread, extract from DFER-R14-2026-0188', path: 'data/school-incident/sources/messenger-thread.txt',
-  format: 'txt', system: 'PNP-ACG Cyber Forensics', importedAt: '2026-10-09T00:00:00Z', status: 'imported',
-  name: 'Messenger thread, extract from DFER-R14-2026-0188', register: 'PNP-ACG Cyber Forensics',
+  format: 'txt', system: 'MPD-CCU Cyber Forensics', importedAt: '2026-10-09T00:00:00Z', status: 'imported',
+  name: 'Messenger thread, extract from DFER-R14-2026-0188', register: 'MPD-CCU Cyber Forensics',
 });
 add('Passage', {
   passageId: 'PS-001', label: 'messenger-thread.txt #1 (M-0107)', documentId: 'D-001', index: 0,

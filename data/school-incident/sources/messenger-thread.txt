@@ -1,7 +1,7 @@
 SYNTHETIC: BARGHEST demo data. Fictional.
 
-Facebook Messenger thread, extract from Digital Forensic Examination Report DFER-R14-2026-0188, PNP-ACG Cyber Forensics. Source device: item E-019, Samsung A15 of J. M. Dela Peña.
-Participants: Joaquin DP (profile 100071122334455) and Marco V. (profile 100072299001122; Marco Villarin, studies at San Isidro National High School). Messages M-0107 to M-0190.
+Facebook Messenger thread, extract from Digital Forensic Examination Report DFER-R14-2026-0188, MPD-CCU Cyber Forensics. Source device: item E-019, Samsung A15 of J. M. Dela Peña.
+Participants: Joaquin DP (profile 100071122334455) and Marco V. (profile 100072299001122; Marco Villarin, studies at Maharlika National High School). Messages M-0107 to M-0190.
 
 M-0107 | 27 Jul 2026 21:12 | Joaquin DP to Marco V.: dito na tayo, sabi ni vesper. add me hollow.ix
 

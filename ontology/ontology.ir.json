@@ -4232,7 +4232,7 @@
             "feoRegistrationNo": {
               "apiName": "feoRegistrationNo",
               "displayMetadata": {
-                "displayName": "FEO registration no.",
+                "displayName": "FLD registration no.",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -5140,7 +5140,7 @@
             "depedId": {
               "apiName": "depedId",
               "displayMetadata": {
-                "displayName": "DepEd school id",
+                "displayName": "State school id",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,
@@ -6219,7 +6219,7 @@
             "tin": {
               "apiName": "tin",
               "displayMetadata": {
-                "displayName": "TIN",
+                "displayName": "Tax ID",
                 "visibility": "NORMAL"
               },
               "indexedForSearch": true,

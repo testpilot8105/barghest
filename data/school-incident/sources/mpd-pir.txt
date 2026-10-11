@@ -1,0 +1,17 @@
+SYNTHETIC: BARGHEST demo data. Fictional.
+
+PROPERTY ISSUANCE RECEIPT
+Entity Name: Maharlika Police Department, 14th Precinct
+Fund Cluster: 01 (Regular Agency Fund)
+PIR No.: PIR-P14-2024-03318
+Date: 12 March 2024
+
+Quantity: 1
+Unit: unit
+Description: Pistol, Glock 17 Gen 4, 9x19mm, Serial No. BHPZ417, FLD Reference GOV-MPD-2024-18827
+Property Number: MPD-P14-FA-2024-0451
+Date Acquired: 2 March 2024
+Amount: Php 52,000.00
+
+Received by: Sgt. Rowena Dela Peña, Badge 0-187-2234, Patrol Division, San Mateo Station. End-user. Date: 12 March 2024.
+Issued by: Supply Accountable Officer, Regional Logistics Division, 14th Precinct. Date: 12 March 2024.

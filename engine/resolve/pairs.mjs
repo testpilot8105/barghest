@@ -1,6 +1,6 @@
 // Candidate pairs: for every two mentions of the same type in the same scenario, a deterministic score and the
 // reasons for it. Above 0.9 the rule decides; between 0.5 and 0.9 the local model decides (decide.mjs); below 0.5
-// the pair is never raised. Shared identifiers decide on their own: a serial number, an LRN, a platform id.
+// the pair is never raised. Shared identifiers decide on their own: a serial number, a student ID, a platform id.
 import { handleKey, identifierKey, nameTokens, orgTokens, splitInitials } from './normalize.mjs';
 
 // Which property is the name, which properties are hard identifiers, which property groups mentions (a boost).

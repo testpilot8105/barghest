@@ -131,7 +131,7 @@ async function intakeChecks(dc) {
 
   // I2. Histogram on Document.system before the import: the seed's one register
   const before = await histogram(dc, startExploration('Document'), 'system');
-  check('I2 histogram on Document.system groups the seed document by its register', before.total === 1 && before.buckets.length === 1 && before.buckets[0].bucket === 'PNP-ACG Cyber Forensics', JSON.stringify(before.buckets));
+  check('I2 histogram on Document.system groups the seed document by its register', before.total === 1 && before.buckets.length === 1 && before.buckets[0].bucket === 'MPD-CCU Cyber Forensics', JSON.stringify(before.buckets));
 
   // I3. importFile over POST import, with the model off, so the file is stored and not read
   const text = 'Proof of intake. The register is Proof register and the file is intake-check.txt. Nothing here names anyone.';
@@ -147,7 +147,7 @@ async function intakeChecks(dc) {
   // I5. The register histogram now has two buckets
   const after = await histogram(dc, startExploration('Document'), 'system');
   const regs = Object.fromEntries(after.buckets.map((b) => [b.bucket, b.count]));
-  check('I5 histogram on Document.system now shows both registers, one file each', after.total === 2 && regs['Proof register'] === 1 && regs['PNP-ACG Cyber Forensics'] === 1, JSON.stringify(regs));
+  check('I5 histogram on Document.system now shows both registers, one file each', after.total === 2 && regs['Proof register'] === 1 && regs['MPD-CCU Cyber Forensics'] === 1, JSON.stringify(regs));
 
   // I6. extractAgain reaches POST extract and is refused while the model is off, with the status a screen needs
   const refused = await extractAgain(dc, imported.documentId).then(() => null, (e) => e);

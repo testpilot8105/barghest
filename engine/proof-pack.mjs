@@ -125,13 +125,13 @@ async function packs() {
     const files = (s) => [...new Set(s.passages.map((p) => titleOf.get(p.documentId)))];
     const s7 = await engineGet(dc, '/barghest/search', { q: STEP7, investigation: 'solid-waste', k: '10' });
     check('step 7 keeps hauler, LGU and inspections as terms', ['hauler', 'lgu', 'inspections'].every((t) => s7.terms.includes(t)), s7.terms.join(', '));
-    const want7 = ['swm-plan-saneladio.pdf', 'swm-plan-tumanaw.pdf', 'emb-inspection-letters.txt'];
+    const want7 = ['swm-plan-saneladio.pdf', 'swm-plan-tumanaw.pdf', 'mea-inspection-letters.txt'];
     check('step 7 keyword search, ten passages as the Assistant reads, finds both plans that name the hauler and the inspection letters', want7.every((f) => files(s7).includes(f)), files(s7).join(', '));
 
     const s6 = await engineGet(dc, '/barghest/search', { q: STEP6, investigation: 'school-incident', k: '10' });
     check('step 6 keeps the name and incident as terms', ['joaquin', 'dela', 'pena', 'incident'].every((t) => s6.terms.includes(t)), s6.terms.join(', '));
-    const want6 = ['irf-blotter.txt', 'spot-report.pdf'];
-    check('step 6 keyword search, ten passages, finds the blotter (took the pistol) and the spot report (the incident)', want6.every((f) => files(s6).includes(f)), files(s6).join(', '));
+    const want6 = ['mpd-blotter.txt', 'field-report.pdf'];
+    check('step 6 keyword search, ten passages, finds the blotter (took the pistol) and the field report (the incident)', want6.every((f) => files(s6).includes(f)), files(s6).join(', '));
   } finally {
     await stopEngine(engine);
   }

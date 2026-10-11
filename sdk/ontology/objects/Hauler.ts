@@ -96,7 +96,7 @@ export namespace Hauler {
     /**
      *   property status: active
      *
-     *   display name: 'TIN'
+     *   display name: 'Tax ID'
      */
     readonly tin: $PropType['string'] | undefined;
   }
@@ -204,7 +204,7 @@ export interface Hauler extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'TIN'
+       *   display name: 'Tax ID'
        */
       tin: $PropertyDef<'string', 'nullable', 'single'>;
     };

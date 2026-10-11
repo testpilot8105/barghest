@@ -52,7 +52,7 @@ export namespace School {
     /**
      *   property status: active
      *
-     *   display name: 'DepEd school id'
+     *   display name: 'State school id'
      */
     readonly depedId: $PropType['string'] | undefined;
     /**
@@ -159,7 +159,7 @@ export interface School extends $ObjectTypeDefinition {
       /**
        *   property status: active
        *
-       *   display name: 'DepEd school id'
+       *   display name: 'State school id'
        */
       depedId: $PropertyDef<'string', 'nullable', 'single'>;
       /**

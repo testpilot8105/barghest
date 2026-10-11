@@ -80,7 +80,7 @@ async function main() {
     school('Person', { personId: 'P-m1', fullName: 'DELA PENA, JOAQUIN', aliases: [], passageId: 'PS-1', canonicalId: 'P-c1' }),
     school('Person', { personId: 'P-m2', fullName: 'Joaquin Dela Peña', aliases: [], passageId: 'PS-2', canonicalId: 'P-c1' }),
     school('Person', { personId: 'P-m3', fullName: 'Nestor Dela Peña', aliases: [], passageId: 'PS-3' }),
-    school('Incident', { incidentId: 'I-1', label: 'Shooting at San Isidro National High School', passageId: 'PS-4' }),
+    school('Incident', { incidentId: 'I-1', label: 'Shooting at Maharlika National High School', passageId: 'PS-4' }),
     school('OnlineGroup', { groupId: 'G-1', name: 'VOIDHOUSE', passageId: 'PS-5' }),
     school('DigitalAccount', { accountId: 'A-1', handle: 'Vesper_Krael', platform: 'Discord', passageId: 'PS-5' }),
     school('DigitalAccount', { accountId: 'A-2', handle: 'VesperK', platform: 'Roblox', passageId: 'PS-6' }),

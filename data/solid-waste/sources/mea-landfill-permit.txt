@@ -1,10 +1,9 @@
 SYNTHETIC: BARGHEST demo data. Fictional.
 
-Republic of the Philippines
-Department of Environment and Natural Resources
-ENVIRONMENTAL MANAGEMENT BUREAU, REGION 20
+Republic of Maharlika
+MAHARLIKA ENVIRONMENTAL AGENCY, REGION 20
 
-ENVIRONMENTAL COMPLIANCE CERTIFICATE (Section 38, RA 9003)
+ENVIRONMENTAL COMPLIANCE CERTIFICATE (Section 38, Solid Waste Act)
 ECC No.: ECC-R20-2023-0187
 Date issued: 20 June 2023
 Valid until: 19 June 2028
@@ -14,6 +13,6 @@ Proponent and operator: City Government of Dalumat
 Category: Sanitary landfill, Category 3 (up to 200 tons per day)
 Approved capacity: 150 tons per day; design capacity 410,000 cubic meters
 
-Conditions: leachate collection and treatment; daily cover; gas venting; quarterly monitoring reports to the EMB Regional Office.
+Conditions: leachate collection and treatment; daily cover; gas venting; quarterly monitoring reports to the MEA Regional Office.
 
 Issued by: ENGR. NESTOR A. CABANILLA, Regional Director

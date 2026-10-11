@@ -37,7 +37,7 @@ const people = [
   ['M-P7', 'Joaquin D. Dela Peña', 'PS-7'],
   ['M-P8', 'Marco Villarin', 'PS-8'],
   ['M-P9', 'Ramon Villarin', 'PS-9'],
-  ['M-P10', 'PSSg Rowena Dela Peña', 'PS-10'],
+  ['M-P10', 'Sgt. Rowena Dela Peña', 'PS-10'],
 ];
 const haulers = [
   ['M-H1', 'JRM Hauling Services', 'PS-11'],

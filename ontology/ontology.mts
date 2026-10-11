@@ -227,7 +227,7 @@ const Firearm = entity({
     model: str('Model'),
     calibre: str('Calibre'),
     serial: str('Serial number'),
-    feoRegistrationNo: str('FEO registration no.'),
+    feoRegistrationNo: str('FLD registration no.'),
     storage: str('Storage'),
     registeredToId: str('Registered to (person)'),
     registeredAgencyId: str('Registered agency'),
@@ -260,7 +260,7 @@ const School = entity({
   properties: {
     schoolId: str('School id'),
     name: str('Name'),
-    depedId: str('DepEd school id'),
+    depedId: str('State school id'),
     division: str('Division'),
   },
 });
@@ -304,7 +304,7 @@ const Hauler = entity({
     haulerId: str('Hauler id'),
     name: str('Name'),
     registrationNo: str('Registration no.'),
-    tin: str('TIN'),
+    tin: str('Tax ID'),
   },
 });
 

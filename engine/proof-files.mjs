@@ -77,9 +77,9 @@ async function main() {
     const dc = await connect(BASE);
 
     // 1. A real PDF from the pack, model off
-    const source = readFileSync(join(root, 'data', INVESTIGATION, 'sources', 'spot-report.pdf'));
-    const pdf = new File([source], 'spot-report.pdf', { type: 'application/pdf' });
-    const imported = await importFile(dc, { file: pdf, investigation: INVESTIGATION, system: 'PNP Spot Report', extract: false });
+    const source = readFileSync(join(root, 'data', INVESTIGATION, 'sources', 'field-report.pdf'));
+    const pdf = new File([source], 'field-report.pdf', { type: 'application/pdf' });
+    const imported = await importFile(dc, { file: pdf, investigation: INVESTIGATION, system: 'MPD Field Report', extract: false });
     check('1 a PDF with text imports as "imported", with passages and a path in the files folder', imported.status === 'imported' && imported.chars > 0 && imported.passages >= 1 && imported.path === `${FILES}/${imported.documentId}.pdf` && imported.extraction === 'off', `${imported.documentId}: ${imported.passages} passages, ${imported.chars} chars, ${imported.path}`);
 
     // 2. The stored copy is on disk, byte-equal
@@ -96,7 +96,7 @@ async function main() {
     check('4 the Document object carries the stored path and the status', rows.rows.length === 1 && rows.rows[0].properties.path === imported.path && rows.rows[0].properties.status === 'imported', String(rows.rows[0]?.properties.path));
 
     // 5. The same file again: the same Document, no duplicate
-    const again = await importFile(dc, { file: pdf, investigation: INVESTIGATION, system: 'PNP Spot Report', extract: false });
+    const again = await importFile(dc, { file: pdf, investigation: INVESTIGATION, system: 'MPD Field Report', extract: false });
     const count = await fetchRows(dc, startExploration('Document'));
     check('5 the same file again is the same Document, no duplicate, the copy still there', again.documentId === imported.documentId && count.rows.length === 1 && existsSync(stored), `${count.rows.length} document(s)`);
 
@@ -122,7 +122,7 @@ async function main() {
     check('9 GET file is 404 for an unknown document and 400 without an id', unknown.status === 404 && missing.status === 400, `${unknown.status} ${missing.status}`);
 
     // 10. A text file is served as text with its charset
-    const note = 'Mabansag Hauling Services, TIN 123.';
+    const note = 'Mabansag Hauling Services, Tax ID 123.';
     const txt = await importFile(dc, { file: new File([note], 'note.txt', { type: 'text/plain' }), investigation: INVESTIGATION, extract: false });
     const txtRes = await fetch(fileUrl(dc, txt.documentId));
     check('10 a TXT is served as text/plain in utf-8, byte-equal', txtRes.status === 200 && txtRes.headers.get('content-type') === 'text/plain; charset=utf-8' && (await txtRes.text()) === note, String(txtRes.headers.get('content-type')));

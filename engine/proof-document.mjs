@@ -63,7 +63,7 @@ const clean = () => {
 function plant() {
   const store = openStore(join(root, DB));
   store.upsertMany([
-    toServerObject(meta, 'SourceRecord', { recordId: 'SR-001', label: 'messenger-thread.txt row 1', documentId: 'D-001', system: 'PNP-ACG Cyber Forensics', rawJson: '{"from":"Joaquin DP"}', observedAt: '2026-09-13T14:20:00Z' }),
+    toServerObject(meta, 'SourceRecord', { recordId: 'SR-001', label: 'messenger-thread.txt row 1', documentId: 'D-001', system: 'MPD-CCU Cyber Forensics', rawJson: '{"from":"Joaquin DP"}', observedAt: '2026-09-13T14:20:00Z' }),
     toServerObject(meta, 'Person', { personId: 'P-m1', fullName: 'Joaquin DP', aliases: [], role: 'mention', passageId: 'PS-001', canonicalId: 'P-001', scenario: 'school-incident' }),
     toServerObject(meta, 'DigitalAccount', { accountId: 'A-m1', handle: 'Joaquin DP', platform: 'Facebook Messenger', recordId: 'SR-001', scenario: 'school-incident' }),
   ]);

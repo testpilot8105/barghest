@@ -19,15 +19,15 @@
           "text": "Mabansag Hauling"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "MABANSAG HAULING SERVICES"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "MABANSAG HAULING SVCS., INC."
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "MABANSAG HAULING"
         },
         {
@@ -43,38 +43,38 @@
           "text": "Mabansag Hauling Svcs."
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Mabansag Hauling Svcs., Inc."
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Mabansag Hauling Services"
         },
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "Mabansag Hauling Svcs., Inc."
         }
       ],
       "identifiers": [
         {
-          "kind": "SEC Reg. No.",
+          "kind": "State Reg. No.",
           "value": "CS201906274",
           "file": "hauling-contracts.pdf"
         },
         {
-          "kind": "TIN",
+          "kind": "Tax ID",
           "value": "417-382-905-000",
           "file": "hauling-contracts.pdf"
         },
         {
-          "kind": "TIN",
+          "kind": "Tax ID",
           "value": "417-382-905-000",
-          "file": "philgeps-awards.csv"
+          "file": "spp-awards.csv"
         },
         {
-          "kind": "PhilGEPS Certificate Ref. No.",
+          "kind": "SPP Registration No.",
           "value": "201911-094217-2481733095",
-          "file": "philgeps-awards.csv"
+          "file": "spp-awards.csv"
         }
       ]
     },
@@ -84,11 +84,11 @@
       "canonical": "Mabansay Waste Haulers",
       "appearsAs": [
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "MABANSAY WASTE HAULERS"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "MABANSAY WASTE HAULERS, INC."
         },
         {
@@ -102,14 +102,14 @@
       ],
       "identifiers": [
         {
-          "kind": "TIN",
+          "kind": "Tax ID",
           "value": "502-176-834-000",
-          "file": "philgeps-awards.csv"
+          "file": "spp-awards.csv"
         },
         {
-          "kind": "PhilGEPS Certificate Ref. No.",
+          "kind": "SPP Registration No.",
           "value": "201805-113902-2290415307",
-          "file": "philgeps-awards.csv"
+          "file": "spp-awards.csv"
         }
       ]
     },
@@ -127,11 +127,11 @@
           "text": "Municipality of San Eladio"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "Municipality of San Eladio"
         },
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "Municipality of San Eladio"
         },
         {
@@ -154,15 +154,15 @@
           "text": "Municipality of Tumanaw"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "Municipality of Tumanaw"
         },
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "Municipality of Tumanaw"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Municipality of Tumanaw"
         },
         {
@@ -181,15 +181,15 @@
           "text": "City of Dalumat"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "City of Dalumat"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "City of Dalumat"
         },
         {
-          "file": "denr-landfill-permit.txt",
+          "file": "mea-landfill-permit.txt",
           "text": "City of Dalumat"
         },
         {
@@ -212,7 +212,7 @@
           "text": "Mulawin Dulo"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Mulawin Dulo"
         },
         {
@@ -236,7 +236,7 @@
           "text": "Kanlurang Bato"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Kanlurang Bato"
         },
         {
@@ -256,7 +256,7 @@
           "text": "Putikan"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Putikan"
         },
         {
@@ -280,7 +280,7 @@
           "text": "Punta Silangan"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Punta Silangan"
         },
         {
@@ -304,7 +304,7 @@
           "text": "Hilagang Ilog"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Hilagang Ilog"
         },
         {
@@ -324,7 +324,7 @@
           "text": "Ugong Bayan"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Ugong Bayan"
         }
       ],
@@ -344,11 +344,11 @@
           "text": "Ilaya Kanluran"
         },
         {
-          "file": "denr-landfill-permit.txt",
+          "file": "mea-landfill-permit.txt",
           "text": "Ilaya Kanluran"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Ilaya Kanluran"
         }
       ],
@@ -364,7 +364,7 @@
           "text": "Bakawan Dulo"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Bakawan Dulo"
         },
         {
@@ -388,7 +388,7 @@
           "text": "Tulay-Bato"
         },
         {
-          "file": "complaints-8888.csv",
+          "file": "complaints-311.csv",
           "text": "Tulay-Bato"
         },
         {
@@ -404,11 +404,11 @@
       "canonical": "Dalumat Sanitary Landfill",
       "appearsAs": [
         {
-          "file": "denr-landfill-permit.txt",
+          "file": "mea-landfill-permit.txt",
           "text": "Dalumat Sanitary Landfill"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Dalumat Sanitary Landfill"
         },
         {
@@ -429,7 +429,7 @@
         {
           "kind": "ECC No.",
           "value": "ECC-R20-2023-0187",
-          "file": "denr-landfill-permit.txt"
+          "file": "mea-landfill-permit.txt"
         }
       ]
     },
@@ -439,7 +439,7 @@
       "canonical": "Tumanaw Open Dumpsite",
       "appearsAs": [
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Tumanaw Open Dumpsite"
         },
         {
@@ -495,11 +495,11 @@
           "text": "SEL-SWM-2025-014"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "SEL-SWM-2025-014"
         },
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "SEL-SWM-2025-014"
         }
       ],
@@ -515,11 +515,11 @@
           "text": "TMN-SWM-2025-009"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "TMN-SWM-2025-009"
         },
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "TMN-SWM-2025-009"
         }
       ],
@@ -535,7 +535,7 @@
           "text": "SEL-SWM-2026-003"
         },
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "SEL-SWM-2026-003"
         }
       ],
@@ -547,7 +547,7 @@
       "canonical": "CDL-SWM-2025-021",
       "appearsAs": [
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "CDL-SWM-2025-021"
         }
       ],
@@ -559,7 +559,7 @@
       "canonical": "CDL-SWM-2026-004",
       "appearsAs": [
         {
-          "file": "philgeps-awards.csv",
+          "file": "spp-awards.csv",
           "text": "CDL-SWM-2026-004"
         }
       ],
@@ -575,7 +575,7 @@
           "text": "NBC 4172"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "NBC 4172"
         }
       ],
@@ -592,7 +592,7 @@
           "text": "NBC 4175"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "NBC 4175"
         }
       ],
@@ -609,7 +609,7 @@
           "text": "NCL 8820"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "NCL 8820"
         }
       ],
@@ -663,7 +663,7 @@
           "text": "Anselmo G. Verano"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "ANSELMO G. VERANO"
         }
       ],
@@ -679,7 +679,7 @@
           "text": "Ofelia S. Cabuhat"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "OFELIA S. CABUHAT"
         }
       ],
@@ -707,7 +707,7 @@
           "text": "Danilo A. Salvador"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Danilo A. Salvador"
         }
       ],
@@ -723,7 +723,7 @@
           "text": "Ma. Teresa Q. Salvador"
         },
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Ma. Teresa Q. Salvador"
         }
       ],
@@ -735,11 +735,11 @@
       "canonical": "Corazon V. Lumbres",
       "appearsAs": [
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "Corazon V. Lumbres"
         }
       ],
-      "role": "EMB Environmental Management Specialist"
+      "role": "MEA Environmental Management Specialist"
     },
     {
       "id": "PER-09",
@@ -747,15 +747,15 @@
       "canonical": "Nestor A. Cabanilla",
       "appearsAs": [
         {
-          "file": "emb-inspection-letters.txt",
+          "file": "mea-inspection-letters.txt",
           "text": "NESTOR A. CABANILLA"
         },
         {
-          "file": "denr-landfill-permit.txt",
+          "file": "mea-landfill-permit.txt",
           "text": "NESTOR A. CABANILLA"
         }
       ],
-      "role": "EMB Regional Director"
+      "role": "MEA Regional Director"
     },
     {
       "id": "PER-10",
@@ -763,11 +763,11 @@
       "canonical": "Gloria D. Anunciacion",
       "appearsAs": [
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "Gloria D. Anunciacion"
         }
       ],
-      "role": "COA Audit Team Leader"
+      "role": "OSA Audit Team Leader"
     },
     {
       "id": "PER-11",
@@ -775,24 +775,24 @@
       "canonical": "Reynaldo J. Soriano",
       "appearsAs": [
         {
-          "file": "coa-audit-observations.pdf",
+          "file": "osa-audit-observations.pdf",
           "text": "Reynaldo J. Soriano"
         }
       ],
-      "role": "COA Supervising Auditor"
+      "role": "OSA Supervising Auditor"
     },
     {
       "id": "ORG-1",
       "type": "Organization",
-      "canonical": "Environmental Management Bureau",
+      "canonical": "Maharlika Environmental Agency",
       "appearsAs": [
         {
-          "file": "emb-inspection-letters.txt",
-          "text": "ENVIRONMENTAL MANAGEMENT BUREAU"
+          "file": "mea-inspection-letters.txt",
+          "text": "MAHARLIKA ENVIRONMENTAL AGENCY"
         },
         {
-          "file": "denr-landfill-permit.txt",
-          "text": "ENVIRONMENTAL MANAGEMENT BUREAU"
+          "file": "mea-landfill-permit.txt",
+          "text": "MAHARLIKA ENVIRONMENTAL AGENCY"
         }
       ],
       "kind": "agency"
@@ -800,11 +800,11 @@
     {
       "id": "ORG-2",
       "type": "Organization",
-      "canonical": "Commission on Audit",
+      "canonical": "Office of the State Auditor",
       "appearsAs": [
         {
-          "file": "coa-audit-observations.pdf",
-          "text": "COMMISSION ON AUDIT"
+          "file": "osa-audit-observations.pdf",
+          "text": "OFFICE OF THE STATE AUDITOR"
         }
       ],
       "kind": "agency"
@@ -837,31 +837,31 @@
       "from": "C-1",
       "kind": "awarded_to",
       "to": "H-001",
-      "file": "philgeps-awards.csv"
+      "file": "spp-awards.csv"
     },
     {
       "from": "C-2",
       "kind": "awarded_to",
       "to": "H-001",
-      "file": "philgeps-awards.csv"
+      "file": "spp-awards.csv"
     },
     {
       "from": "C-3",
       "kind": "awarded_to",
       "to": "H-001",
-      "file": "philgeps-awards.csv"
+      "file": "spp-awards.csv"
     },
     {
       "from": "C-4",
       "kind": "awarded_to",
       "to": "H-002",
-      "file": "philgeps-awards.csv"
+      "file": "spp-awards.csv"
     },
     {
       "from": "C-5",
       "kind": "awarded_to",
       "to": "H-002",
-      "file": "philgeps-awards.csv"
+      "file": "spp-awards.csv"
     },
     {
       "from": "H-001",
@@ -946,60 +946,60 @@
       "from": "H-001",
       "kind": "operates",
       "to": "V-1",
-      "file": "emb-inspection-letters.txt",
+      "file": "mea-inspection-letters.txt",
       "note": "NBC 4172 and NBC 4175 seen unloading"
     },
     {
       "from": "H-001",
       "kind": "operates",
       "to": "V-2",
-      "file": "emb-inspection-letters.txt"
+      "file": "mea-inspection-letters.txt"
     },
     {
       "from": "V-1",
       "kind": "logged_at",
       "to": "FAC-2",
-      "file": "emb-inspection-letters.txt",
+      "file": "mea-inspection-letters.txt",
       "note": "seen unloading at the dumpsite"
     },
     {
       "from": "V-2",
       "kind": "logged_at",
       "to": "FAC-2",
-      "file": "emb-inspection-letters.txt"
+      "file": "mea-inspection-letters.txt"
     },
     {
       "from": "H-001",
       "kind": "operates",
       "to": "V-3",
-      "file": "emb-inspection-letters.txt",
+      "file": "mea-inspection-letters.txt",
       "note": "NCL 8820 weighed in at the landfill"
     },
     {
       "from": "V-3",
       "kind": "logged_at",
       "to": "FAC-1",
-      "file": "emb-inspection-letters.txt"
+      "file": "mea-inspection-letters.txt"
     },
     {
       "from": "ORG-1",
       "kind": "inspected",
       "to": "FAC-1",
-      "file": "emb-inspection-letters.txt",
+      "file": "mea-inspection-letters.txt",
       "note": "5 March 2026, compliant with findings"
     },
     {
       "from": "ORG-1",
       "kind": "inspected",
       "to": "FAC-2",
-      "file": "emb-inspection-letters.txt",
+      "file": "mea-inspection-letters.txt",
       "note": "12 March 2026, Notice of Violation"
     },
     {
       "from": "FAC-1",
       "kind": "located_at",
       "to": "BRG-7",
-      "file": "denr-landfill-permit.txt"
+      "file": "mea-landfill-permit.txt"
     },
     {
       "from": "BRG-1",

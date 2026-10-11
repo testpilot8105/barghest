@@ -18,18 +18,18 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** Folder, files and register per investigation. `live` marks the one file --skip-live leaves out, for importing by hand later. */
 export const PACKS = {
   'school-incident': [
-    { folder: 'Police', files: [['spot-report.pdf', 'PNP Spot Report'], ['irf-blotter.txt', 'PNP e-Blotter'], ['pnp-par.txt', 'Property Acknowledgment Receipt'], ['feo-firearm-records.csv', 'PNP FEO records']] },
-    { folder: 'Forensics', files: [['firearms-identification-report.pdf', 'PNP Forensic Group', 'live']] },
-    { folder: 'School', files: [['deped-lis-export.csv', 'DepEd LIS'], ['guidance-intake-sheets.txt', 'Anti-Bullying Intake Sheet']] },
+    { folder: 'Police', files: [['field-report.pdf', 'MPD Field Report'], ['mpd-blotter.txt', 'MPD Blotter'], ['mpd-pir.txt', 'Property Issuance Receipt'], ['fld-firearm-records.csv', 'MPD FLD records']] },
+    { folder: 'Forensics', files: [['firearms-identification-report.pdf', 'MPD Crime Lab', 'live']] },
+    { folder: 'School', files: [['school-records.csv', 'School Records'], ['guidance-intake-sheets.txt', 'Anti-Bullying Intake Sheet']] },
     { folder: 'Digital', files: [['discord-export.json', 'Discord export'], ['messenger-thread.txt', 'Messenger export'], ['roblox-chat.txt', 'Roblox export'], ['tiktok-takedown.csv', 'TikTok takedown'], ['livestream-metadata.json', 'Livestream record']] },
-    { folder: 'Intelligence', files: [['acg-intel-report.pdf', 'PNP-ACG'], ['cicc-advisory.txt', 'CICC']] },
+    { folder: 'Intelligence', files: [['ccu-intel-report.pdf', 'MPD-CCU'], ['nctf-advisory.txt', 'NCTF']] },
   ],
   'solid-waste': [
     { folder: 'LGU plans', files: [['swm-plan-saneladio.pdf', 'SWM Plan'], ['swm-plan-tumanaw.pdf', 'SWM Plan'], ['swm-plan-dalumat.pdf', 'SWM Plan']] },
-    { folder: 'Procurement', files: [['hauling-contracts.pdf', 'Hauling contract', 'live'], ['philgeps-awards.csv', 'PhilGEPS']] },
-    { folder: 'Operations', files: [['truck-trip-logs.csv', 'Trip logs'], ['mrf-quarterly-reports.csv', 'MRF report'], ['complaints-8888.csv', '8888 hotline']] },
-    { folder: 'Regulators', files: [['emb-inspection-letters.txt', 'DENR-EMB'], ['denr-landfill-permit.txt', 'DENR ECC']] },
-    { folder: 'Audit', files: [['coa-audit-observations.pdf', 'COA AOM']] },
+    { folder: 'Procurement', files: [['hauling-contracts.pdf', 'Hauling contract', 'live'], ['spp-awards.csv', 'SPP']] },
+    { folder: 'Operations', files: [['truck-trip-logs.csv', 'Trip logs'], ['mrf-quarterly-reports.csv', 'MRF report'], ['complaints-311.csv', '311 hotline']] },
+    { folder: 'Regulators', files: [['mea-inspection-letters.txt', 'MEA'], ['mea-landfill-permit.txt', 'MEA ECC']] },
+    { folder: 'Audit', files: [['osa-audit-observations.pdf', 'OSA AOM']] },
   ],
 };
 

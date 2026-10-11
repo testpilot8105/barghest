@@ -7,15 +7,15 @@
       "canonical": "Joaquin Dela Peña",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "J. M. Dela Peña"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "DELA PENA, JOAQUIN"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "DELA PEÑA, JOAQUIN MANALO"
         },
         {
@@ -52,15 +52,15 @@
       "canonical": "Marco Villarin",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "Marco Villarin"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "VILLARIN, MARCO"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "VILLARIN, MARCO DIZON"
         },
         {
@@ -77,15 +77,15 @@
       "canonical": "Althea Ramos",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "RAMOS, Althea"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "RAMOS, ALTHEA"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "RAMOS, ALTHEA REYES"
         }
       ],
@@ -98,15 +98,15 @@
       "canonical": "Jerome Catacutan",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "CATACUTAN, Jerome"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "CATACUTAN, JEROME"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "CATACUTAN, JEROME SANTOS"
         },
         {
@@ -123,15 +123,15 @@
       "canonical": "Princess Mae Bautista",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "BAUTISTA, Princess Mae"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "BAUTISTA, PRINCESS MAE"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "BAUTISTA, PRINCESS MAE CRUZ"
         }
       ],
@@ -144,19 +144,19 @@
       "canonical": "Lorna Abalos",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "ABALOS, Lorna"
         },
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "Ms. Lorna Abalos"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "ABALOS, LORNA"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "Ms. L. Abalos"
         },
         {
@@ -172,16 +172,16 @@
       "canonical": "Rowena Dela Peña",
       "appearsAs": [
         {
-          "file": "irf-blotter.txt",
-          "text": "PSSg ROWENA DELA PENA"
+          "file": "mpd-blotter.txt",
+          "text": "Sgt. ROWENA DELA PENA"
         },
         {
-          "file": "pnp-par.txt",
-          "text": "PSSg Rowena Dela Peña"
+          "file": "mpd-pir.txt",
+          "text": "Sgt. Rowena Dela Peña"
         },
         {
-          "file": "acg-intel-report.pdf",
-          "text": "PSSg Rowena Dela Peña"
+          "file": "ccu-intel-report.pdf",
+          "text": "Sgt. Rowena Dela Peña"
         }
       ],
       "role": "police officer, aunt of P-001"
@@ -192,15 +192,15 @@
       "canonical": "Ramon Villarin",
       "appearsAs": [
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "VILLARIN, RAMON"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "Ramon Villarin"
         },
         {
-          "file": "feo-firearm-records.csv",
+          "file": "fld-firearm-records.csv",
           "text": "Ramon Villarin"
         },
         {
@@ -216,7 +216,7 @@
       "canonical": "unidentified handler",
       "appearsAs": [
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "unidentified handler"
         }
       ],
@@ -228,11 +228,11 @@
       "canonical": "Nestor Dela Peña",
       "appearsAs": [
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "DELA PENA, NESTOR"
         },
         {
-          "file": "deped-lis-export.csv",
+          "file": "school-records.csv",
           "text": "Nestor Dela Peña"
         }
       ],
@@ -248,7 +248,7 @@
           "text": "wckyy_09"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "wckyy_09"
         }
       ],
@@ -266,7 +266,7 @@
           "text": "Joaquin DP"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "Joaquin DP"
         }
       ],
@@ -288,7 +288,7 @@
           "text": "add me hollow.ix"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "hollow.ix"
         }
       ],
@@ -306,7 +306,7 @@
           "text": "@hollow.ix"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "@hollow.ix"
         }
       ],
@@ -374,7 +374,7 @@
           "text": "Vesper_Krael"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "Vesper_Krael"
         }
       ],
@@ -388,7 +388,7 @@
       "canonical": "@vkrael",
       "appearsAs": [
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "@vkrael"
         }
       ],
@@ -406,7 +406,7 @@
           "text": "VesperK"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "VesperK"
         }
       ],
@@ -424,7 +424,7 @@
           "text": "Rowena DP"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "Rowena DP"
         }
       ],
@@ -442,7 +442,7 @@
           "text": "SIDEWINDER RP"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "SIDEWINDER RP"
         }
       ],
@@ -459,7 +459,7 @@
           "text": "VOIDHOUSE"
         },
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "VOIDHOUSE"
         }
       ],
@@ -472,7 +472,7 @@
       "canonical": "vkrael_drops",
       "appearsAs": [
         {
-          "file": "acg-intel-report.pdf",
+          "file": "ccu-intel-report.pdf",
           "text": "vkrael_drops"
         }
       ],
@@ -482,15 +482,15 @@
     {
       "castId": "O-001",
       "type": "Organization",
-      "canonical": "764",
+      "canonical": "ASHFALL",
       "appearsAs": [
         {
-          "file": "acg-intel-report.pdf",
-          "text": "764"
+          "file": "ccu-intel-report.pdf",
+          "text": "ASHFALL"
         },
         {
-          "file": "cicc-advisory.txt",
-          "text": "764"
+          "file": "nctf-advisory.txt",
+          "text": "ASHFALL"
         }
       ],
       "kind": "network, alleged"
@@ -498,11 +498,11 @@
     {
       "castId": "O-002",
       "type": "Organization",
-      "canonical": "No Lives Matter (NLM)",
+      "canonical": "Nullwave (NW)",
       "appearsAs": [
         {
-          "file": "cicc-advisory.txt",
-          "text": "No Lives Matter (NLM)"
+          "file": "nctf-advisory.txt",
+          "text": "Nullwave (NW)"
         }
       ],
       "kind": "ideology, alleged"
@@ -510,15 +510,15 @@
     {
       "castId": "O-003",
       "type": "Organization",
-      "canonical": "Philippine National Police",
+      "canonical": "Maharlika Police Department",
       "appearsAs": [
         {
-          "file": "feo-firearm-records.csv",
-          "text": "Philippine National Police"
+          "file": "fld-firearm-records.csv",
+          "text": "Maharlika Police Department"
         },
         {
-          "file": "pnp-par.txt",
-          "text": "Philippine National Police"
+          "file": "mpd-pir.txt",
+          "text": "Maharlika Police Department"
         }
       ],
       "kind": "agency"
@@ -526,23 +526,23 @@
     {
       "castId": "S-001",
       "type": "School",
-      "canonical": "San Isidro National High School",
+      "canonical": "Maharlika National High School",
       "appearsAs": [
         {
-          "file": "deped-lis-export.csv",
-          "text": "San Isidro National High School"
+          "file": "school-records.csv",
+          "text": "Maharlika National High School"
         },
         {
-          "file": "spot-report.pdf",
-          "text": "San Isidro National High School"
+          "file": "field-report.pdf",
+          "text": "Maharlika National High School"
         },
         {
-          "file": "irf-blotter.txt",
-          "text": "San Isidro National High School"
+          "file": "mpd-blotter.txt",
+          "text": "Maharlika National High School"
         },
         {
           "file": "guidance-intake-sheets.txt",
-          "text": "SAN ISIDRO NATIONAL HIGH SCHOOL"
+          "text": "MAHARLIKA NATIONAL HIGH SCHOOL"
         }
       ],
       "depedId": "303912"
@@ -553,12 +553,12 @@
       "canonical": "I-001, 14 September 2026, 0842H",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
-          "text": "SR-SMPPO-2026-09-14-001"
+          "file": "field-report.pdf",
+          "text": "FR-SMS-2026-09-14-001"
         },
         {
-          "file": "irf-blotter.txt",
-          "text": "IRF-2026-09-14-004"
+          "file": "mpd-blotter.txt",
+          "text": "IR-2026-09-14-004"
         }
       ]
     },
@@ -568,19 +568,19 @@
       "canonical": "Glock 17 Gen 4 BHPZ417",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "BHPZ417"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "BHPZ417"
         },
         {
-          "file": "feo-firearm-records.csv",
+          "file": "fld-firearm-records.csv",
           "text": "BHPZ417"
         },
         {
-          "file": "pnp-par.txt",
+          "file": "mpd-pir.txt",
           "text": "BHPZ417"
         },
         {
@@ -588,8 +588,8 @@
           "text": "BHPZ417"
         }
       ],
-      "feoReference": "GOV-PNP-2024-18827",
-      "parNo": "PAR-PRO14-2024-03318"
+      "feoReference": "GOV-MPD-2024-18827",
+      "parNo": "PIR-P14-2024-03318"
     },
     {
       "castId": "F-002",
@@ -597,15 +597,15 @@
       "canonical": "Armscor M200 RIA38-1177093",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "RIA38-1177093"
         },
         {
-          "file": "irf-blotter.txt",
+          "file": "mpd-blotter.txt",
           "text": "RIA38-1177093"
         },
         {
-          "file": "feo-firearm-records.csv",
+          "file": "fld-firearm-records.csv",
           "text": "RIA38-1177093"
         },
         {
@@ -622,7 +622,7 @@
       "canonical": "E-001",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "E-001"
         },
         {
@@ -638,7 +638,7 @@
       "canonical": "E-002",
       "appearsAs": [
         {
-          "file": "spot-report.pdf",
+          "file": "field-report.pdf",
           "text": "E-002"
         },
         {
@@ -880,45 +880,45 @@
       "from": "P-001",
       "kind": "took",
       "to": "F-001",
-      "file": "irf-blotter.txt",
+      "file": "mpd-blotter.txt",
       "note": "stated as belief of the custodian and the investigator"
     },
     {
       "from": "P-002",
       "kind": "took",
       "to": "F-002",
-      "file": "irf-blotter.txt",
+      "file": "mpd-blotter.txt",
       "note": "stated as belief of the licensed owner"
     },
     {
       "from": "P-007",
       "kind": "custodian_of",
       "to": "F-001",
-      "file": "pnp-par.txt"
+      "file": "mpd-pir.txt"
     },
     {
       "from": "F-001",
       "kind": "registered_to",
       "to": "O-003",
-      "file": "feo-firearm-records.csv"
+      "file": "fld-firearm-records.csv"
     },
     {
       "from": "F-002",
       "kind": "registered_to",
       "to": "P-008",
-      "file": "feo-firearm-records.csv"
+      "file": "fld-firearm-records.csv"
     },
     {
       "from": "E-001",
       "kind": "recovered_at",
       "to": "I-001",
-      "file": "spot-report.pdf"
+      "file": "field-report.pdf"
     },
     {
       "from": "E-002",
       "kind": "recovered_at",
       "to": "I-001",
-      "file": "spot-report.pdf"
+      "file": "field-report.pdf"
     },
     {
       "from": "P-001",
@@ -948,25 +948,25 @@
       "from": "P-001",
       "kind": "owns",
       "to": "A-001",
-      "file": "acg-intel-report.pdf"
+      "file": "ccu-intel-report.pdf"
     },
     {
       "from": "P-001",
       "kind": "owns",
       "to": "A-002",
-      "file": "acg-intel-report.pdf"
+      "file": "ccu-intel-report.pdf"
     },
     {
       "from": "P-001",
       "kind": "owns",
       "to": "A-003",
-      "file": "acg-intel-report.pdf"
+      "file": "ccu-intel-report.pdf"
     },
     {
       "from": "P-001",
       "kind": "owns",
       "to": "A-004",
-      "file": "acg-intel-report.pdf"
+      "file": "ccu-intel-report.pdf"
     },
     {
       "from": "P-002",
@@ -990,7 +990,7 @@
       "from": "P-007",
       "kind": "owns",
       "to": "A-011",
-      "file": "acg-intel-report.pdf",
+      "file": "ccu-intel-report.pdf",
       "note": "assessed"
     },
     {
@@ -1039,14 +1039,14 @@
       "from": "A-003",
       "kind": "groomed_by",
       "to": "A-008",
-      "file": "acg-intel-report.pdf",
+      "file": "ccu-intel-report.pdf",
       "note": "assessed, held below 0.9"
     },
     {
       "from": "G-002",
       "kind": "member_of",
       "to": "O-001",
-      "file": "acg-intel-report.pdf",
+      "file": "ccu-intel-report.pdf",
       "note": "assessed as a possible Cell 09, held below 0.9"
     },
     {
@@ -1060,31 +1060,31 @@
       "from": "P-001",
       "kind": "attends",
       "to": "S-001",
-      "file": "deped-lis-export.csv"
+      "file": "school-records.csv"
     },
     {
       "from": "P-006",
       "kind": "teaches_at",
       "to": "S-001",
-      "file": "deped-lis-export.csv"
+      "file": "school-records.csv"
     },
     {
       "from": "P-010",
       "kind": "guardian_of",
       "to": "P-001",
-      "file": "deped-lis-export.csv"
+      "file": "school-records.csv"
     },
     {
       "from": "P-008",
       "kind": "guardian_of",
       "to": "P-002",
-      "file": "deped-lis-export.csv"
+      "file": "school-records.csv"
     },
     {
       "from": "P-007",
       "kind": "relative_of",
       "to": "P-001",
-      "file": "irf-blotter.txt",
+      "file": "mpd-blotter.txt",
       "note": "aunt"
     },
     {
@@ -1092,112 +1092,112 @@
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-004",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-005",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-006",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-007",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-008",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-009",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-010",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-011",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-012",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-013",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-014",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-015",
       "kind": "matched_to",
       "to": "F-001",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-016",
       "kind": "matched_to",
       "to": "F-002",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-017",
       "kind": "matched_to",
       "to": "F-002",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     },
     {
       "from": "E-018",
       "kind": "matched_to",
       "to": "F-002",
       "file": "firearms-identification-report.pdf",
-      "note": "IBIS correlation"
+      "note": "ballistics database correlation"
     }
   ]
 }

@@ -68,28 +68,28 @@ const get = (path) => fetch(`${BASE}${path}`).then((r) => r.json());
 // ---- Fixtures: fictional, in the registers' own wording, the same student spelled three ways.
 const fixtures = mkdtempSync(join(tmpdir(), 'barghest-pipeline-'));
 writeFileSync(
-  join(fixtures, 'spot-report.txt'),
-  `PHILIPPINE NATIONAL POLICE
-SAN MATEO CITY POLICE STATION
-SPOT REPORT SR-SMPPO-2026-09-14-001
+  join(fixtures, 'field-report.txt'),
+  `MAHARLIKA POLICE DEPARTMENT
+SAN MATEO STATION
+FIELD REPORT FR-SMS-2026-09-14-001
 
 Date and time of incident: 14 September 2026, 0842H.
-Place of incident: San Isidro National High School, Barangay Mabini, City of San Mateo.
+Place of incident: Maharlika National High School, Barangay Mabini, City of San Mateo.
 Nature of incident: Shooting incident inside the junior high building.
 
-Narrative: On or about 0842H, a male student identified as Joaquin Dela Peña, 15 years old, Grade 9 Section Rizal, allegedly fired a Glock 17 pistol, serial number BHPZ417, at students and a teacher in the north corridor. Responding personnel recovered the pistol at the scene, tagged as evidence E-001. The pistol is registered to the Philippine National Police under FEO reference GOV-PNP-2024-18827 and was issued to PSSg Rowena Dela Peña, 1st Provincial Mobile Force Company, under Property Acknowledgment Receipt PAR-PRO14-2024-03318. Victims were brought to San Mateo Provincial Hospital. Investigator on case: PMSg R. Tolentino.
+Narrative: On or about 0842H, a male student identified as Joaquin Dela Peña, 15 years old, Grade 9 Section Rizal, allegedly fired a Glock 17 pistol, serial number BHPZ417, at students and a teacher in the north corridor. Responding personnel recovered the pistol at the scene, tagged as evidence E-001. The pistol is registered to the Maharlika Police Department under FLD reference GOV-MPD-2024-18827 and was issued to Sgt. Rowena Dela Peña, Patrol Division, under Property Issuance Receipt PIR-P14-2024-03318. Victims were brought to San Mateo Provincial Hospital. Investigator on case: Sgt. R. Tolentino.
 `,
 );
 writeFileSync(
-  join(fixtures, 'irf-blotter.txt'),
-  `INCIDENT RECORD FORM IRF-2026-09-14-004, blotter entry 2026-1187
+  join(fixtures, 'mpd-blotter.txt'),
+  `INCIDENT RECORD IR-2026-09-14-004, blotter entry 2026-1187
 
-Complainant: Lorna Abalos, teacher, San Isidro National High School.
+Complainant: Lorna Abalos, teacher, Maharlika National High School.
 Suspect: DELA PEÑA, JOAQUIN, 15, Grade 9, resident of Barangay Mabini. Co-suspect: VILLARIN, MARCO, 14, Grade 9.
 
-Narrative: At about 0842H of 14 September 2026 the suspect, J. Dela Peña, together with M. Villarin, entered the junior high building through the north emergency exit and fired a pistol at the students of Section Rizal. The pistol, a Glock 17 with serial BHPZ417, belongs to the suspect's aunt, PSSg Rowena Dela Peña of the San Mateo Provincial Police Office, who kept it in a locked plastic locker at the family residence in Barangay Mabini.
+Narrative: At about 0842H of 14 September 2026 the suspect, J. Dela Peña, together with M. Villarin, entered the junior high building through the north emergency exit and fired a pistol at the students of Section Rizal. The pistol, a Glock 17 with serial BHPZ417, belongs to the suspect's aunt, Sgt. Rowena Dela Peña of the San Mateo Station, who kept it in a locked plastic locker at the family residence in Barangay Mabini.
 
-Charges drafted: murder, frustrated murder; CICL handling under RA 9344.
+Charges drafted: murder, frustrated murder; CICL handling under the Juvenile Justice Act.
 `,
 );
 writeFileSync(
@@ -107,7 +107,7 @@ async function importFile(name) {
   const form = new FormData();
   form.append('file', new Blob([readFileSync(join(fixtures, name))]), name);
   form.append('investigation', 'school-incident');
-  form.append('system', name.startsWith('spot') ? 'PNP Spot Report' : name.startsWith('irf') ? 'PNP CIRAS e-Blotter' : 'PNP-ACG Cyber Forensics');
+  form.append('system', name.startsWith('field') ? 'MPD Field Report' : name.startsWith('mpd-blotter') ? 'MPD Blotter' : 'MPD-CCU Cyber Forensics');
   const r = await post('/barghest/import', form);
   if (r.status !== 200) throw new Error(`import ${name}: ${r.status} ${JSON.stringify(r.body)}`);
   return r.body;
@@ -134,7 +134,7 @@ try {
 
   // Import, extraction in the background
   const docs = [];
-  for (const name of ['spot-report.txt', 'irf-blotter.txt', 'messenger-thread.txt']) {
+  for (const name of ['field-report.txt', 'mpd-blotter.txt', 'messenger-thread.txt']) {
     const r = await importFile(name);
     docs.push({ name, ...r });
     check(`${name} imports and extraction starts`, r.extraction === 'started', `${r.passages} passages`);
@@ -189,7 +189,7 @@ try {
 
   // Ask
   sample('before ask');
-  const a = await post('/barghest/ask', { question: 'What connects Joaquin Dela Peña to the shooting at San Isidro National High School?', investigation: 'school-incident' }, true);
+  const a = await post('/barghest/ask', { question: 'What connects Joaquin Dela Peña to the shooting at Maharlika National High School?', investigation: 'school-incident' }, true);
   sample('after ask');
   check('the question is answered with citations', a.status === 200 && a.body.refused === false && a.body.citations.length >= 1, `${a.body.citations?.length} citations, ${a.body.latencyMs} ms`);
   console.log(`    answer: ${a.body.answer}`);

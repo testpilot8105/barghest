@@ -81,7 +81,7 @@ async function main() {
     check('2 a folder and a subfolder: slug ids, the parent counts one subfolder, both hold no files', /^police-[0-9a-f]{6}$/.test(police.id) && older.parentId === police.id && entry(two, police.id)?.subfolders === 1 && entry(two, police.id)?.files === 0 && entry(two, older.id)?.files === 0, `${police.id}, ${older.id}`);
 
     // 3. Import into a folder: the count, the file view's folder, and the Document filter
-    const imported = await importFile(dc, { file: new File(['Blotter entry 44: Rowena Dela Peña reported the locker.'], 'blotter-44.txt', { type: 'text/plain' }), investigation: INV, system: 'PNP e-Blotter', folderId: police.id, extract: false });
+    const imported = await importFile(dc, { file: new File(['Blotter entry 44: Rowena Dela Peña reported the locker.'], 'blotter-44.txt', { type: 'text/plain' }), investigation: INV, system: 'MPD Blotter', folderId: police.id, extract: false });
     const afterImport = await getFolders(dc, INV);
     const view = await getDocumentView(dc, imported.documentId);
     const inPolice = await fetchRows(dc, withStep(startExploration('Document'), eq('folderId', police.id)));

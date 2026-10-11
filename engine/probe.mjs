@@ -1,4 +1,4 @@
-// P2 model probe (node engine/probe.mjs): one paragraph written from the spot report goes to the local model with
+// P2 model probe (node engine/probe.mjs): one paragraph written from the field report goes to the local model with
 // the full JSON schema; the reply is validated with zod; latency and token counts are printed. Needs Ollama up with
 // the chat model pulled. Nothing is written to the store.
 import { createLlm, MODELS, ollamaAllowed } from './llm.mjs';
@@ -10,7 +10,7 @@ if (!ollamaAllowed()) {
   process.exit(2);
 }
 
-const PARAGRAPH = `SPOT REPORT SR-SMPPO-2026-09-14-001. On or about 0842H of 14 September 2026, at San Isidro National High School, Barangay Mabini, City of San Mateo, a male student identified as Joaquin Dela Pena, 15 years old, Grade 9, allegedly fired a Glock 17 pistol at students and a teacher in the north corridor of the junior high building. Responding personnel of San Mateo City Police Station recovered the pistol at the scene. Investigator on case: PMSg R. Tolentino.`;
+const PARAGRAPH = `FIELD REPORT FR-SMS-2026-09-14-001. On or about 0842H of 14 September 2026, at Maharlika National High School, Barangay Mabini, City of San Mateo, a male student identified as Joaquin Dela Pena, 15 years old, Grade 9, allegedly fired a Glock 17 pistol at students and a teacher in the north corridor of the junior high building. Responding personnel of San Mateo Station recovered the pistol at the scene. Investigator on case: Sgt. R. Tolentino.`;
 
 const llm = createLlm();
 const health = await llm.health();

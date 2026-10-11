@@ -3,7 +3,7 @@
 import { fetchRows, histogram, useAsync, type AsyncState, type DataClient, type Step } from '../data/index.ts';
 
 export interface CitedPassage {
-  /** The passage's own label, the file and its number: "irf-blotter.txt #2". */
+  /** The passage's own label, the file and its number: "mpd-blotter.txt #2". */
   label: string;
   documentId: string;
 }

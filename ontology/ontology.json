@@ -2407,7 +2407,7 @@
             "typeClasses": []
           },
           "feoRegistrationNo": {
-            "displayName": "FEO registration no.",
+            "displayName": "FLD registration no.",
             "rid": "ri.Firearm.feoRegistrationNo",
             "status": {
               "type": "active"
@@ -2888,7 +2888,7 @@
             "typeClasses": []
           },
           "depedId": {
-            "displayName": "DepEd school id",
+            "displayName": "State school id",
             "rid": "ri.School.depedId",
             "status": {
               "type": "active"
@@ -3497,7 +3497,7 @@
             "typeClasses": []
           },
           "tin": {
-            "displayName": "TIN",
+            "displayName": "Tax ID",
             "rid": "ri.Hauler.tin",
             "status": {
               "type": "active"

@@ -2,7 +2,7 @@
 // identifiers. The same spelling rules for every type, so two mentions that differ only in case, punctuation,
 // diacritics, honorifics, suffixes, "LAST, FIRST" order or corporate boilerplate normalise to the same tokens.
 
-const HONORIFICS = new Set(['mr', 'mrs', 'ms', 'miss', 'dr', 'atty', 'engr', 'hon', 'sir', 'madam', 'pssg', 'pmsg', 'pcpt', 'pcol', 'pltcol', 'pmaj', 'plt', 'pat', 'pcms', 'pems', 'psms', 'pss', 'sgt', 'cpl', 'pfc', 'po1', 'po2', 'po3', 'spo1', 'spo2', 'spo3', 'spo4', 'ptl', 'prof', 'rev', 'fr', 'bro', 'sis']);
+const HONORIFICS = new Set(['mr', 'mrs', 'ms', 'miss', 'dr', 'atty', 'engr', 'hon', 'sir', 'madam', 'sgt', 'lt', 'cpt', 'capt', 'col', 'ltcol', 'maj', 'cpl', 'pfc', 'det', 'ofc', 'prof', 'rev', 'fr', 'bro', 'sis']);
 const SUFFIXES = new Set(['jr', 'sr', 'ii', 'iii', 'iv', 'v']);
 const CORPORATE = new Set(['inc', 'incorporated', 'corp', 'corporation', 'co', 'company', 'ltd', 'limited', 'llc', 'enterprises', 'enterprise', 'services', 'service', 'svcs', 'svc', 'the', 'of', 'and', 'group', 'trading', 'general', 'merchandise', 'opc']);
 const ABBREVIATIONS = { svcs: 'services', svc: 'service', corp: 'corporation', inc: 'incorporated', ent: 'enterprises', bgy: 'barangay', brgy: 'barangay', mun: 'municipality', nhs: 'national high school', es: 'elementary school' };
