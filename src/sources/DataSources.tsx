@@ -1,7 +1,6 @@
 // Data Sources: what's coming in, and is the model done with it (Foundry's Data Connection, in BARGHEST's look). The
 // owner's layout B (09.10.2026): a strip across the top saying what the model is doing right now, then the files
-// and the model log side by side. The whole view takes dropped files. Two stage moments happen here: the live file
-// read in front of the judges (demo step 2) and the full import of both packs (P7).
+// and the model log side by side. The whole view takes dropped files, and shows a pack import filling in.
 import { Callout, Classes, H4, HTMLTable, Intent, NonIdealState, ProgressBar, Tag } from '@blueprintjs/core';
 import { Database, Error as ErrorIcon, Import, SmallTick, WarningSign } from '@blueprintjs/icons';
 import { useEffect, useState } from 'react';

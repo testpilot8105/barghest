@@ -12,7 +12,7 @@
 // dialog, opened and closed, nothing created; with the model off, a file imported, opened by double-click, deleted
 // through the confirm, and checked gone from the engine). Screenshots to dist-shots/. Exit 1 on any failure. Needs the engine on
 // 8787 (BARGHEST_OLLAMA=off pnpm dev:engine), or on BARGHEST_ENGINE_PORT.
-// Run: pnpm --filter @atlas/barghest smoke   --geometry prints the measured boxes as well.
+// Run: pnpm smoke   --geometry prints the measured boxes as well.
 import { chromium } from 'playwright';
 import { createServer, request } from 'node:http';
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
@@ -24,7 +24,7 @@ const dist = join(app, 'dist');
 const shots = join(app, 'dist-shots');
 const showGeometry = process.argv.includes('--geometry');
 if (!existsSync(join(dist, 'index.html'))) {
-  console.error('smoke: no dist/index.html; run pnpm --filter @atlas/barghest build first');
+  console.error('smoke: no dist/index.html; run pnpm build first');
   process.exit(1);
 }
 

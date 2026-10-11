@@ -330,7 +330,7 @@ optionally and cover every investigation without it.
 - `pnpm dev` is a small spawn script, not pnpm's regex runner, because concurrent regex runs only arrived in pnpm 12.
 - Every imported file is kept as a stored original at `data/files/<documentId>.<ext>` (`BARGHEST_FILES` moves the
   folder; the proofs point it at a throwaway one). The Document's `path` is that copy, relative to the app. The
-  folder is gitignored: what a judge uploads never reaches the public repo. The two packs still ship from
+  folder is gitignored, so imported files never reach the repository. The two packs still ship from
   `data/school-incident/sources/` and `data/solid-waste/sources/`; importing one makes a copy like any other file.
 
 ## 5. Names, as frozen at P1
@@ -412,8 +412,7 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   deciding the unsure pairs, embeddings, semantic search and one question answered with three verbatim citations,
   an unrelated question refused, 18 inference-log rows. What it costs on an M4 with 16 GB: about 60 seconds of
   extraction per passage of 300 tokens when calls queue one at a time, a 17 second answer, about 2 GB of memory
-  while the model is loaded. Import keeps answering while extraction runs in the background; a full document pack
-  is imported ahead of a demo, and one file is imported live.
+  while the model is loaded. Import keeps answering while extraction runs in the background.
 - 09.10.2026, file manager step 1: section 2.5. The data layer wraps `import`, `extract`, `inference-log` and
   `health` as `importFile`, `extractAgain`, `fetchInferenceLog` / `useInferenceLog`, `getHealth` / `useHealth` and
   `useExtracting`. A refused engine call throws `EngineError` with `status`. The Document filter by `scenario` and
@@ -437,8 +436,7 @@ Actions (camel case, as the generated SDK names them): `createObjectPerson`, `cr
   polling while the model reads the file.
 - 09.10.2026, file manager step 5: `POST delete-document?documentId=` removes a file and everything the model
   pulled from it, trims shared Relationships, deletes the stored copy, and re-resolves the investigation without the
-  model while keeping earlier model decisions; `deleteDocument` in the data layer. The live demo file can now be
-  imported in rehearsal and wiped before the judges.
+  model while keeping earlier model decisions; `deleteDocument` in the data layer.
 - 09.10.2026, file manager step 6: folders (section 2.7). Store records per investigation with a fixed id; the
   Document gained `folderId`; `GET folders`, `POST folders`, `rename-folder`, `move-folder`, `delete-folder` and
   `move-document`, each writing an audit row with the old and the new value; `import` honours `folderId`; the file

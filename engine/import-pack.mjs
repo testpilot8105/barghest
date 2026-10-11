@@ -3,8 +3,8 @@
 // into its folder with its register. Files are stored without the model and then read one at a time, each waiting for
 // the last, so the model never has more than one file in hand and a request never queues behind twenty others. With
 // the model off, or with --no-extract, the files are only stored. A file the investigation already holds (same
-// original name) is skipped, so a second run picks up where the first stopped; that is also how a live file is
-// rehearsed after a --skip-live run: run again without the flag and only the live file goes in.
+// original name) is skipped, so a second run picks up where the first stopped; after a --skip-live run, running
+// again without the flag imports only the file that was left out.
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,7 +15,7 @@ import { createFolder, extractAgain, getDocumentView, getFolders, getHealth, get
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Folder, files and register per investigation. `live` marks the file imported on stage, left out by --skip-live. */
+/** Folder, files and register per investigation. `live` marks the one file --skip-live leaves out, for importing by hand later. */
 export const PACKS = {
   'school-incident': [
     { folder: 'Police', files: [['spot-report.pdf', 'PNP Spot Report'], ['irf-blotter.txt', 'PNP e-Blotter'], ['pnp-par.txt', 'Property Acknowledgment Receipt'], ['feo-firearm-records.csv', 'PNP FEO records']] },
